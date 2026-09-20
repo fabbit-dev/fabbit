@@ -1,0 +1,106 @@
+# Артефакты сборки и бинарники не коммитятся. Битстримы, образы прошивки,
+# файлы для завода и экспорт 3D публикуются в GitHub Releases.
+
+# --- Среда синтеза ----------------------------------------------------------
+*.jou
+*.log
+*.str
+*.rpt
+*.pb
+*.dcp
+*.wdb
+*.wcfg
+*.xpr
+*.xpe
+*.jobs
+*.debug
+.Xil/
+vivado*.backup.*
+**/*.runs/
+**/*.cache/
+**/*.hw/
+**/*.ip_user_files/
+**/*.sim/
+**/*.gen/
+usage_statistics_webtalk.*
+
+# --- Открытый тулчейн -------------------------------------------------------
+*.json.gz
+*.fasm
+*.frames
+build/
+out/
+work/
+
+# --- Битстримы и образы -----------------------------------------------------
+*.bit
+*.bin
+*.bif
+*.mcs
+*.prm
+*.svf
+*.rbf
+
+# --- Симуляция --------------------------------------------------------------
+obj_dir/
+sim_build/
+*.vvp
+*.vcd
+*.fst
+*.ghw
+__pycache__/
+*.py[cod]
+
+# --- Прошивка ---------------------------------------------------------------
+firmware/build/
+firmware/sdkconfig
+firmware/sdkconfig.old
+**/managed_components/
+dependencies.lock
+
+# --- Платы ------------------------------------------------------------------
+*-backups/
+*.kicad_prl
+*.kicad_pcb-bak
+*.kicad_sch-bak
+*.net
+*.bak
+fp-info-cache
+_autosave-*
+*.lck
+# Файлы для завода и экспорт
+**/gerber/
+**/fab/
+*.gbr
+*.gbrjob
+*.drl
+*.step
+*.stp
+*.wrl
+*.dxf
+
+# --- 3D ---------------------------------------------------------------------
+*.blend[0-9]
+*.blend[0-9][0-9]
+*.stl
+*.3mf
+*.gcode
+
+# --- Секреты ----------------------------------------------------------------
+.env
+.env.*
+*.pem
+*.key
+secrets.*
+credentials.*
+
+# --- Редакторы и ОС ---------------------------------------------------------
+.obsidian/
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+.venv/
+venv/
+compile_commands.json
