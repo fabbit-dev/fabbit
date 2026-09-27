@@ -9,8 +9,8 @@ F смотрит на экран и кнопки, B на крышку.
 ## Импорт в KiCad
 
 DXF в git нет, они лежат в GitHub Releases. Контур и расстановка уже есть в
-`fabbit_mainboard.kicad_pcb`. Повторный импорт: `File → Import → Graphics…`, мм,
-позиция (0, 0):
+`fabbit_mainboard.kicad_pcb`. В `.kicad_pcb` начало сдвинуто: x = X + 100,
+y = 200 − Z. Повторный импорт: `File → Import → Graphics…`, мм, позиция (100, 200):
 
 | Файл | Слой |
 |---|---|
