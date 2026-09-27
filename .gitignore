@@ -85,6 +85,7 @@ _autosave-*
 *.blend[0-9][0-9]
 *.FCBak
 *.stl
+!hardware/case/fabbit_case.stl
 *.3mf
 *.gcode
 
