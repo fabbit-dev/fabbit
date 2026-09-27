@@ -2,7 +2,7 @@
   (version 20240108)
   (generator "konnect")
   (layer "F.Cu")
-  (descr "Заглушка: SMD-стойка M2.5 H9 (Würth WA-SMSI 9774090151) на B-стороне, отверстие 3.7 насквозь, винт со стороны мезонина. Заменить на Mounting_Wuerth:Mounting_Wuerth_WA-SMSI-M2.5_H9mm_9774090151 (высоту подобрать под стек Samtec).")
+  (descr "Заглушка: SMD-стойка M2.5 H9 (Würth WA-SMSI 9774090151) на B-стороне, отверстие 3.7 насквозь, винт со стороны мезонина. Стек Samtec ERM8-02 + ERF8-07 = 9.0 мм совпадает с высотой стойки. Заменить в KiCad на Mounting_Wuerth:Mounting_Wuerth_WA-SMSI-M2.5_H9mm_9774090151.")
   (attr smd exclude_from_pos_files)
   (pad "" np_thru_hole circle (at 0 0) (size 3.7 3.7) (layers "*.Cu" "*.Mask") (drill 3.7) )
   (fp_circle (center 0 0) (end 2.75 0) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
