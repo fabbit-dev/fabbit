@@ -68,6 +68,7 @@ dependencies.lock
 fp-info-cache
 _autosave-*
 *.lck
+.history/
 # Файлы для завода и экспорт
 **/gerber/
 **/fab/
@@ -82,6 +83,7 @@ _autosave-*
 # --- 3D ---------------------------------------------------------------------
 *.blend[0-9]
 *.blend[0-9][0-9]
+*.FCBak
 *.stl
 *.3mf
 *.gcode
@@ -104,3 +106,7 @@ credentials.*
 .venv/
 venv/
 compile_commands.json
+
+# --- Локальные заметки разработчика (не публикуются) ------------------------
+.dev/
+*.local.md
