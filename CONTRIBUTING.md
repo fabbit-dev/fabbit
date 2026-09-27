@@ -11,12 +11,16 @@ git switch -c feat/spi-receiver
 git add -A
 git commit -m "feat(gateware): приёмник SPI"
 git push -u origin HEAD            # -u только в первый push
-gh pr create --fill
+gh pr create --fill --title "feat(gateware): приёмник SPI"
 gh pr merge --squash --delete-branch
 git switch main && git pull
 ```
 
 Следующий коммит в ту же ветку: `git add -A && git commit -m "..." && git push`.
+
+Squash берёт заголовок коммита в `main` из заголовка PR. Без `--title` при
+нескольких коммитах туда попадёт имя ветки. Поправить на слиянии:
+`gh pr merge --squash --delete-branch --subject "тип(область): что сделано"`.
 
 ## Ветки
 
