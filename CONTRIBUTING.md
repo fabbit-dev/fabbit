@@ -72,6 +72,12 @@ git tag mainboard-rev-a && git push origin mainboard-rev-a
 
 `git show mainboard-rev-a` покажет, что заказывали.
 
+## Модель корпуса
+
+Меняешь `hardware/case/fabbit_case.FCStd`: перевыгрузи `fabbit_case.stl`
+(File → Export, вся сборка, бинарный STL) и закоммить вместе. GitHub показывает
+STL в браузере, STEP не показывает.
+
 ## Состояние
 
 ```bash
@@ -85,7 +91,8 @@ gh pr status
 ## Нельзя
 
 * Push в `main` и `git push --force` в общие ветки.
-* Коммитить `.bit`, `.bin`, герберы, `.stl`: они идут в GitHub Releases.
+* Коммитить `.bit`, `.bin`, герберы, `.step`, `.stl`: они идут в GitHub Releases.
+  Исключение: `hardware/case/fabbit_case.stl`, превью сборки для GitHub.
 * Коммитить фото без сжатия.
 * Держать ветку неделями.
 * Удалять `.gitkeep`: git не хранит пустые каталоги.
