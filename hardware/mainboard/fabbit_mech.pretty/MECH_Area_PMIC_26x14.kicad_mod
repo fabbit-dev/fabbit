@@ -1,0 +1,11 @@
+(footprint "MECH_Area_PMIC_26x14"
+  (version 20240108)
+  (generator "konnect")
+  (layer "F.Cu")
+  (descr "Метка: зона питания (зарядка, boost 5 В, fuel gauge) 26x14, высота до 1.4 мм. Без зоны размещения.")
+  (attr smd exclude_from_bom exclude_from_pos_files allow_missing_courtyard)
+  (pad "" smd rect (at 0 0) (size 0.1 0.1) (layers "F.Mask")  )
+  (fp_rect (start -13 -7) (end 13 7) (stroke (width 0.15) (type solid)) (fill none) (layer "F.Fab"))
+  (fp_text reference "REF**" (at 0.0000 -1.3000 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+  (fp_text value "MECH_Area_PMIC_26x14" (at 0.0000 1.3000 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+)

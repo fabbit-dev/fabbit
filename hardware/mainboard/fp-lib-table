@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+
+  (lib (name "fabbit_mech") (type "KiCad") (uri "${KIPRJMOD}/fabbit_mech.pretty") (options "") (descr "")))

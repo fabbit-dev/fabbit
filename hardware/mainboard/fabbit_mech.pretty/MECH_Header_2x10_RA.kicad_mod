@@ -1,0 +1,12 @@
+(footprint "MECH_Header_2x10_RA"
+  (version 20240108)
+  (generator "konnect")
+  (layer "F.Cu")
+  (descr "Заглушка: угловая гребёнка 2x10 шаг 2.54, штыри выходят в торец корпуса.")
+  (attr smd exclude_from_bom exclude_from_pos_files)
+  (pad "" smd rect (at 0 0) (size 0.1 0.1) (layers "F.Mask")  )
+  (fp_rect (start -12.95 -4.5) (end 12.95 4.5) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (fp_rect (start -12.7 -4.25) (end 12.7 4.25) (stroke (width 0.15) (type solid)) (fill none) (layer "F.Fab"))
+  (fp_text reference "REF**" (at 0.0000 -1.3000 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+  (fp_text value "MECH_Header_2x10_RA" (at 0.0000 1.3000 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+)
