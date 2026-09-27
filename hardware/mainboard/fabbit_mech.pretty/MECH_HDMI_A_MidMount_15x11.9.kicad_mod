@@ -1,0 +1,12 @@
+(footprint "MECH_HDMI_A_MidMount_15x11.9"
+  (version 20240108)
+  (generator "konnect")
+  (layer "F.Cu")
+  (descr "Заглушка: HDMI Type A mid-mount в вырезе платы, над B-стороной ~2.4 мм.")
+  (attr smd exclude_from_bom exclude_from_pos_files)
+  (pad "" smd rect (at 0 0) (size 0.1 0.1) (layers "F.Mask")  )
+  (fp_rect (start -7.75 -6.2) (end 7.75 6.2) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (fp_rect (start -7.5 -5.95) (end 7.5 5.95) (stroke (width 0.15) (type solid)) (fill none) (layer "F.Fab"))
+  (fp_text reference "REF**" (at 0.0000 -1.3000 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+  (fp_text value "MECH_HDMI_A_MidMount_15x11.9" (at 0.0000 1.3000 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+)
