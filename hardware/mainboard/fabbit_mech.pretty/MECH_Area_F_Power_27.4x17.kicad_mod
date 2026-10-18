@@ -1,0 +1,12 @@
+(footprint "MECH_Area_F_Power_27.4x17"
+  (version 20240108)
+  (generator "konnect")
+  (layer "F.Cu")
+  (descr "Зона F, высота ≤ 2.2: BQ25798, BQ27441, TPS63802, 2x TPS61023, ключи. Дроссели SPM6530T 3.0 сюда не встают.")
+  (attr smd exclude_from_bom exclude_from_pos_files allow_missing_courtyard)
+  (pad "" smd rect (at 0 0) (size 0.1 0.1) (layers "F.Mask")  )
+  (fp_rect (start -0.3000 -0.3000) (end 0.3000 0.3000) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (fp_rect (start -13.7 -8.5) (end 13.7 8.5) (stroke (width 0.1) (type solid)) (fill none) (layer "F.Fab"))
+  (fp_text reference "REF**" (at 0.0000 -1.3000 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+  (fp_text value "MECH_Area_F_Power_27.4x17" (at 0.0000 1.3000 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+)
