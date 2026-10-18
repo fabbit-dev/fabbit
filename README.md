@@ -18,7 +18,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/%D0%BA%D0%BE%D0%B4-MIT-blue" alt="код: MIT"></a>
   <a href="hardware/LICENSE"><img src="https://img.shields.io/badge/%D0%B6%D0%B5%D0%BB%D0%B5%D0%B7%D0%BE-CERN--OHL--S--2.0-blue" alt="железо: CERN-OHL-S-2.0"></a>
-  <img src="https://img.shields.io/badge/%D0%9F%D0%9B%D0%98%D0%A1-Artix--7%20XC7A50T-8A2BE2" alt="ПЛИС: Artix-7 XC7A50T">
+  <a href="#железо"><img src="https://img.shields.io/badge/%D0%9F%D0%9B%D0%98%D0%A1-Artix--7%20XC7A50T-8A2BE2" alt="ПЛИС: Artix-7 XC7A50T"></a>
 </p>
 
 <p align="center">
@@ -64,7 +64,7 @@ Fabbit для инженеров и исследователей железа. �
 | Ввод | 11 кнопок, колесо с нажатием, кнопка питания |
 | Периферия | Динамик 1 Вт, микрофон, вибромотор, ИК приём и передача, IMU, RTC, microSD, Qwiic, светодиод состояния |
 | Опорная частота | TCXO 25 МГц ±0,5 ppm: шкала времени и частотомер |
-| Корпус | 90 × 150 × 22,5 мм, у разъёмов SMA 24 мм, SLA-печать |
+| Корпус | 90 × 150 × 22,5 мм, над модулем аналога 24 мм, SLA-печать |
 
 ## Как устроено
 
@@ -78,11 +78,11 @@ flowchart TB
   HOST["ПК"]
   subgraph DEV["Fabbit"]
     USBC["USB-C: USB 3.0, PD 3.1"]
-    MCU["Супервизор CH32H417<br/>USB, меню, microSD, питание и заряд<br/>Wi-Fi ESP32-C5, кнопки, ИК, IMU, RTC"]
-    FPGA["ПЛИС Artix-7, модуль Colorlight i9+<br/>оболочка + профиль"]
+    MCU["Супервизор CH32H417<br/>USB, меню, microSD<br/>питание и заряд<br/>Wi-Fi, кнопки, ИК, IMU"]
+    FPGA["ПЛИС Artix-7<br/>модуль Colorlight i9+<br/>оболочка + профиль"]
     VID["Экран 3,5″ 640×480<br/>HDMI, звук"]
-    IO["ЛА: 16 входов 0–10 В + 8 линий 1,1–4,7 В<br/>MIPI-20: SWD/JTAG + trace"]
-    AMOD["Аналоговый модуль (мезонин)<br/>осциллограф, генератор, мультиметр"]
+    IO["ЛА: 16 входов 0–10 В<br/>и 8 линий 1,1–4,7 В<br/>MIPI-20: SWD, JTAG, trace"]
+    AMOD["Модуль аналога<br/>осциллограф, генератор<br/>мультиметр"]
     PSU["Лаб. источник 0,8–22 В<br/>глитчер"]
   end
   HOST <-->|"USB 3.0"| USBC
@@ -110,7 +110,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-  ON["Включение"] --> GOLD["Golden-загрузчик из флеша модуля i9+<br/>меню и экран заряда"]
+  ON["Включение"] --> GOLD["Golden-загрузчик<br/>из флеша модуля i9+<br/>меню и экран заряда"]
   GOLD -->|"выбор профиля"| PROF["Профиль из слота флеша<br/>или с microSD"]
   PROF -->|"выход"| GOLD
   GOLD -.->|"сбой"| RESC["Аварийный образ<br/>из флеша супервизора по JTAG"]
@@ -120,7 +120,7 @@ flowchart TB
 
 - **Верхний край.** Порт A 2×12 и порт B 2×10 с шагом 2,54 мм, питание цели 2×2, MIPI-20.
 - **Разъём мезонина.** BergStak 2×40, шаг 0,8 мм, стек 9 мм. На разъёме 35 линий ПЛИС
-  (из них 10 пар LVDS), SPI и I²C супервизора, питание и опорные 25 МГц от TCXO.
+  (20 из них в 10 парах LVDS), SPI и I²C супервизора, питание и опорные 25 МГц от TCXO.
 
 ## Структура репозитория
 

@@ -18,7 +18,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/code-MIT-blue" alt="code: MIT"></a>
   <a href="hardware/LICENSE"><img src="https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-blue" alt="hardware: CERN-OHL-S-2.0"></a>
-  <img src="https://img.shields.io/badge/FPGA-Artix--7%20XC7A50T-8A2BE2" alt="FPGA: Artix-7 XC7A50T">
+  <a href="#hardware"><img src="https://img.shields.io/badge/FPGA-Artix--7%20XC7A50T-8A2BE2" alt="FPGA: Artix-7 XC7A50T"></a>
 </p>
 
 <p align="center">
@@ -49,7 +49,7 @@ anyone can build their own profile or their own mezzanine board.
 | Oscilloscope | 2 channels, HMCAD1511 8-bit ADC, 2 × 312–375 MS/s, 2 × 400 MS/s after LVDS delay tuning, ×1/×10 probes |
 | Signal generator | DAC904 14-bit DAC, 9.6 Vpp open circuit, 4.8 Vpp into 50 Ω. The output survives ±25 V |
 | Multimeter | ADS1220 24-bit ADC: voltage, resistance |
-| Lab power supply | 0.8–22 V with current limit: up to 20 W from a PD charger, up to 5 W from the battery. Measures voltage, current, power and energy. Below 5.5 V output, current autoranges from 0.2 µA to 3 A |
+| Lab power supply | 0.8–22 V with current limit: up to 20 W from a PD charger, up to 5 W from the battery. Measures voltage, current, power and energy. Up to 5.5 V output, current autoranges from 0.2 µA to 3 A |
 | Glitcher | A switch shorts the target supply for a time set by the FPGA to inject voltage glitches |
 | Retro console | Retro cores on the screen and HDMI, buttons, audio |
 
@@ -65,7 +65,7 @@ anyone can build their own profile or their own mezzanine board.
 | Input | 11 buttons, a clickable wheel, a power button |
 | Peripherals | 1 W speaker, microphone, vibration motor, IR receiver and transmitter, IMU, RTC, microSD, Qwiic, status LED |
 | Reference clock | 25 MHz TCXO, ±0.5 ppm: timebase and frequency counter |
-| Case | 90 × 150 × 22.5 mm, 24 mm at the SMA connectors, SLA print |
+| Case | 90 × 150 × 22.5 mm, 24 mm over the analog module, SLA print |
 
 ## How it works
 
@@ -79,11 +79,11 @@ flowchart TB
   HOST["PC"]
   subgraph DEV["Fabbit"]
     USBC["USB-C: USB 3.0, PD 3.1"]
-    MCU["CH32H417 supervisor<br/>USB, menu, microSD, power and charging<br/>ESP32-C5 Wi-Fi, buttons, IR, IMU, RTC"]
-    FPGA["Artix-7 FPGA, Colorlight i9+ module<br/>shell + profile"]
+    MCU["CH32H417 supervisor<br/>USB, menu, microSD<br/>power and charging<br/>Wi-Fi, buttons, IR, IMU"]
+    FPGA["Artix-7 FPGA<br/>Colorlight i9+ module<br/>shell + profile"]
     VID["3.5″ 640×480 screen<br/>HDMI, audio"]
-    IO["Logic analyzer: 16 inputs 0–10 V + 8 lines 1.1–4.7 V<br/>MIPI-20: SWD/JTAG + trace"]
-    AMOD["Analog module (mezzanine)<br/>oscilloscope, generator, multimeter"]
+    IO["Logic analyzer: 16 inputs 0–10 V<br/>and 8 lines 1.1–4.7 V<br/>MIPI-20: SWD, JTAG, trace"]
+    AMOD["Analog module<br/>oscilloscope, generator<br/>multimeter"]
     PSU["Lab supply 0.8–22 V<br/>glitcher"]
   end
   HOST <-->|"USB 3.0"| USBC
@@ -112,7 +112,7 @@ You pick a profile in the golden loader menu:
 
 ```mermaid
 flowchart TB
-  ON["Power-on"] --> GOLD["Golden loader from i9+ module flash<br/>menu and charging screen"]
+  ON["Power-on"] --> GOLD["Golden loader<br/>from i9+ module flash<br/>menu and charging screen"]
   GOLD -->|"profile selected"| PROF["Profile from a flash slot<br/>or microSD"]
   PROF -->|"exit"| GOLD
   GOLD -.->|"failure"| RESC["Rescue image<br/>from supervisor flash over JTAG"]
@@ -122,7 +122,7 @@ flowchart TB
 
 - **Top edge.** Port A 2×12 and port B 2×10 at 2.54 mm pitch, target power 2×2, MIPI-20.
 - **Mezzanine connector.** BergStak 2×40, 0.8 mm pitch, 9 mm stack height. It carries 35 FPGA
-  lines (10 of them LVDS pairs), supervisor SPI and I²C, power and the 25 MHz TCXO reference.
+  lines (20 of them in 10 LVDS pairs), supervisor SPI and I²C, power and the 25 MHz TCXO reference.
 
 ## Repository layout
 
