@@ -1,0 +1,12 @@
+(footprint "MECH_Area_F_MCU_25x16"
+  (version 20240108)
+  (generator "konnect")
+  (layer "F.Cu")
+  (descr "Зона F у USB-C, высота ≤ 1.5: CH32H417QEU6 (QFN128 12.3x12.3x0.85) в центре, кварц, ядро 1.23 В, дроссель 3x3x1.5, ESD USB.")
+  (attr smd exclude_from_bom exclude_from_pos_files allow_missing_courtyard)
+  (pad "" smd rect (at 0 0) (size 0.1 0.1) (layers "F.Mask")  )
+  (fp_rect (start -0.3000 -0.3000) (end 0.3000 0.3000) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (fp_rect (start -12.5 -8) (end 12.5 8) (stroke (width 0.1) (type solid)) (fill none) (layer "F.Fab"))
+  (fp_text reference "REF**" (at 0.0000 -1.3000 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))
+  (fp_text value "MECH_Area_F_MCU_25x16" (at 0.0000 1.3000 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))
+)

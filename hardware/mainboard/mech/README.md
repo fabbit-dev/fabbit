@@ -23,7 +23,9 @@ H9…H12 держат модуль аналога: SMD-стойки M2.5 H9 Wür
 Отверстия H9…H12 под экраном (H9, H10 на 0,55 мм): на F там ничего нет.
 Контур платы с отверстиями: `fabbit_mainboard_outline.svg`.
 
-Контур и расстановка в `fabbit_mainboard.kicad_pcb` ещё под прежний корпус 88 мм: обновить по этим файлам.
+В `fabbit_mainboard.kicad_pcb` контур из `fabbit_mainboard_edge_cuts.dxf` без кругов H1…H12:
+отверстия дают футпринты. Заглушки `MECH_*` из `fabbit_mech.pretty` стоят по CSV, обозначения
+и сверка в `../VERIFY.md`.
 
 ## Что задаёт корпус
 
