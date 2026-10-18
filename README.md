@@ -135,7 +135,7 @@ firmware/            прошивка супервизора CH32H417
 profiles/            содержимое карты microSD
 hardware/            платы и корпус
 ├── mainboard/       главная плата, KiCad 10
-├── adc-mezzanine/   аналоговый модуль
+├── analog-module/   аналоговый модуль
 ├── panel-adapter/   переходник дисплея
 ├── case/            корпус, FreeCAD 1.1 и STL
 └── docs/            компоненты (BOM) и проверка по даташитам

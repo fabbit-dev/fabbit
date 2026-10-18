@@ -137,7 +137,7 @@ firmware/            CH32H417 supervisor firmware
 profiles/            microSD card contents
 hardware/            boards and case
 ├── mainboard/       main board, KiCad 10
-├── adc-mezzanine/   analog module
+├── analog-module/   analog module
 ├── panel-adapter/   display adapter
 ├── case/            case, FreeCAD 1.1 and STL
 └── docs/            bill of materials and datasheet checks
