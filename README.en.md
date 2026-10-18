@@ -61,7 +61,7 @@ anyone can build their own profile or their own mezzanine board.
 | Supervisor | WCH CH32H417: menu, microSD, power and charging. 16-bit parallel UHSIF bus to the FPGA |
 | Screen | 3.5″ IPS 640×480, HDMI mirrors the screen |
 | Connectivity | USB 3.0, 5 Gbit/s. ESP32-C5: Wi-Fi 6 on 2.4 and 5 GHz, BLE 5, 802.15.4 |
-| Power | USB-C PD 3.1: charging and 5 V output up to 1 A. 1S Li-po, 2800–3000 mAh, 3–9 h runtime ([estimate, in Russian](journal/2026-10-17.md)) |
+| Power | USB-C PD 3.1: charging and 5 V output up to 1 A. 1S Li-po, 2800 mAh, 3–9 h runtime ([estimate, in Russian](journal/2026-10-17.md)) |
 | Input | 11 buttons, a clickable wheel, a power button |
 | Peripherals | 1 W speaker, microphone, vibration motor, IR receiver and transmitter, IMU, RTC, microSD, Qwiic, status LED |
 | Reference clock | 25 MHz TCXO, ±0.5 ppm: timebase and frequency counter |
