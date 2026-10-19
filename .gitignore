@@ -28,6 +28,7 @@ usage_statistics_webtalk.*
 *.json.gz
 *.fasm
 *.frames
+clockInfo.txt
 build/
 out/
 work/
@@ -40,6 +41,7 @@ work/
 *.prm
 *.svf
 *.rbf
+*.fbp
 
 # --- Симуляция --------------------------------------------------------------
 obj_dir/
@@ -52,9 +54,8 @@ __pycache__/
 *.py[cod]
 
 # --- Прошивка ---------------------------------------------------------------
-firmware/build/
-firmware/sdkconfig
-firmware/sdkconfig.old
+firmware/**/sdkconfig
+firmware/**/sdkconfig.old
 **/managed_components/
 dependencies.lock
 

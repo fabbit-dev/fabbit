@@ -130,10 +130,13 @@ flowchart TB
 gateware/            FPGA
 ├── common/          shell: bus, video, SDRAM
 ├── constraints/     pin assignments
+├── golden/          golden loader
+├── diag/            wiring checks
 ├── profiles/        profile sources
 ├── sim/             simulation
 └── tools/           build
-firmware/            CH32H417 supervisor firmware
+firmware/            supervisor firmware
+└── ports/esp32s3/   ESP32-S3 test bench
 profiles/            microSD card contents
 hardware/            boards and case
 ├── mainboard/       main board, KiCad 10
@@ -144,7 +147,7 @@ hardware/            boards and case
 host/                PC software
 ├── sigrok/          libsigrok driver
 └── tools/           utilities
-docs/img/            README images
+docs/                bus protocol, README images
 journal/             log: measurements and dead ends (in Russian)
 ```
 
