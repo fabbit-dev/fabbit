@@ -52,3 +52,25 @@ module STARTUPE2 #(
   assign EOS = 1;
   assign PREQ = 0;
 endmodule
+
+// ODDR (SAME_EDGE): D1 и D2 берутся по переднему фронту, D1 на выходе с переднего, D2 с заднего.
+module ODDR #(
+    parameter string DDR_CLK_EDGE = "SAME_EDGE",
+    parameter string SRTYPE = "SYNC"
+) (
+    output logic Q,
+    input  wire  C,
+    input  wire  CE,
+    input  wire  D1,
+    input  wire  D2,
+    input  wire  R,
+    input  wire  S
+);
+  logic d2 = 0;
+  initial Q = 0;
+  always @(posedge C) begin
+    Q  <= D1;
+    d2 <= D2;
+  end
+  always @(negedge C) Q <= d2;
+endmodule
