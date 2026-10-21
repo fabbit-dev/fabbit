@@ -1,21 +1,40 @@
 `default_nettype none
 
-// Оболочка профиля: отвечает ESP на ID ("FBPR", версия, режим 1, id профиля) и принимает TUNE.
-// Остальные команды игнорирует. Вход в профиль: golden делает IPROG на слот; выход в меню —
-// перезапуск питания модуля (ICAP в openXC7 не работает, docs/protocol.md).
+// Оболочка профиля: ответ ESP по шине quad SPI (docs/bus-protocol.md) в домене clk (100 МГц).
+//   01 ID          чтение 8: "FBPR", версия, режим 1, id профиля
+//   07 TUNE        ключ: момент выдачи данных
+//   22 REBOOT      ключ: IPROG на адрес 0 (golden), если UseIcap (сборка Vivado)
+//   30 CSR_W       запись 4·n: регистры профиля с индекса addr[7:0], слова старшим байтом вперёд
+//   31 CSR_R       чтение 4·n: то же на чтение
+//   32 STREAM      запись n: байты в поток канала addr[7:0] (без обратного давления: свободное место
+//                  ESP узнаёт из регистра профиля)
+// Регистры и поток видит профиль в домене clk; переход в свои такты — его забота (common/cdc).
 module profile_shell #(
     parameter logic [15:0] ProfileId = 16'd0,
-    parameter logic [ 7:0] Version = 8'd1
+    parameter logic [ 7:0] Version = 8'd2,
+    parameter bit          UseIcap = 1'b0
 ) (
-    input  wire       clk,       // 100 МГц
-    input  wire       esp_sck,
-    input  wire       esp_cs_n,
-    input  wire [3:0] d_in,
-    output wire [3:0] d_out,
-    output wire       d_oe,
-    output wire       irq        // 1: профиль готов
+    input  wire        clk,         // 100 МГц
+    input  wire        esp_sck,
+    input  wire        esp_cs_n,
+    input  wire  [3:0] d_in,
+    output wire  [3:0] d_out,
+    output wire        d_oe,
+    output wire        irq,         // 1: профиль готов
+    // регистры профиля
+    output logic        csr_we,
+    output logic [ 7:0] csr_waddr,
+    output logic [31:0] csr_wdata,
+    output wire  [ 7:0] csr_raddr,
+    input  wire  [31:0] csr_rdata,  // комбинационно от csr_raddr, читается через такт
+    // поток байтов
+    output logic        st_valid,
+    output logic [ 7:0] st_chan,
+    output logic [ 7:0] st_data
 );
   localparam logic [31:0] Key = "FBKY";
+  localparam logic [7:0] CmdId = 8'h01, CmdTune = 8'h07, CmdReboot = 8'h22;
+  localparam logic [7:0] CmdCsrW = 8'h30, CmdCsrR = 8'h31, CmdStream = 8'h32;
 
   logic [7:0] rd_start = 8'd16;
   logic       rd_fall = 1'b1;
@@ -24,21 +43,9 @@ module profile_shell #(
   logic [7:0] rd_data = 8'd0;
   logic [23:0] addr;
   qspi_slave u_q (
-      .clk      (clk),
-      .rd_start (rd_start),
-      .rd_fall  (rd_fall),
-      .sck      (esp_sck),
-      .cs_n     (esp_cs_n),
-      .d_in     (d_in),
-      .d_out    (d_out),
-      .d_oe     (d_oe),
-      .hdr_valid(hdr_valid),
-      .cmd      (cmd),
-      .addr     (addr),
-      .wr_valid (wr_valid),
-      .wr_data  (wr_data),
-      .rd_req   (rd_req),
-      .rd_data  (rd_data),
+      .clk(clk), .rd_start(rd_start), .rd_fall(rd_fall), .sck(esp_sck), .cs_n(esp_cs_n),
+      .d_in(d_in), .d_out(d_out), .d_oe(d_oe), .hdr_valid(hdr_valid), .cmd(cmd), .addr(addr),
+      .wr_valid(wr_valid), .wr_data(wr_data), .rd_req(rd_req), .rd_data(rd_data),
       .frame_end(frame_end)
   );
   assign irq = 1'b1;
@@ -46,27 +53,61 @@ module profile_shell #(
   logic [7:0] f_cmd = 8'd0;
   logic [23:0] f_addr = 24'd0;
   logic [31:0] f_key = 32'd0;
-  logic [3:0] f_n = 4'd0;
-  logic [2:0] rd_i = 3'd0;
-  logic [63:0] id_word;
-  assign id_word = {"FBPR", Version, 8'd1, ProfileId};
+  logic [3:0] f_n = 4'd0;      // байтов данных в кадре, до 15
+  logic [9:0] rd_i = 10'd0;    // номер байта чтения в кадре
+  logic [1:0] wb = 2'd0;       // байт внутри слова CSR_W
+  logic [7:0] widx = 8'd0;
+  wire [63:0] id_word = {"FBPR", Version, 8'd1, ProfileId};
+
+  assign csr_raddr = f_addr[7:0] + 8'(rd_i >> 2);
 
   always_ff @(posedge clk) begin
+    csr_we   <= 1'b0;
+    st_valid <= 1'b0;
     if (hdr_valid) begin
       f_cmd  <= cmd;
       f_addr <= addr;
       f_n    <= 4'd0;
-      rd_i   <= 3'd0;
+      rd_i   <= 10'd0;
+      wb     <= 2'd0;
+      widx   <= addr[7:0];
     end
-    if (rd_req && !hdr_valid) rd_i <= rd_i + 3'd1;
-    rd_data <= (f_cmd == 8'h01) ? id_word[63-8*rd_i-:8] : 8'h00;
+    if (rd_req && !hdr_valid) rd_i <= rd_i + 10'd1;
+    case (f_cmd)
+      CmdId:   rd_data <= id_word[63-8*rd_i[2:0]-:8];
+      CmdCsrR: rd_data <= csr_rdata[31-8*rd_i[1:0]-:8];
+      default: rd_data <= 8'h00;
+    endcase
     if (wr_valid) begin
       f_key <= {f_key[23:0], wr_data};
       if (f_n != 4'hF) f_n <= f_n + 4'd1;
+      if (f_cmd == CmdCsrW) begin
+        csr_wdata <= {csr_wdata[23:0], wr_data};
+        wb <= wb + 2'd1;
+        if (wb == 2'd3) begin
+          csr_we    <= 1'b1;
+          csr_waddr <= widx;
+          widx      <= widx + 8'd1;
+        end
+      end
+      if (f_cmd == CmdStream) begin
+        st_valid <= 1'b1;
+        st_chan  <= f_addr[7:0];
+        st_data  <= wr_data;
+      end
     end
-    if (frame_end && f_cmd == 8'h07 && f_n == 4'd4 && f_key == Key) begin
+    if (frame_end && f_cmd == CmdTune && f_n == 4'd4 && f_key == Key) begin
       rd_start <= f_addr[7:0];
       rd_fall  <= f_addr[8];
     end
   end
+
+  // возврат в golden: IPROG на адрес 0 (ICAP работает только в сборке Vivado)
+  wire reboot = frame_end && f_cmd == CmdReboot && f_n == 4'd4 && f_key == Key;
+  if (UseIcap) begin : g_icap
+    icap_ctrl u_icap (
+        .clk(clk), .rd_start(1'b0), .rd_reg(5'd0), .iprog(reboot), .wbstar(32'd0), .timer(32'd0),
+        .busy(), .rdata(), .rvalid(), .dbg());
+  end
+
 endmodule

@@ -336,7 +336,30 @@ esp_err_t fl_boot(uint32_t addr) { return fl_write(FL_CMD_BOOT, addr, KEY, 4); }
 
 esp_err_t fl_set_wdt(uint32_t units) { return simple(FL_CMD_SET_WDT, units & 0xFFFFFF, 100); }
 
-esp_err_t fl_reboot_golden(void) { return fl_write(FL_CMD_REBOOT_GOLDEN, 0, NULL, 0); }
+esp_err_t fl_reboot_golden(void) { return fl_write(FL_CMD_REBOOT_GOLDEN, 0, KEY, 4); }
+
+esp_err_t fl_csr_write(uint8_t idx, const uint32_t *v, size_t n)
+{
+    uint8_t b[256];
+    if (n > sizeof b / 4) return ESP_ERR_INVALID_SIZE;
+    for (size_t i = 0; i < n; i++) {
+        b[4 * i] = v[i] >> 24;
+        b[4 * i + 1] = v[i] >> 16;
+        b[4 * i + 2] = v[i] >> 8;
+        b[4 * i + 3] = v[i];
+    }
+    return fl_write(FL_CMD_CSR_W, idx, b, 4 * n);
+}
+
+esp_err_t fl_csr_read(uint8_t idx, uint32_t *v, size_t n)
+{
+    uint8_t b[256];
+    if (n > sizeof b / 4) return ESP_ERR_INVALID_SIZE;
+    ESP_RETURN_ON_ERROR(fl_read(FL_CMD_CSR_R, idx, b, 4 * n), TAG, "csr");
+    for (size_t i = 0; i < n; i++)
+        v[i] = (uint32_t)b[4 * i] << 24 | b[4 * i + 1] << 16 | b[4 * i + 2] << 8 | b[4 * i + 3];
+    return ESP_OK;
+}
 
 uint32_t fl_crc32(uint32_t crc, const uint8_t *p, size_t n)
 {

@@ -9,7 +9,7 @@ FR2BIT  := $(APIO)/openxc7/bin/xc7frames2bit
 DB      := $(APIO)/openxc7/share/nextpnr/external/prjxray-db/artix7
 PART    := xc7a50tfgg484-1
 CHIPDB  := $(APIO)/openxc7/chipdb/xc7a50tfgg484.bin
-COMMON  := $(wildcard common/*.sv)
+COMMON  := $(wildcard common/*.sv) common/cdc/reset_sync.sv
 # видеотракт: пакет первым, остальное после
 VIDEO   := common/video/video_pkg.sv $(filter-out common/video/video_pkg.sv,$(wildcard common/video/*.sv))
 PNR_FLAGS ?= --seed 1
@@ -78,7 +78,20 @@ golden_vivado: | build
 
 viv_%: $$($$*_SRC) | build
 	vivado -mode batch -nojournal -log build/vivado_$*.log -source tools/build_vivado.tcl \
-	  -tclargs $(or $($*_TOP),$*) "$($*_SRC)" "$($*_XDC)" "$($*_VIVPARAMS)"
+	  -tclargs $(or $($*_TOP),$*) "$($*_SRC)" "$($*_XDC)" "$($*_VIVPARAMS)" "$($*_DEFS)"
+
+# оболочка профиля глазами ESP: ID, CSR_W/CSR_R, STREAM
+sim_shell: | build
+	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_shell -Mdir build/tb_shell \
+	  common/qspi_slave.sv common/icap_ctrl.sv sim/xilinx_stubs.sv common/profile_shell.sv sim/tb_shell.sv > build/tb_shell.log 2>&1
+	build/tb_shell/Vtb_shell | grep -E '^(ok|FAIL|ВСЁ|ОШИБОК|TIMEOUT)'
+
+# платформа: асинхронная FIFO на несвязанных тактах
+CDC := common/mem/ram_sdp.sv common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/cdc/fifo_async.sv
+sim_cdc: | build
+	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_cdc -Mdir build/tb_cdc \
+	  $(CDC) sim/tb_cdc.sv > build/tb_cdc.log 2>&1
+	build/tb_cdc/Vtb_cdc | grep -E '^(ok|FAIL|ВСЁ|ОШИБОК|TIMEOUT)'
 
 # видеотракт: Verilator (iverilog не берёт пакеты и очереди)
 sim_video: | build
@@ -88,5 +101,5 @@ sim_video: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_video golden_vivado $(TARGETS)
+.PHONY: all clean sim sim_video sim_cdc sim_shell golden_vivado $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames
