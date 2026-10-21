@@ -6,10 +6,11 @@
 //   clk       = VCO / 42 = 21,429 МГц  (NTSC 21,477, −0,23 %: кадр 59,96 Гц): ядро NES, CE внутри
 //   fclk      = VCO / 14 = 64,286 МГц  = 3 × clk, синфазно: контроллер SDRAM (sdram_nes)
 //   sdram_clk = VCO / 14, сдвиг SdramPhase° + динамический (PSEN, шаг VCO/56 = 19,8 пс,
-//               784 шага на период):
-//               такт микросхемы, наружу через ODDR. Фазу подбирают по «глазу» (diag/sdram_eye).
+//               784 шага на период): такт микросхемы, наружу через ODDR.
+// SdramPhase = середина окна, найденного diag/sdram_eye на стенде 2026-10-21: окно 13,3 нс из 15,56 нс
+// (180° + 215 шагов ≈ 279°), 154 прохода по 1M слов без ошибок.
 module nes_clocks #(
-    parameter real SdramPhase = 180.0
+    parameter real SdramPhase = 279.0
 ) (
     input  wire clk_25m,
     input  wire psclk,      // такт интерфейса сдвига фазы (шина ESP, 100 МГц)

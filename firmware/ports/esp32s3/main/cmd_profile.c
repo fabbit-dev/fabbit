@@ -1,4 +1,4 @@
-// Консоль профилей: регистры (CSR) и «глаз» SDRAM (профиль diag/sdram_eye).
+// Консоль профилей: регистры (CSR), «глаз» SDRAM (diag/sdram_eye) и профиль NES.
 #include "cmd_profile.h"
 
 #include <inttypes.h>
@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "esp_console.h"
+#include "esp_heap_caps.h"
 #include "esp_timer.h"
 #include "fpga_link.h"
 #include "freertos/FreeRTOS.h"
@@ -131,6 +132,96 @@ static int cmd_soak(int argc, char **argv)
     return e != 0;
 }
 
+// профиль NES: номера регистров (gateware/profiles/nes/nes_top.sv)
+enum { NES_ID = 0, NES_CTRL = 1, NES_STAT = 2, NES_FREE = 3, NES_RX = 4, NES_JOY = 5 };
+#define NES_KEY 0x4E530000u  // "NS" в старших 16 битах: без него управление игнорируется
+#define NES_ROM_MAX (16 + 512 * 1024 + 256 * 1024)  // PRG ≤ 512 КБ, CHR ≤ 256 КБ (nes_sdram.sv)
+
+static bool nes_present(void)
+{
+    fl_id_t id;
+    if (fl_id(&id) != ESP_OK || strcmp(id.magic, "FBPR")) {
+        printf("нет профиля (ID %s)\n", id.magic);
+        return false;
+    }
+    if (fl_csr_get(NES_ID) != 0x464E4553) {  // "FNES"
+        printf("загружен не профиль NES\n");
+        return false;
+    }
+    return true;
+}
+
+// rom <файл>: загрузить .nes (из /data/roms/, если путь не указан) в профиль NES
+static int cmd_rom(int argc, char **argv)
+{
+    if (argc < 2 || !nes_present()) return 1;
+    char path[160];
+    if (strchr(argv[1], '/')) snprintf(path, sizeof path, "%s", argv[1]);
+    else snprintf(path, sizeof path, "/data/roms/%s%s", argv[1], strchr(argv[1], '.') ? "" : ".nes");
+    FILE *f = fopen(path, "rb");
+    if (!f) {
+        printf("нет %s\n", path);
+        return 1;
+    }
+    uint8_t *rom = heap_caps_malloc(NES_ROM_MAX + 8192, MALLOC_CAP_SPIRAM);
+    size_t n = rom ? fread(rom, 1, NES_ROM_MAX + 8192, f) : 0;
+    fclose(f);
+    if (!rom || n < 16 || memcmp(rom, "NES\x1a", 4)) {
+        printf("%s: не файл iNES\n", path);
+        free(rom);
+        return 1;
+    }
+    size_t need = 16 + rom[4] * 16384u + rom[5] * 8192u;
+    printf("%s: PRG %u × 16 КБ, CHR %u × 8 КБ, маппер %u\n", path, rom[4], rom[5],
+           (rom[6] >> 4) | (rom[7] & 0xF0));
+    if (rom[4] > 32 || rom[5] > 32 || need > n) {
+        printf("не влезает или обрезан: PRG до 512 КБ, CHR до 256 КБ (DQM SDRAM заземлены)\n");
+        free(rom);
+        return 1;
+    }
+    int64_t t0 = esp_timer_get_time();
+    fl_csr_set(NES_CTRL, NES_KEY | 1);
+    int64_t end = esp_timer_get_time() + 1000000;
+    while (!(fl_csr_get(NES_STAT) & 1) && esp_timer_get_time() < end) vTaskDelay(1);
+    size_t sent = 0;
+    while (sent < need) {
+        uint32_t free_b = fl_csr_get(NES_FREE);
+        size_t k = need - sent;
+        if (k > free_b) k = free_b;
+        if (k > FL_BUF_SIZE) k = FL_BUF_SIZE;
+        if (k < 256 && k < need - sent) {
+            vTaskDelay(1);
+            continue;
+        }
+        if (fl_write(FL_CMD_STREAM, 0, rom + sent, k) != ESP_OK) break;
+        sent += k;
+    }
+    free(rom);
+    end = esp_timer_get_time() + 3000000;
+    uint32_t st;
+    while (((st = fl_csr_get(NES_STAT)) & 1) && esp_timer_get_time() < end) vTaskDelay(1);
+    int64_t us = esp_timer_get_time() - t0;
+    printf("ROM %u Б за %lld мс (%.2f МБ/с), принято ПЛИС %" PRIu32 ": %s\n", (unsigned)sent,
+           us / 1000, sent / (double)us, fl_csr_get(NES_RX),
+           (st & 4) ? "ошибка загрузчика" : (st & 2) ? "запущен" : "не завершён");
+    return (st & 6) != 2;
+}
+
+// joy [биты]: джойстик 1 (A B Select Start Вверх Вниз Влево Вправо = биты 0..7)
+static int cmd_joy(int argc, char **argv)
+{
+    if (!nes_present()) return 1;
+    if (argc > 1) fl_csr_set(NES_JOY, strtoul(argv[1], NULL, 0) & 0xFF);
+    printf("JOY %02" PRIx32 "\n", fl_csr_get(NES_JOY));
+    return 0;
+}
+
+static int cmd_nesreset(int argc, char **argv)
+{
+    if (!nes_present()) return 1;
+    return fl_csr_set(NES_CTRL, NES_KEY | 2) != ESP_OK;
+}
+
 static void reg(const char *name, const char *help, esp_console_cmd_func_t f)
 {
     esp_console_cmd_t c = {.command = name, .help = help, .func = f};
@@ -142,4 +233,7 @@ void cmd_profile_register(void)
     reg("csr", "csr <индекс> [значение]: регистр профиля", cmd_csr);
     reg("eye", "eye [шаг] [мс]: перебор фазы SDRAM (профиль sdram_eye), середина окна", cmd_eye);
     reg("soak", "soak [с]: тест SDRAM на текущей фазе (профиль sdram_eye)", cmd_soak);
+    reg("rom", "rom <файл>: загрузить .nes в профиль NES (/data/roms/)", cmd_rom);
+    reg("joy", "joy [биты]: кнопки джойстика 1 профиля NES", cmd_joy);
+    reg("nesreset", "сброс ядра NES", cmd_nesreset);
 }
