@@ -11,6 +11,7 @@ PART    := xc7a50tfgg484-1
 CHIPDB  := $(APIO)/openxc7/chipdb/xc7a50tfgg484.bin
 COMMON  := $(wildcard common/*.sv) common/cdc/reset_sync.sv
 # видеотракт: пакет первым, остальное после
+NES_DIR := profiles/nes
 VIDEO   := common/video/video_pkg.sv $(filter-out common/video/video_pkg.sv,$(wildcard common/video/*.sv))
 PNR_FLAGS ?= --seed 1
 
@@ -40,6 +41,16 @@ hdmi_bars_SLANG  := 1
 hdmi_bars_GEN    := Frac=0
 # Vivado: hdmi_bars с дробным MMCM, 25,1875 МГц
 hdmi_bars_VIVPARAMS := Frac=1
+
+# SDRAM на 64,3 МГц: «глаз» по фазе MMCM (Vivado: make viv_sdram_eye). Файлы ядра первыми:
+# наш `default_nettype none` не должен действовать на них
+sdram_eye_SRC := $(NES_DIR)/nes_config_pkg.sv $(NES_DIR)/core/src/sdram_nes.v \
+                 common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/qspi_slave.sv common/icap_ctrl.sv \
+                 common/profile_shell.sv common/profile_bus.sv $(NES_DIR)/nes_clocks.sv \
+                 $(NES_DIR)/nes_sdram.sv $(NES_DIR)/sdram_tester.sv diag/sdram_eye.sv
+sdram_eye_DEFS := NANO
+sdram_eye_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc constraints/sdram.xdc \
+                 constraints/nes_clocks.xdc
 
 TARGETS := golden_top wiretest_p3 blink_a blink_b wiretest_hdmi hdmi_bars
 all: $(addprefix build/,$(addsuffix .bit,$(TARGETS)))
@@ -80,6 +91,15 @@ viv_%: $$($$*_SRC) | build
 	vivado -mode batch -nojournal -log build/vivado_$*.log -source tools/build_vivado.tcl \
 	  -tclargs $(or $($*_TOP),$*) "$($*_SRC)" "$($*_XDC)" "$($*_VIVPARAMS)" "$($*_DEFS)"
 
+# память NES: sdram_nes + тестер против модели SDRAM, в окне фазы и вне его
+NES_MEM := common/cdc/sync_bit.sv $(NES_DIR)/nes_config_pkg.sv $(NES_DIR)/core/src/sdram_nes.v \
+           $(NES_DIR)/nes_sdram.sv $(NES_DIR)/sdram_tester.sv
+sim_sdram: | build
+	verilator --binary --timing --timescale 1ns/1ps -Wno-fatal -Wno-lint -Wno-style --top-module tb_sdram \
+	  -Mdir build/tb_sdram sim/xilinx_stubs.sv $(NES_MEM) sim/sdram_model.sv sim/tb_sdram.sv > build/tb_sdram.log 2>&1
+	build/tb_sdram/Vtb_sdram +expect=ok | grep -E '^(ok|FAIL|  )'
+	build/tb_sdram/Vtb_sdram +expect=fail +phase_ps=6000 | grep -E '^(ok|FAIL|ВСЁ|ОШИБОК)'
+
 # оболочка профиля глазами ESP: ID, CSR_W/CSR_R, STREAM
 sim_shell: | build
 	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_shell -Mdir build/tb_shell \
@@ -101,5 +121,5 @@ sim_video: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_video sim_cdc sim_shell golden_vivado $(TARGETS)
+.PHONY: all clean sim sim_video sim_cdc sim_shell sim_sdram golden_vivado $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames
