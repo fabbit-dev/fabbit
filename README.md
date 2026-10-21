@@ -128,10 +128,13 @@ flowchart TB
 gateware/            ПЛИС
 ├── common/          оболочка: шина, видео, SDRAM
 ├── constraints/     назначение ножек
+├── golden/          golden-загрузчик
+├── diag/            проверки проводки
 ├── profiles/        исходники профилей
 ├── sim/             симуляция
 └── tools/           сборка
-firmware/            прошивка супервизора CH32H417
+firmware/            прошивка супервизора
+└── ports/esp32s3/   стенд на ESP32-S3
 profiles/            содержимое карты microSD
 hardware/            платы и корпус
 ├── mainboard/       главная плата, KiCad 10
@@ -142,7 +145,7 @@ hardware/            платы и корпус
 host/                ПО для ПК
 ├── sigrok/          драйвер libsigrok
 └── tools/           утилиты
-docs/img/            картинки README
+docs/                протокол шины, картинки README
 journal/             дневник: замеры и тупики
 ```
 
