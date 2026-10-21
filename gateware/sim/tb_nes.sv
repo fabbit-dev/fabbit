@@ -4,6 +4,7 @@
 // nes_system целиком на модели SDRAM: ROM (+rom=файл.hex, байт на строку) идёт потоком в загрузчик,
 // ядро работает +frames=N кадров, кадр 256×240 пишется в +ppm=файл и печатается его CRC-32.
 // Проверки: ROM загружен без ошибки, кадр не пустой (больше одного цвета), в SDRAM нет нарушений.
+// Кнопки: +press=08 +press_at=10 +press_len=6 (nes15: Start на 10-м кадре → поле 4×4 к 40-му).
 module tb_nes;
   import nes_palette_pkg::*;
 
@@ -39,7 +40,7 @@ module tb_nes;
   nes_system dut (
       .nclk(nclk), .fclk(fclk), .sdram_clk_in(sdram_clk), .rst(rst), .load_go(load_go),
       .reset_go(1'b0), .rom_valid(rom_valid), .rom_ready(rom_ready), .rom_data(rom[rom_pos]),
-      .joy(8'h00), .loading(loading), .loader_done(done), .loader_fail(fail),
+      .joy(joy), .loading(loading), .loader_done(done), .loader_fail(fail),
       .reset_nes(reset_nes), .fb_we(fb_we), .fb_x(fb_x), .fb_y(fb_y), .fb_d(fb_d), .sample(),
       .scanline(scanline), .sdram_clk(sd_clk), .sdram_a(sd_a), .sdram_ba(sd_ba),
       .sdram_ras_n(ras_n), .sdram_cas_n(cas_n), .sdram_we_n(we_n), .sdram_dq(sd_dq));
@@ -48,10 +49,21 @@ module tb_nes;
       .clk(sd_clk), .cke(1'b1), .cs_n(1'b0), .ras_n(ras_n), .cas_n(cas_n), .we_n(we_n),
       .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(sd_dq));
 
+  // кнопки: +press=биты +press_at=кадр +press_len=кадров (как CSR 5 профиля)
+  logic [7:0] joy = 8'h00;
+  int frames = 0;
+  int press = 0, press_at = 0, press_len = 0;
+  initial begin
+    void'($value$plusargs("press=%h", press));
+    void'($value$plusargs("press_at=%d", press_at));
+    void'($value$plusargs("press_len=%d", press_len));
+  end
+  always @(posedge nclk)
+    joy <= (frames >= press_at && frames < press_at + press_len) ? 8'(press) : 8'h00;
+
   // кадр
   logic [8:0] fb [256 * 240];
   always @(posedge nclk) if (fb_we) fb[{fb_y, fb_x}] = fb_d;
-  int frames = 0;
   logic [8:0] line_d = 0;
   always @(posedge nclk) begin
     line_d <= scanline;
