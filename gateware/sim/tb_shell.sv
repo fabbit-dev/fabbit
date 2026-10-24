@@ -2,10 +2,11 @@
 `timescale 1ns / 1ps
 
 // profile_shell глазами ESP: ID, CSR_W/CSR_R (несколько слов подряд), STREAM (канал и байты),
-// ключ TUNE. Профиль в тесте: 16 регистров с записью и чтением, приёмник потока.
+// PAD (слово целиком, кадр не из 4 байт отброшен), ключ TUNE. Профиль в тесте: 16 регистров с записью и чтением, приёмник потока.
 module tb_shell;
-  logic clk = 0;
+  logic clk = 0, rst = 1;
   always #5 clk = ~clk;  // 100 МГц
+  initial #200ns rst = 0;
 
   logic sck = 0, cs_n = 1;
   logic [3:0] m_out = 0;
@@ -14,7 +15,10 @@ module tb_shell;
   wire s_oe;
   assign d_bus = m_oe ? m_out : (s_oe ? s_out : 4'bzzzz);
 
-  wire csr_we, st_valid, irq;
+  wire csr_we, st_valid, irq, pad_stb;
+  wire [31:0] pad;
+  int pad_n = 0;
+  always @(posedge clk) if (pad_stb) pad_n++;
   wire [7:0] csr_waddr, csr_raddr, st_chan, st_data;
   wire [31:0] csr_wdata;
   logic [31:0] regs [16];
@@ -31,10 +35,10 @@ module tb_shell;
     end
 
   profile_shell #(.ProfileId(16'h0042)) dut (
-      .clk(clk), .esp_sck(sck), .esp_cs_n(cs_n), .d_in(d_bus), .d_out(s_out), .d_oe(s_oe),
-      .irq(irq), .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata),
+      .clk(clk), .rst(rst), .esp_sck(sck), .esp_cs_n(cs_n), .d_in(d_bus), .d_out(s_out),
+      .d_oe(s_oe), .irq(irq), .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata),
       .csr_raddr(csr_raddr), .csr_rdata(csr_rdata), .st_valid(st_valid), .st_chan(st_chan),
-      .st_data(st_data));
+      .st_data(st_data), .pad(pad), .pad_stb(pad_stb));
 
   // ---- ESP: quad SPI 10 МГц, 8 dummy, как fpga_link ----
   localparam time T = 100ns;
@@ -125,6 +129,16 @@ module tb_shell;
       foreach (st_got[i]) if (st_got[i] != 8'(i * 7 + 3)) ok = 0;
       check(ok, $sformatf("STREAM: %0d байт в канал %0d по порядку", st_got.size(), st_ch));
     end
+
+    {wbuf[0], wbuf[1], wbuf[2], wbuf[3]} = 32'h0001_8011;
+    q_write(8'h33, 0, 4);
+    check(pad == 32'h0001_8011 && pad_n == 1,
+          $sformatf("PAD: слово %08h, стробов %0d", pad, pad_n));
+    {wbuf[0], wbuf[1], wbuf[2]} = 24'hFFFFFF;
+    q_write(8'h33, 0, 3);
+    {wbuf[0], wbuf[1], wbuf[2], wbuf[3], wbuf[4]} = 40'hFF_FFFF_FFFF;
+    q_write(8'h33, 0, 5);
+    check(pad == 32'h0001_8011 && pad_n == 1, "PAD из 3 и 5 байт отброшен");
 
     {wbuf[0], wbuf[1], wbuf[2], wbuf[3]} = "FBKZ";
     q_write(8'h07, 24'h000011, 4);

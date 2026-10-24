@@ -63,13 +63,14 @@ sdram_eye_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.
 
 # профиль NES (Vivado: make viv_nes_top): ядро первыми, затем оболочка, видео и верх
 nes_top_SRC := $(NES_CORE) $(VIDEO) common/mem/ram_sdp.sv common/cdc/sync_bit.sv common/cdc/reset_sync.sv \
-               common/cdc/fifo_async.sv common/qspi_slave.sv common/icap_ctrl.sv common/profile_shell.sv \
-               common/profile_bus.sv $(NES_DIR)/nes_clocks.sv \
+               common/cdc/fifo_async.sv common/cdc/cdc_word.sv common/qspi_slave.sv common/icap_ctrl.sv \
+               common/profile_shell.sv common/profile_bus.sv $(NES_DIR)/nes_clocks.sv $(NES_DIR)/nes_pad.sv \
                $(NES_DIR)/nes_palette_pkg.sv $(NES_DIR)/nes_palette.sv $(NES_DIR)/nes_sdram.sv \
                $(NES_DIR)/nes_system.sv $(NES_DIR)/nes_top.sv
 nes_top_DEFS := NANO
 nes_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc constraints/hdmi.xdc \
-               constraints/sdram.xdc constraints/nes_clocks.xdc constraints/nes_top.xdc
+               constraints/sdram.xdc constraints/nes_clocks.xdc constraints/nes_top.xdc \
+               constraints/vivado_profile.xdc
 
 TARGETS := golden_top wiretest_p3 blink_a blink_b wiretest_hdmi hdmi_bars
 all: $(addprefix build/,$(addsuffix .bit,$(TARGETS)))
@@ -135,6 +136,12 @@ sim_shell: | build
 	  common/qspi_slave.sv common/icap_ctrl.sv sim/xilinx_stubs.sv common/profile_shell.sv sim/tb_shell.sv > build/tb_shell.log 2>&1
 	build/tb_shell/Vtb_shell | grep -E '^(ok|FAIL|ВСЁ|ОШИБОК|TIMEOUT)'
 
+# кнопки: слово пада через cdc_word (шина → ядро NES), раскладка и турбо nes_pad
+sim_pad: | build
+	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_pad -Mdir build/tb_pad \
+	  common/cdc/sync_bit.sv common/cdc/cdc_word.sv $(NES_DIR)/nes_pad.sv sim/tb_pad.sv > build/tb_pad.log 2>&1
+	build/tb_pad/Vtb_pad | grep -E '^(ok|FAIL|ВСЁ|ОШИБОК|TIMEOUT)'
+
 # платформа: асинхронная FIFO на несвязанных тактах
 CDC := common/mem/ram_sdp.sv common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/cdc/fifo_async.sv
 sim_cdc: | build
@@ -150,5 +157,5 @@ sim_video: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_video sim_cdc sim_shell sim_sdram sim_nes golden_vivado $(TARGETS)
+.PHONY: all clean sim sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames
