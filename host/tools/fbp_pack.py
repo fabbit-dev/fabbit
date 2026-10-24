@@ -8,6 +8,8 @@
   48 u32 COR0 после правки   52..59 резерв   60 u32 CRC32 байтов 0..59
 Правка: openXC7 пишет COR0 с OSCFSEL=0 (CCLK ~3 МГц, слот грузится ~7 с). Ставим поле частоты
 как у Vivado с CONFIGRATE 33. CRC конфигурации в битстримах openXC7 нет, правка безопасна.
+Битстрим Vivado (есть запись регистра CRC) не правится: правка ломает CRC, ПЛИС не стартует из слота
+(STAT: CRC Error). Поле частоты у него и так задано CONFIGRATE.
 
 python3 fbp_pack.py <in.bit> <out.fbp> --id N --name ИМЯ [--rate-from 0x02423FE5]
 """
@@ -17,6 +19,7 @@ import zlib
 
 SYNC = b'\xaa\x99\x55\x66'
 COR0_WRITE = 0x30012001  # type1 write COR0, 1 слово
+CRC_WRITE = 0x30000001   # type1 write CRC, 1 слово: есть только в битстримах Vivado
 OSCFSEL_MASK = 0x3F << 17
 
 
@@ -36,14 +39,23 @@ def bit_payload(data: bytes) -> bytes:
     return data
 
 
-def patch_cor0(img: bytearray, rate_from: int) -> int:
+def cor0_pos(img: bytes) -> int:
     i = img.find(SYNC)
     if i < 0:
         raise ValueError('нет sync')
-    w = struct.pack('>I', COR0_WRITE)
-    j = img.find(w, i)
+    j = img.find(struct.pack('>I', COR0_WRITE), i)
     if j < 0 or j - i > 256:
         raise ValueError('нет записи COR0 в заголовке потока')
+    return j + 4
+
+
+def read_cor0(img: bytes) -> int:
+    j = cor0_pos(img)
+    return struct.unpack('>I', img[j:j + 4])[0]
+
+
+def patch_cor0(img: bytearray, rate_from: int) -> int:
+    j = cor0_pos(img) - 4
     old = struct.unpack('>I', img[j + 4:j + 8])[0]
     new = (old & ~OSCFSEL_MASK) | (rate_from & OSCFSEL_MASK)
     img[j + 4:j + 8] = struct.pack('>I', new)
@@ -60,7 +72,11 @@ def main():
                     help='COR0 Vivado с нужным CONFIGRATE, берётся только поле OSCFSEL')
     a = ap.parse_args()
     img = bytearray(bit_payload(open(a.inp, 'rb').read()))
-    cor0 = patch_cor0(img, a.rate_from)
+    if img.find(struct.pack('>I', CRC_WRITE), img.find(SYNC)) >= 0:
+        cor0 = read_cor0(img)
+        print('битстрим с CRC (Vivado): COR0 не правится')
+    else:
+        cor0 = patch_cor0(img, a.rate_from)
     name = a.name.encode()[:31]
     hdr = struct.pack('<4sHBBII32sI8x', b'FBP1', a.id, 0, 1, len(img), zlib.crc32(img),
                       name.ljust(32, b'\0'), cor0)

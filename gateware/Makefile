@@ -69,7 +69,8 @@ nes_top_SRC := $(NES_CORE) $(VIDEO) common/mem/ram_sdp.sv common/cdc/sync_bit.sv
                $(NES_DIR)/nes_system.sv $(NES_DIR)/nes_top.sv
 nes_top_DEFS := NANO
 nes_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc constraints/hdmi.xdc \
-               constraints/sdram.xdc constraints/nes_clocks.xdc constraints/nes_top.xdc
+               constraints/sdram.xdc constraints/nes_clocks.xdc constraints/nes_top.xdc \
+               constraints/vivado_profile.xdc
 
 TARGETS := golden_top wiretest_p3 blink_a blink_b wiretest_hdmi hdmi_bars
 all: $(addprefix build/,$(addsuffix .bit,$(TARGETS)))
