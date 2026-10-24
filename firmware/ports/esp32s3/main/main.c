@@ -10,6 +10,7 @@
 #include "esp_log.h"
 #include "esp_random.h"
 #include "esp_timer.h"
+#include "cmd_menu.h"
 #include "cmd_pad.h"
 #include "cmd_profile.h"
 #include "fpga_link.h"
@@ -459,6 +460,7 @@ void app_main(void)
     reg("osd", "osd <test|on|off|fill x y w h c>: плоскость меню golden", cmd_osd);
     cmd_profile_register();
     cmd_pad_register();
+    cmd_menu_register();
     printf("fabbit loader: шина %" PRIu32 " Hz\n", fl_get_freq());
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
 }
