@@ -33,8 +33,8 @@ static int cmd_status(int argc, char **argv)
     if (fl_status(&st) != ESP_OK) return 1;
     char bs[96];
     fl_bootsts_str(st.bootsts, bs, sizeof bs);
-    printf("STATUS busy=%u err=%u code=%u bootsts=%08" PRIx32 " (%s)\n", st.busy, st.error,
-           st.err_code, st.bootsts, bs);
+    printf("STATUS busy=%u err=%u code=%u bootsts=%08" PRIx32 " (%s) osd=%u кадр %u\n", st.busy,
+           st.error, st.err_code, st.bootsts, bs, st.osd_shown, st.frames);
     return 0;
 }
 
@@ -365,6 +365,52 @@ static int cmd_icapdbg(int argc, char **argv)
 
 static int cmd_golden(int argc, char **argv) { return fl_reboot_golden() != ESP_OK; }
 
+// osd <test|on|off|fill x y w h c>: плоскость меню golden
+static int cmd_osd(int argc, char **argv)
+{
+    if (argc < 2) return 1;
+    if (!strcmp(argv[1], "on") || !strcmp(argv[1], "off"))
+        return fl_osd_show(!strcmp(argv[1], "on")) != ESP_OK;
+    if (!strcmp(argv[1], "fill") && argc == 7)
+        return fl_osd_fill(arg_u32(argv[2]), arg_u32(argv[3]), arg_u32(argv[4]), arg_u32(argv[5]),
+                           arg_u32(argv[6])) != ESP_OK;
+    if (strcmp(argv[1], "test")) return 1;
+    // 16 серых полос, рамка и сетка 32 пикселя: время полного экрана FILL и RECT
+    uint32_t pal[16];
+    for (int i = 0; i < 16; i++) pal[i] = 0x111111u * i;
+    fl_osd_pal(0, pal, 16);
+    fl_status_t st;
+    fl_status(&st);
+    uint16_t f0 = st.frames;
+    int64_t t0 = esp_timer_get_time();
+    esp_err_t e = fl_osd_fill(0, 0, FL_OSD_W, FL_OSD_H, 0x00);
+    int64_t t1 = esp_timer_get_time();
+    uint8_t *fb = heap_caps_malloc(FL_OSD_W / 2 * FL_OSD_H, MALLOC_CAP_SPIRAM);
+    if (!fb) return 1;
+    for (int y = 0; y < FL_OSD_H; y++)
+        for (int x = 0; x < FL_OSD_W; x += 2) {
+            uint8_t c[2];
+            for (int k = 0; k < 2; k++) {
+                int xx = x + k;
+                bool edge = xx < 2 || xx >= FL_OSD_W - 2 || y < 2 || y >= FL_OSD_H - 2;
+                bool grid = (xx % 32 == 0) || (y % 32 == 0);
+                c[k] = edge ? 15 : grid ? 5 : (y >= 64 && y < 416) ? xx * 16 / FL_OSD_W : 0;
+            }
+            fb[y * (FL_OSD_W / 2) + x / 2] = c[0] << 4 | c[1];
+        }
+    int64_t t2 = esp_timer_get_time();
+    if (e == ESP_OK) e = fl_osd_rect(0, 0, FL_OSD_W, FL_OSD_H, fb, FL_OSD_W / 2);
+    int64_t t3 = esp_timer_get_time();
+    free(fb);
+    if (e == ESP_OK) e = fl_osd_show(true);
+    vTaskDelay(pdMS_TO_TICKS(500));
+    fl_status(&st);
+    printf("OSD %s: FILL 640×480 %lld мкс, RECT 640×480 %lld мс (%.2f МБ/с), кадров за %lld мс: %u\n",
+           esp_err_to_name(e), t1 - t0, (t3 - t2) / 1000, 153600.0 / (t3 - t2),
+           (esp_timer_get_time() - t0) / 1000, (uint16_t)(st.frames - f0));
+    return e != ESP_OK;
+}
+
 static void reg(const char *name, const char *help, esp_console_cmd_func_t f)
 {
     esp_console_cmd_t c = {.command = name, .help = help, .func = f};
@@ -410,6 +456,7 @@ void app_main(void)
     reg("bootwait", "bootwait <addr>: BOOT и время до ответа ПЛИС", cmd_bootwait);
     reg("icapdbg", "icapdbg <рег>: чтение через ICAP, 16 тактов выхода", cmd_icapdbg);
     reg("golden", "вернуться в golden из профиля", cmd_golden);
+    reg("osd", "osd <test|on|off|fill x y w h c>: плоскость меню golden", cmd_osd);
     cmd_profile_register();
     cmd_pad_register();
     printf("fabbit loader: шина %" PRIu32 " Hz\n", fl_get_freq());

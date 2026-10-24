@@ -155,7 +155,14 @@ sim_video: | build
 	  sim/xilinx_stubs.sv $(VIDEO) sim/tb_video.sv > build/tb_video.log 2>&1
 	build/tb_video/Vtb_video | grep -E '^(ok|FAIL|ВСЁ|ОШИБОК|TIMEOUT|  )'
 
+# плоскость меню: шина → osd_plane → кадр, сверка с эталоном, кадр в build/tb_osd.ppm
+sim_osd: | build
+	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_osd -Mdir build/tb_osd \
+	  sim/xilinx_stubs.sv $(VIDEO) common/cdc/sync_bit.sv common/mem/ram_sdp.sv common/qspi_slave.sv \
+	  sim/tb_osd.sv > build/tb_osd.log 2>&1
+	build/tb_osd/Vtb_osd | grep -E '^(ok|FAIL|ВСЁ|ОШИБОК|TIMEOUT|  )'
+
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado $(TARGETS)
+.PHONY: all clean sim sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames

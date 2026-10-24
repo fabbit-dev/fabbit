@@ -32,7 +32,7 @@ module tb_golden;
   ) u_c (
       .clk(clk), .hdr_valid(hdr_valid), .cmd(cmd), .addr(addr), .wr_valid(wr_valid),
       .wr_data(wr_data), .rd_req(rd_req), .rd_data(rd_data), .frame_end(frame_end),
-      .busy(busy), .err(err), .boot_status(bootsts), .dbg_cmd(dbg_cmd),
+      .osd_busy(1'b0), .osd_shown(1'b0), .frames(16'h1234), .busy(busy), .err(err), .boot_status(bootsts), .dbg_cmd(dbg_cmd),
       .rd_start(rd_start), .rd_fall(rd_fall),
       .dbg_cmd_valid(dbg_valid), .flash_cs_n(f_cs), .flash_mosi(f_mosi), .flash_miso(f_miso),
       .flash_wp_n(f_wp), .flash_hold_n(f_hold));
