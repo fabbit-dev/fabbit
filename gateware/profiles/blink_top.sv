@@ -14,29 +14,11 @@ module blink_top #(
     inout  wire [3:0] esp_d,
     output wire       esp_irq
 );
-  logic clk_fb, c100r, c100;
-  PLLE2_BASE #(
-      .CLKIN1_PERIOD (40.0),
-      .DIVCLK_DIVIDE (1),
-      .CLKFBOUT_MULT (40),
-      .CLKOUT0_DIVIDE(10)
-  ) u_pll (
-      .CLKIN1(clk), .CLKFBIN(clk_fb), .CLKFBOUT(clk_fb), .CLKOUT0(c100r), .CLKOUT1(),
-      .CLKOUT2(), .CLKOUT3(), .CLKOUT4(), .CLKOUT5(), .LOCKED(), .PWRDWN(1'b0), .RST(1'b0)
-  );
-  BUFG u_bufg (.I(c100r), .O(c100));
-
-  logic [3:0] d_in, d_out;
-  logic d_oe;
-  for (genvar i = 0; i < 4; i++) begin : g_io
-    IOBUF u_io (.IO(esp_d[i]), .I(d_out[i]), .T(~d_oe), .O(d_in[i]));
-  end
-  profile_shell #(
-      .ProfileId(ProfileId)
-  ) u_shell (
-      .clk(c100), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .d_in(d_in), .d_out(d_out), .d_oe(d_oe),
-      .irq(esp_irq)
-  );
+  wire c100, rst_bus;
+  profile_bus #(.ProfileId(ProfileId)) u_bus (
+      .clk_25m(clk), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .esp_d(esp_d), .esp_irq(esp_irq),
+      .clk_bus(c100), .rst_bus(rst_bus), .csr_we(), .csr_waddr(), .csr_wdata(), .csr_raddr(),
+      .csr_rdata(32'd0), .st_valid(), .st_chan(), .st_data());
 
   logic [26:0] t = 27'd0;
   always_ff @(posedge c100) t <= (t == 27'd99_999_999) ? 27'd0 : t + 27'd1;

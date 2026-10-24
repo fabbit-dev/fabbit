@@ -10,6 +10,7 @@
 #include "esp_log.h"
 #include "esp_random.h"
 #include "esp_timer.h"
+#include "cmd_profile.h"
 #include "fpga_link.h"
 #include "profile_mgr.h"
 #include "freertos/FreeRTOS.h"
@@ -408,6 +409,7 @@ void app_main(void)
     reg("bootwait", "bootwait <addr>: BOOT и время до ответа ПЛИС", cmd_bootwait);
     reg("icapdbg", "icapdbg <рег>: чтение через ICAP, 16 тактов выхода", cmd_icapdbg);
     reg("golden", "вернуться в golden из профиля", cmd_golden);
+    cmd_profile_register();
     printf("fabbit loader: шина %" PRIu32 " Hz\n", fl_get_freq());
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
 }

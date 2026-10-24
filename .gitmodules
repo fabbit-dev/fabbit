@@ -1,0 +1,5 @@
+[submodule "gateware/profiles/nes/core"]
+	path = gateware/profiles/nes/core
+	url = https://github.com/fabbit-dev/nestang.git
+	branch = fabbit
+	shallow = true

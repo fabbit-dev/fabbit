@@ -26,7 +26,10 @@ typedef enum {
     FL_CMD_FL_WRSR = 0x16,  // addr[7:0] SR (только BP), addr[15:8] CR
     FL_CMD_BOOT = 0x20,
     FL_CMD_SET_WDT = 0x21,  // addr: TIMER для BOOT в единицах 64 отсчётов, 0 = нет
-    FL_CMD_REBOOT_GOLDEN = 0x22,  // только оболочка профиля
+    FL_CMD_REBOOT_GOLDEN = 0x22,  // оболочка профиля, с ключом (ICAP: только сборка Vivado)
+    FL_CMD_CSR_W = 0x30,          // оболочка профиля: addr = индекс регистра, слова BE
+    FL_CMD_CSR_R = 0x31,
+    FL_CMD_STREAM = 0x32,         // оболочка профиля: addr = канал, байты потока
 } fl_cmd_t;
 
 typedef struct {
@@ -83,5 +86,15 @@ esp_err_t fl_set_wdt(uint32_t units);
 esp_err_t fl_reboot_golden(void);
 
 uint32_t fl_crc32(uint32_t crc, const uint8_t *p, size_t n);
+// регистры профиля: n слов с индекса idx (не больше 64)
+esp_err_t fl_csr_write(uint8_t idx, const uint32_t *v, size_t n);
+esp_err_t fl_csr_read(uint8_t idx, uint32_t *v, size_t n);
+static inline esp_err_t fl_csr_set(uint8_t idx, uint32_t v) { return fl_csr_write(idx, &v, 1); }
+static inline uint32_t fl_csr_get(uint8_t idx)
+{
+    uint32_t v = 0;
+    fl_csr_read(idx, &v, 1);
+    return v;
+}
 // BOOTSTS (UG470) по-человечески: "сейчас: ...; до этого: ..."
 void fl_bootsts_str(uint32_t v, char *out, size_t n);
