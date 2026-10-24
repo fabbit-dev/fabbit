@@ -30,6 +30,7 @@ typedef enum {
     FL_CMD_CSR_W = 0x30,          // оболочка профиля: addr = индекс регистра, слова BE
     FL_CMD_CSR_R = 0x31,
     FL_CMD_STREAM = 0x32,         // оболочка профиля: addr = канал, байты потока
+    FL_CMD_PAD = 0x33,            // оболочка профиля: 4 байта {пад 1, пад 0}, BE
 } fl_cmd_t;
 
 typedef struct {
@@ -46,6 +47,10 @@ typedef struct {
 } fl_status_t;
 
 esp_err_t fl_init(uint32_t hz);
+// замок шины (рекурсивный): каждый кадр берёт его сам; держать вокруг серии кадров, которую
+// нельзя разрывать чужими (например, «записать CSR и прочитать ответ»)
+void fl_lock(void);
+void fl_unlock(void);
 esp_err_t fl_set_freq(uint32_t hz);
 uint32_t fl_get_freq(void);
 // прозвонка: линии SCK, CS, IO0..3, IRQ по очереди в 1 на 300 мс
@@ -96,5 +101,7 @@ static inline uint32_t fl_csr_get(uint8_t idx)
     fl_csr_read(idx, &v, 1);
     return v;
 }
+// кнопки в профиль: pad0 = джойстик 1, pad1 = джойстик 2 (биты PAD_*, docs/bus-protocol.md)
+esp_err_t fl_pad(uint16_t pad0, uint16_t pad1);
 // BOOTSTS (UG470) по-человечески: "сейчас: ...; до этого: ..."
 void fl_bootsts_str(uint32_t v, char *out, size_t n);

@@ -5,6 +5,7 @@
 //   ESP ─quad SPI─ profile_bus (100 МГц) ─поток 0─ fifo_async ─ GameLoader ─┐
 //                                                                         NES ─ nes_sdram ─ SDRAM
 //   NES color/cycle/scanline ─ video_fb_scale (×2) ─ nes_palette ─ hdmi_tx      (64,3 МГц)
+//   ESP PAD (profile_shell) ─ cdc_word ─ nes_pad (раскладка, турбо) ─ 4021 ядра
 //
 // Такты: шина 100 МГц (PLL), ядро 21,43 МГц и SDRAM 64,3 МГц (nes_clocks), видео 25,19 МГц
 // (video_clocks). Между доменами только sync_bit, fifo_async и буфер кадра (ram_sdp).
@@ -16,7 +17,10 @@
 //   2 состояние: бит 0 идёт загрузка, бит 1 ROM загружен, бит 2 ошибка загрузчика
 //   3 свободно в FIFO потока, байт (оценка снизу)
 //   4 принято байт потока с начала загрузки
-//   5 джойстик 1: биты A, B, Select, Start, Вверх, Вниз, Влево, Вправо (1 — нажата)
+//   5 запись с ключом 0x4E53 в [31:16]: кнопки NES для отладки (A, B, Select, Start, Вверх, Вниз,
+//     Влево, Вправо = биты 0..7), складываются с падом; чтение: [31:16] пад 0 (последний PAD),
+//     [7:0] записанное
+//   Кнопки игры приходят командой PAD (docs/bus-protocol.md), пад 0 = джойстик 1.
 // Поток 0: файл .nes целиком (заголовок iNES и данные), не больше свободного места за кадр.
 module nes_top (
     input  wire        clk,        // 25 МГц
@@ -42,7 +46,8 @@ module nes_top (
   localparam int FifoDepth = 4096;
 
   // ---- шина ESP ----
-  wire clk_bus, rst_bus, csr_we, st_valid;
+  wire clk_bus, rst_bus, csr_we, st_valid, pad_stb;
+  wire [31:0] pad;
   wire [7:0] csr_waddr, csr_raddr, st_chan, st_data;
   wire [31:0] csr_wdata;
   logic [31:0] csr_rdata;
@@ -50,7 +55,7 @@ module nes_top (
       .clk_25m(clk), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .esp_d(esp_d), .esp_irq(esp_irq),
       .clk_bus(clk_bus), .rst_bus(rst_bus), .csr_we(csr_we), .csr_waddr(csr_waddr),
       .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata), .st_valid(st_valid),
-      .st_chan(st_chan), .st_data(st_data));
+      .st_chan(st_chan), .st_data(st_data), .pad(pad), .pad_stb(pad_stb));
 
   // ---- такты ядра и SDRAM ----
   wire nclk, fclk, sd_clk_int, nlocked, rst_nes;
@@ -65,6 +70,7 @@ module nes_top (
   logic load_tgl = 1'b0, reset_tgl = 1'b0, load_bus = 1'b0;
   logic [7:0] joy_bus = '0;
   logic [23:0] rx_bytes = '0;
+  logic [15:0] pad_bus = '0;
   always_ff @(posedge clk_bus) begin
     load_bus <= 1'b0;
     if (ctrl_we && csr_wdata[0]) begin
@@ -73,8 +79,17 @@ module nes_top (
       rx_bytes <= '0;
     end
     if (ctrl_we && csr_wdata[1]) reset_tgl <= ~reset_tgl;
-    if (csr_we && csr_waddr == 8'd5) joy_bus <= csr_wdata[7:0];
+    if (csr_we && csr_waddr == 8'd5 && csr_wdata[31:16] == CtrlKey) joy_bus <= csr_wdata[7:0];
     if (st_valid && st_chan == 8'd0) rx_bytes <= rx_bytes + 1'b1;
+    if (pad_stb) pad_bus <= pad[15:0];
+    if (rst_bus) begin
+      load_tgl  <= 1'b0;
+      reset_tgl <= 1'b0;
+      load_bus  <= 1'b0;
+      joy_bus   <= '0;
+      rx_bytes  <= '0;
+      pad_bus   <= '0;
+    end
   end
 
   // ---- переход в домен ядра ----
@@ -88,10 +103,23 @@ module nes_top (
   end
   wire load_go = load_s ^ load_d;    // импульс: начать загрузку
   wire reset_go = reset_s ^ reset_d;
-  wire [7:0] joy;
+  // кнопки: слово пада целиком в домен ядра, раскладка и турбо по кадрам ядра
+  wire [8:0] scanline;
+  wire [31:0] pad_n;
+  cdc_word #(.Width(32)) u_padx (
+      .sclk(clk_bus), .stb(pad_stb), .d(pad), .dclk(nclk), .q(pad_n), .q_stb());
+  wire [7:0] joy_dbg, joy_pad;
   for (genvar i = 0; i < 8; i++) begin : g_joy
-    sync_bit u_j (.clk(nclk), .d(joy_bus[i]), .q(joy[i]));
+    sync_bit u_j (.clk(nclk), .d(joy_bus[i]), .q(joy_dbg[i]));
   end
+  logic frame_go = 1'b0;
+  logic [8:0] line_d = '0;
+  always_ff @(posedge nclk) begin
+    line_d   <= scanline;
+    frame_go <= scanline == 9'd0 && line_d != 9'd0;
+  end
+  nes_pad u_pad (.clk(nclk), .frame(frame_go), .pad(pad_n[15:0]), .joy(joy_pad));
+  wire [7:0] joy = joy_pad | joy_dbg;
 
   // ---- поток ROM: шина → ядро ----
   wire [12:0] fifo_level;
@@ -107,7 +135,7 @@ module nes_top (
   // ---- система NES ----
   wire loading, loader_done, loader_fail, reset_nes, fb_we;
   wire [7:0] fb_x, fb_y;
-  wire [8:0] fb_d, scanline;
+  wire [8:0] fb_d;
   nes_system u_sys (
       .nclk(nclk), .fclk(fclk), .sdram_clk_in(sd_clk_int), .rst(rst_nes), .load_go(load_go),
       .reset_go(reset_go), .rom_valid(fifo_valid), .rom_ready(fifo_ready), .rom_data(fifo_data),
@@ -143,17 +171,13 @@ module nes_top (
       8'd2: csr_rdata = {29'd0, fail_s, done_s, loading_s};
       8'd3: csr_rdata = 32'(FifoDepth) - 32'(fifo_level) - 32'd16;
       8'd4: csr_rdata = {8'd0, rx_bytes};
-      8'd5: csr_rdata = {24'd0, joy_bus};
+      8'd5: csr_rdata = {pad_bus, 8'd0, joy_bus};
       default: csr_rdata = '0;
     endcase
 
   // светодиод: горит, пока грузится ROM; мигает в такт кадрам, когда ядро работает
   logic [5:0] frames = '0;
-  logic [8:0] line_d = '0;
-  always_ff @(posedge nclk) begin
-    line_d <= scanline;
-    if (scanline == 9'd0 && line_d != 9'd0) frames <= frames + 1'b1;
-  end
+  always_ff @(posedge nclk) if (frame_go) frames <= frames + 1'b1;
   assign led = loading || (!reset_nes && frames[5]);
 
 endmodule

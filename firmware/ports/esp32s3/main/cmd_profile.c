@@ -184,7 +184,8 @@ static int cmd_rom(int argc, char **argv)
     int64_t end = esp_timer_get_time() + 1000000;
     while (!(fl_csr_get(NES_STAT) & 1) && esp_timer_get_time() < end) vTaskDelay(1);
     size_t sent = 0;
-    while (sent < need) {
+    end = esp_timer_get_time() + 5000000;
+    while (sent < need && esp_timer_get_time() < end) {
         uint32_t free_b = fl_csr_get(NES_FREE);
         size_t k = need - sent;
         if (k > free_b) k = free_b;
@@ -207,12 +208,14 @@ static int cmd_rom(int argc, char **argv)
     return (st & 6) != 2;
 }
 
-// joy [биты]: джойстик 1 (A B Select Start Вверх Вниз Влево Вправо = биты 0..7)
+// joy [биты]: кнопки NES для отладки (A B Select Start Вверх Вниз Влево Вправо = биты 0..7),
+// складываются с кнопками стенда (PAD)
 static int cmd_joy(int argc, char **argv)
 {
     if (!nes_present()) return 1;
-    if (argc > 1) fl_csr_set(NES_JOY, strtoul(argv[1], NULL, 0) & 0xFF);
-    printf("JOY %02" PRIx32 "\n", fl_csr_get(NES_JOY));
+    if (argc > 1) fl_csr_set(NES_JOY, NES_KEY | (strtoul(argv[1], NULL, 0) & 0xFF));
+    uint32_t v = fl_csr_get(NES_JOY);
+    printf("JOY %02" PRIx32 ", пад 0 %04" PRIx32 "\n", v & 0xFF, v >> 16);
     return 0;
 }
 

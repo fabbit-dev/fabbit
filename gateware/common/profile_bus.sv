@@ -20,7 +20,9 @@ module profile_bus #(
     input  wire  [31:0] csr_rdata,
     output wire        st_valid,
     output wire  [ 7:0] st_chan,
-    output wire  [ 7:0] st_data
+    output wire  [ 7:0] st_data,
+    output wire  [31:0] pad,         // кнопки {пад 1, пад 0}, команда PAD (profile_shell)
+    output wire        pad_stb
 );
   wire fb, c100_raw, locked;
   PLLE2_BASE #(
@@ -39,9 +41,10 @@ module profile_bus #(
   end
 
   profile_shell #(.ProfileId(ProfileId), .UseIcap(UseIcap)) u_shell (
-      .clk(clk_bus), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .d_in(d_in), .d_out(d_out),
-      .d_oe(d_oe), .irq(esp_irq),
+      .clk(clk_bus), .rst(rst_bus), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .d_in(d_in),
+      .d_out(d_out), .d_oe(d_oe), .irq(esp_irq),
       .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata), .csr_raddr(csr_raddr),
-      .csr_rdata(csr_rdata), .st_valid(st_valid), .st_chan(st_chan), .st_data(st_data));
+      .csr_rdata(csr_rdata), .st_valid(st_valid), .st_chan(st_chan), .st_data(st_data),
+      .pad(pad), .pad_stb(pad_stb));
 
 endmodule
