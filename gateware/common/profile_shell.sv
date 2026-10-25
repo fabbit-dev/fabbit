@@ -10,11 +10,13 @@
 //                  ESP узнаёт из регистра профиля)
 //   33 PAD         запись 4: кнопки {пад 1, пад 0} по 16 бит (раскладка RetroPad, docs/bus-protocol.md);
 //                  слово принимается целиком по CS#↑ и только при ровно 4 байтах
+//   34 CAPTURE_R   чтение замороженного захвата с байтового адреса addr[23:0], если Readback
 // Регистры и поток видит профиль в домене clk; переход в свои такты — его забота (common/cdc).
 module profile_shell #(
     parameter logic [15:0] ProfileId = 16'd0,
     parameter logic [ 7:0] Version = 8'd3,
-    parameter bit          UseIcap = 1'b0
+    parameter bit          UseIcap = 1'b0,
+    parameter bit          Readback = 1'b0
 ) (
     input  wire        clk,         // 100 МГц
     input  wire        rst,         // синхронный сброс, пока PLL не захватил частоту
@@ -36,12 +38,17 @@ module profile_shell #(
     output logic [ 7:0] st_data,
     // кнопки: {пад 1, пад 0}, pad_stb на такт после смены
     output logic [31:0] pad = 32'd0,
-    output logic        pad_stb = 1'b0
+    output logic        pad_stb = 1'b0,
+    // Random-access readback: no destructive pop, profile returns zero if unavailable.
+    // Data must settle within two clk cycles of rb_addr changing.
+    output wire [23:0] rb_addr,
+    input  wire [ 7:0] rb_data
 );
   localparam logic [31:0] Key = "FBKY";
+  localparam int ReadIndexBits = Readback ? 24 : 10;
   localparam logic [7:0] CmdId = 8'h01, CmdTune = 8'h07, CmdReboot = 8'h22;
   localparam logic [7:0] CmdCsrW = 8'h30, CmdCsrR = 8'h31, CmdStream = 8'h32,
-                         CmdPad = 8'h33;
+                         CmdPad = 8'h33, CmdCaptureR = 8'h34;
 
   logic [7:0] rd_start = 8'd16;
   logic       rd_fall = 1'b1;
@@ -61,12 +68,14 @@ module profile_shell #(
   logic [23:0] f_addr = 24'd0;
   logic [31:0] f_key = 32'd0;
   logic [3:0] f_n = 4'd0;      // байтов данных в кадре, до 15
-  logic [9:0] rd_i = 10'd0;    // номер байта чтения в кадре
+  logic [ReadIndexBits-1:0] rd_i = '0;  // номер байта чтения в кадре
   logic [1:0] wb = 2'd0;       // байт внутри слова CSR_W
   logic [7:0] widx = 8'd0;
   wire [63:0] id_word = {"FBPR", Version, 8'd1, ProfileId};
 
   assign csr_raddr = f_addr[7:0] + 8'(rd_i >> 2);
+  wire [24:0] rb_sum = {1'b0, f_addr} + 25'(rd_i);
+  assign rb_addr = rb_sum[24] ? 24'hFFFFFF : rb_sum[23:0];
 
   always_ff @(posedge clk) begin
     csr_we   <= 1'b0;
@@ -75,14 +84,15 @@ module profile_shell #(
       f_cmd  <= cmd;
       f_addr <= addr;
       f_n    <= 4'd0;
-      rd_i   <= 10'd0;
+      rd_i   <= '0;
       wb     <= 2'd0;
       widx   <= addr[7:0];
     end
-    if (rd_req && !hdr_valid) rd_i <= rd_i + 10'd1;
+    if (rd_req && !hdr_valid && (!Readback || !(&rd_i))) rd_i <= rd_i + 1'b1;
     case (f_cmd)
       CmdId:   rd_data <= id_word[63-8*rd_i[2:0]-:8];
       CmdCsrR: rd_data <= csr_rdata[31-8*rd_i[1:0]-:8];
+      CmdCaptureR: rd_data <= Readback ? rb_data : 8'd0;
       default: rd_data <= 8'h00;
     endcase
     if (wr_valid) begin

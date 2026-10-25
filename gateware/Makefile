@@ -72,6 +72,13 @@ nes_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xd
                constraints/sdram.xdc constraints/nes_clocks.xdc constraints/nes_top.xdc \
                constraints/vivado_profile.xdc
 
+# LA: P2 16 inputs, BRAM snapshot, bidirectional QSPI, return to golden through ICAP.
+LA_CORE := common/mem/ram_sdp.sv profiles/la/la_ring.sv profiles/la/la_system.sv
+la_top_SRC := common/cdc/reset_sync.sv common/qspi_slave.sv common/icap_ctrl.sv \
+              common/profile_shell.sv common/profile_bus.sv $(LA_CORE) profiles/la/la_top.sv
+la_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc \
+              constraints/la.xdc constraints/vivado_profile.xdc
+
 TARGETS := wiretest_p3 blink_a blink_b wiretest_hdmi hdmi_bars
 all: $(addprefix build/,$(addsuffix .bit,$(TARGETS)))
 $(TARGETS): %: build/%.bit
@@ -148,6 +155,17 @@ sim_pad: | build
 
 # платформа: асинхронная FIFO на несвязанных тактах
 CDC := common/mem/ram_sdp.sv common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/cdc/fifo_async.sv
+sim_la_ring: | build
+	verilator --binary --timing --timescale 1ns/1ps -Wno-fatal --top-module tb_la_ring \
+	  -Mdir build/tb_la_ring common/mem/ram_sdp.sv profiles/la/la_ring.sv sim/tb_la_ring.sv > build/tb_la_ring.log 2>&1
+	build/tb_la_ring/Vtb_la_ring
+
+sim_la: | build
+	verilator --binary --timing --timescale 1ns/1ps -Wno-fatal --top-module tb_la_profile \
+	  -Mdir build/tb_la_profile common/qspi_slave.sv common/icap_ctrl.sv sim/xilinx_stubs.sv \
+	  common/profile_shell.sv $(LA_CORE) sim/tb_la_profile.sv > build/tb_la_profile.log 2>&1
+	build/tb_la_profile/Vtb_la_profile
+
 sim_cdc: | build
 	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_cdc -Mdir build/tb_cdc \
 	  $(CDC) sim/tb_cdc.sv > build/tb_cdc.log 2>&1
@@ -168,5 +186,5 @@ sim_osd: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
+.PHONY: all clean sim sim_la sim_la_ring sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames
