@@ -46,6 +46,15 @@ static DIR *entry_opendir(const char *path)
 #include "../ports/esp32s3/main/launcher_port.c"
 #include "../ports/esp32s3/main/cmd_profile.c"
 #include "../ports/esp32s3/main/rom_port.c"
+#define retro_preflight actual_retro_preflight
+#define retro_present actual_retro_present
+#define retro_load_file actual_retro_load_file
+#define retro_reset actual_retro_reset
+#include "../ports/esp32s3/components/retro_rom/retro_rom.c"
+#undef retro_reset
+#undef retro_load_file
+#undef retro_present
+#undef retro_preflight
 #undef opendir
 #undef fopen
 
@@ -54,11 +63,14 @@ static struct {
 } calls;
 static bool menu_entry;
 static const char *expected_path;
+static bool nvs_enabled;
+static saved_v1_t stored_old;
+static saved_v2_t stored_new;
 
 esp_err_t pm_load_cb(const char *file, bool force, pm_progress_cb cb, void *ctx)
 {
-    assert(menu_entry && !strcmp(file, "nes") && !force);
-    assert(!calls.pm && !calls.backend && !calls.present);
+    assert(menu_entry && !strcmp(file, "retro") && !force);
+    assert(!calls.pm && !calls.backend);
     calls.pm++;
     assert(cb);
     cb(ctx, "core", 100);
@@ -79,6 +91,17 @@ esp_err_t nes_load_file(const char *path, void (*cb)(void *, int), void *ctx, ui
 }
 
 bool nes_present(void) { calls.present++; return true; }
+static bool active_retro;
+bool retro_present(void) { return active_retro; }
+esp_err_t retro_preflight(const char *path, rom_info_t *info) { return actual_retro_preflight(path, info); }
+esp_err_t retro_load_file(const char *path, void (*cb)(void *, int), void *ctx, uint32_t *ms)
+{
+    assert(menu_entry && expected_path && !strcmp(path, expected_path));
+    assert(!cb && !ctx && calls.pm == (active_retro ? 0 : 1));
+    calls.backend++;
+    *ms = 17;
+    return ESP_OK;
+}
 void fl_lock(void) { calls.locks++; }
 void fl_unlock(void) { assert(calls.locks > 0); calls.locks--; }
 esp_err_t fl_boot(uint32_t addr) { calls.boot++; return ESP_OK; }
@@ -130,15 +153,30 @@ uint32_t fl_crc32(uint32_t crc, const uint8_t *bytes, size_t n)
 esp_err_t nvs_open(const char *name, nvs_open_mode_t mode, nvs_handle_t *handle)
 {
     calls.nvs++;
-    return ESP_ERR_NOT_FOUND;
+    *handle = 1;
+    return nvs_enabled ? ESP_OK : ESP_ERR_NOT_FOUND;
+}
+esp_err_t nvs_get_blob(nvs_handle_t handle, const char *key, void *value, size_t *size)
+{
+    const void *data;
+    size_t n;
+    if (!strcmp(key, "saved")) { data = &stored_old; n = sizeof stored_old; }
+    else if (!strcmp(key, "saved_v2")) { data = &stored_new; n = sizeof stored_new; }
+    else return ESP_ERR_NOT_FOUND;
+    if (*size < n) return ESP_ERR_INVALID_SIZE;
+    memcpy(value, data, n); *size = n;
+    return ESP_OK;
 }
 esp_err_t nvs_set_blob(nvs_handle_t handle, const char *key, const void *value, size_t size)
 {
-    assert(!"NVS should not be open in this test");
-    return ESP_FAIL;
+    assert(nvs_enabled);
+    if (!strcmp(key, "saved")) { assert(size == sizeof stored_old); memcpy(&stored_old, value, size); }
+    else if (!strcmp(key, "saved_v2")) { assert(size == sizeof stored_new); memcpy(&stored_new, value, size); }
+    else assert(!"unexpected NVS write");
+    return ESP_OK;
 }
-esp_err_t nvs_commit(nvs_handle_t handle) { assert(!"NVS should not be open"); return ESP_FAIL; }
-void nvs_close(nvs_handle_t handle) { assert(!"NVS should not be open"); }
+esp_err_t nvs_commit(nvs_handle_t handle) { assert(nvs_enabled); return ESP_OK; }
+void nvs_close(nvs_handle_t handle) { assert(nvs_enabled); }
 
 static void progress(void *ctx, const char *stage, int pct)
 {
@@ -180,6 +218,81 @@ static void fixture(const char *name, const uint8_t header[16], size_t size)
         assert(fputc(0, f) != EOF);
     }
     assert(!fclose(f));
+}
+
+static void full_fixture(const char *name, const uint8_t *data, size_t size)
+{
+    char path[768]; snprintf(path, sizeof path, "%s/%s", temp_dir, name);
+    FILE *f = fopen(path, "wb");
+    assert(f && fwrite(data, 1, size, f) == size && !fclose(f));
+}
+
+static void mixed_catalog(void)
+{
+    uint8_t data[65536] = {0};
+    memcpy(data + 0x100, "SEGA MEGA DRIVE ", 16);
+    data[1] = 0xff; data[2] = 0xff; // SP 0x00ffff00
+    data[6] = 2; // PC 0x200
+    data[0x1a6] = 0xff; data[0x1a7] = 0xff;
+    data[0x1f0] = 'U';
+    full_fixture("valid.gen", data, sizeof data); // duplicate title, distinct identity
+    memset(data, 0, sizeof data);
+    uint8_t *h = data + 0x7fc0;
+    h[0x15] = 0x20; h[0x17] = 6; h[0x19] = 1;
+    h[0x1c] = 0xcb; h[0x1d] = 0xed; h[0x1e] = 0x34; h[0x1f] = 0x12; h[0x3d] = 0x80;
+    full_fixture("snes.sfc", data, sizeof data);
+    lc_game_t games[16];
+    reset_calls(true, NULL);
+    assert(p_games(games, 16) == 4); // missing assets: SNES omitted
+    lc_game_t game = {0}; strcpy(game.path, "/data/roms/snes.sfc");
+    char err[128];
+    assert(!run_locked(&game, progress, &calls, err, sizeof err));
+    no_effects(); // before pm_load, ID, CSR, BOOT, or recovery
+    for (unsigned i = 0; i < 64; i++) data[i] = i;
+    full_fixture("snes.ipl", data, 64);
+    memset(data, 0, 1024); data[0] = 1;
+    full_fixture("snes.gauss", data, 1024);
+    memset(s_runs, 0, sizeof s_runs);
+    s_legacy_runs[0] = (run_t){name_hash("alpha"), 7};
+    s_legacy_runs[1] = (run_t){name_hash("valid"), 9};
+    assert(p_games(games, 16) == 5);
+    int systems = 0;
+    for (int i = 0; i < 5; i++) {
+        systems |= 1 << games[i].system;
+        assert(games[i].identity[0]);
+        if (!strcmp(games[i].name, "alpha")) assert(games[i].runs == 7);
+        if (!strcmp(games[i].name, "valid")) assert(games[i].runs == 0); // ambiguous legacy title
+        if (games[i].system == ROM_MD || games[i].system == ROM_SNES) assert(games[i].rom_bytes == 65536);
+    }
+    assert(systems == ((1 << ROM_NES) | (1 << ROM_MD) | (1 << ROM_SNES)));
+    char sidecar[100];
+    assert(rom_sidecar("/data/roms/valid.gen", ".fbi", sidecar, sizeof sidecar));
+    assert(!strcmp(sidecar, "/data/roms/valid.fbi"));
+    assert(rom_sidecar("x.MD", ".fbi", sidecar, sizeof sidecar) && !strcmp(sidecar, "x.fbi"));
+    assert(!rom_sidecar("long.gen", ".fbi", sidecar, 4));
+    const char *files[] = {"valid.gen", "snes.sfc", "snes.ipl", "snes.gauss"};
+    for (size_t i = 0; i < sizeof files / sizeof *files; i++) {
+        char path[768]; snprintf(path, sizeof path, "%s/%s", temp_dir, files[i]); assert(!unlink(path));
+    }
+}
+
+static void state_compat(void)
+{
+    nvs_enabled = true;
+    strcpy(stored_old.game, "valid");
+    lc_saved_t state;
+    p_load(&state);
+    assert(!strcmp(state.game, "valid") && !state.identity[0]);
+    strcpy(state.identity, "1:valid.nes"); p_save(&state);
+    assert(!strcmp(stored_old.game, "valid"));
+    p_load(&state); assert(!strcmp(state.identity, "1:valid.nes"));
+    strcpy(state.game, "MD title"); strcpy(state.identity, "2:cart.gen");
+    p_save(&state);
+    assert(!strcmp(stored_old.game, "valid"));
+    p_load(&state); assert(!strcmp(state.identity, "2:cart.gen") && !strcmp(state.game, "MD title"));
+    strcpy(stored_old.game, "alpha"); // downgraded firmware selected another title
+    p_load(&state); assert(!strcmp(state.game, "alpha") && !state.identity[0]);
+    nvs_enabled = false;
 }
 
 static void rejected_entries(const char *name)
@@ -240,15 +353,14 @@ int main(void)
     fixture("trainer.nes", nes, 16912);
     for (size_t i = 4; i < 9; i++) fixture(invalid[i], bad, 16400);
 
-    // NES-only directory scope is intentional: magic.bin is valid for console,
-    // but menu candidates must also have a .nes suffix (case insensitive).
+    // Candidate suffixes are hints; actual content validation controls inclusion.
     lc_game_t games[16];
     reset_calls(true, NULL);
-    assert(p_games(games, 16) == 2);
+    assert(p_games(games, 16) == 3);
     assert(!strcmp(games[0].path, "/data/roms/alpha.NES"));
-    assert(!strcmp(games[1].path, "/data/roms/valid.nes"));
-    assert(!strcmp(games[0].name, "alpha") && !strcmp(games[1].name, "valid"));
-    for (int i = 0; i < 2; i++) {
+    assert(!strcmp(games[2].path, "/data/roms/valid.nes"));
+    assert(!strcmp(games[0].name, "alpha") && !strcmp(games[2].name, "valid"));
+    for (int i = 0; i < 3; i++) {
         assert(games[i].mapper == 0 && games[i].prg_kb == 16 && games[i].chr_kb == 0);
         assert(!games[i].runs);
     }
@@ -257,10 +369,18 @@ int main(void)
     for (size_t i = 0; i < sizeof invalid / sizeof *invalid; i++) rejected_entries(invalid[i]);
     // A bare console name must append .nes before the same preflight.
     rejected_entries("truncated");
-    accepted_menu(&games[1]);
+    accepted_menu(&games[2]);
+    active_retro = true;
+    reset_calls(true, games[2].path);
+    char err[128] = "";
+    assert(p_run(&games[2], progress, &calls, err, sizeof err));
+    assert(!calls.pm && !calls.boot && !calls.reboot && calls.backend == 1 && !calls.locks);
+    active_retro = false;
     accepted_console("valid", "/data/roms/valid.nes");
     accepted_console("magic.bin", "/data/roms/magic.bin");
     accepted_console("/data/roms/magic.bin", "/data/roms/magic.bin");
+    mixed_catalog();
+    state_compat();
 
     const char *valid[] = {"valid.nes", "alpha.NES", "magic.bin"};
     char path[768];
@@ -273,6 +393,6 @@ int main(void)
         assert(!unlink(path));
     }
     assert(!rmdir(temp_dir));
-    puts("ok ROM entries: real NES-only menu, preflight before effects, core/backend order, console suffix/magic");
+    puts("ok ROM entries: mixed catalog/metadata/identities, preflight before effects/assets, hot core, legacy NVS");
     return 0;
 }

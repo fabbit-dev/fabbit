@@ -11,6 +11,8 @@ static int s_runs, s_saves;
 static lc_saved_t s_store;
 static int s_count = 5;
 static char s_last_game[64];
+static char s_last_identity[100];
+static bool s_same_titles;
 
 static uint32_t now_ms(void) { return s_ms; }
 static void sleep_ms(uint32_t ms) { s_ms += ms; }
@@ -25,6 +27,9 @@ static int games(lc_game_t *g, int max)
         if (i < 5) snprintf(g[i].name, sizeof g[i].name, "%s", n[i]);
         else snprintf(g[i].name, sizeof g[i].name, "Game %03d", i);
         snprintf(g[i].path, sizeof g[i].path, "/roms/%s.nes", g[i].name);
+        g[i].system = (uint8_t)(i % 3 + 1);
+        snprintf(g[i].identity, sizeof g[i].identity, "%u:%s.nes", g[i].system, g[i].name);
+        if (s_same_titles) snprintf(g[i].name, sizeof g[i].name, "Tetris");
         g[i].mapper = (uint8_t)i;
         g[i].prg_kb = 128;
     }
@@ -47,6 +52,7 @@ static bool run(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, siz
     s_ms += 340;
     s_runs++;
     snprintf(s_last_game, sizeof s_last_game, "%s", g->name);
+    snprintf(s_last_identity, sizeof s_last_identity, "%s", g->identity);
     if (s_fail) {
         snprintf(err, n, "ядро NES не запустилось: ESP_FAIL");
         pcsim_plane_clear();  // ПЛИС откатилась в golden: плоскость пуста
@@ -175,4 +181,17 @@ void pcsim_app(uint8_t *fb, const ui_port_t *ui)
     key(LC_OK);
     key(LC_OK);
     pcsim_check(lc_app_running(), "запуск без хранения состояния и превью");
+
+    // Display titles may collide or change; restart selection uses system+path.
+    s_count = 3;
+    s_same_titles = true;
+    memset(&s_store, 0, sizeof s_store);
+    strcpy(s_store.game, "Tetris");
+    strcpy(s_store.identity, "2:Contra.nes");
+    lc_app_start(&port, fb, ui);
+    spin(1400);
+    key(LC_OK);
+    key(LC_OK);
+    pcsim_check(!strcmp(s_last_identity, "2:Contra.nes"), "identity: system+path, not duplicate display title");
+    pcsim_check(!strcmp(s_store.identity, s_last_identity), "identity: saved on launch");
 }

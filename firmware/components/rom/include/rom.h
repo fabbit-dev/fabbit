@@ -17,6 +17,9 @@ typedef struct {
     rom_system_t system;
     size_t payload_offset, payload_size;  // заданы только при ROM_OK
     rom_nes_info_t nes;
+    uint32_t rom_size, save_size;  // canonical cartridge bytes, volatile save RAM capacity
+    uint8_t map;                  // SNES: 0 LoROM, 1 HiROM
+    bool fast_rom;
 } rom_info_t;
 
 // Policy существующего NES GameLoader: trainer/расширенные размеры не поддерживаются.

@@ -30,7 +30,7 @@ static uint32_t s_wipe_t0;
 static int s_intro_frame;
 static char s_err[96];
 
-static const char *TITLE_GAMES = "РЕТРО-КОНСОЛЬ · NES";
+static const char *TITLE_GAMES = "РЕТРО-КОНСОЛЬ";
 
 // ---------------- общее ----------------
 
@@ -48,7 +48,7 @@ static void profiles_init(void)
 {
     s_prof[P_RETRO] = (lc_profile_t){"Ретро-консоль", "РЕТРО-КОНСОЛЬ",
                                      "Схема приставки в ПЛИС, картинка по HDMI", "", &ui_icon_retro, true};
-    snprintf(s_prof[P_RETRO].tag, sizeof s_prof[P_RETRO].tag, "NES · %d %s", s_ngames,
+    snprintf(s_prof[P_RETRO].tag, sizeof s_prof[P_RETRO].tag, "%d %s", s_ngames,
              plural(s_ngames, "игра", "игры", "игр"));
     s_prof[P_LOGIC] = (lc_profile_t){"Логический анализатор", "ЛОГИЧЕСКИЙ АНАЛИЗАТОР",
                                      "Цифровые каналы с гребёнки в sigrok", "скоро", &ui_icon_logic, false};
@@ -156,7 +156,7 @@ static void run_game(void)
     lc_game_t *g = &s_games[s_gsel];
     s_st = ST_LOADING;
     load_ctx_t ctx = {.t0 = now()};
-    snprintf(ctx.stage, sizeof ctx.stage, "ядро NES");
+    snprintf(ctx.stage, sizeof ctx.stage, "запуск ядра");
     char sub[80];
     snprintf(sub, sizeof sub, "%s", ctx.stage);
     lc_loading(TITLE_GAMES, g->name, sub, 0);
@@ -169,6 +169,7 @@ static void run_game(void)
     }
     s_saved.profile = (uint8_t)s_psel;
     snprintf(s_saved.game, sizeof s_saved.game, "%s", g->name);
+    snprintf(s_saved.identity, sizeof s_saved.identity, "%s", g->identity);
     if (P->save) P->save(&s_saved);
     s_err[0] = 0;
     if (P->run(g, load_progress, &ctx, s_err, sizeof s_err)) {
@@ -217,8 +218,15 @@ static void load_games(void)
     if (s_ngames < 0) s_ngames = 0;
     if (s_ngames > LC_GAMES_MAX) s_ngames = LC_GAMES_MAX;
     s_gsel = s_gtop = 0;
-    for (int i = 0; i < s_ngames; i++)
-        if (!strcmp(s_games[i].name, s_saved.game)) s_gsel = i;
+    int legacy_match = -1, legacy_count = 0;
+    for (int i = 0; i < s_ngames; i++) {
+        if (s_saved.identity[0] && !strcmp(s_games[i].identity, s_saved.identity)) s_gsel = i;
+        if (!strcmp(s_games[i].name, s_saved.game) && s_games[i].system <= 1) {
+            legacy_match = i;
+            legacy_count++;
+        }
+    }
+    if (!s_saved.identity[0] && legacy_count == 1) s_gsel = legacy_match;
     if (s_gsel >= LC_LIST_ROWS) s_gtop = s_gsel - LC_LIST_ROWS / 2;
     if (s_gtop > s_ngames - LC_LIST_ROWS) s_gtop = s_ngames > LC_LIST_ROWS ? s_ngames - LC_LIST_ROWS : 0;
     profiles_init();
@@ -233,6 +241,7 @@ void lc_app_start(const lc_port_t *port, uint8_t *fb, const ui_port_t *ui)
     memset(&s_saved, 0, sizeof s_saved);
     if (P->load) P->load(&s_saved);
     s_saved.game[sizeof s_saved.game - 1] = 0;
+    s_saved.identity[sizeof s_saved.identity - 1] = 0;
     s_psel = s_saved.profile < P_N ? s_saved.profile : 0;
     s_last_key = now();
     load_games();

@@ -8,6 +8,7 @@ typedef struct {
     size_t payload_offset, payload_size;
     uint32_t reset_pc;
     bool sram;
+    uint32_t ram_size;
 } rom_md_info_t;
 typedef struct {
     size_t payload_offset, payload_size;
@@ -20,7 +21,10 @@ typedef struct {
 
 // Raw big-endian linear MD cartridges <=4 MiB. No SMD deinterleave or byte swapping.
 // Requires explicit 'U' in the region field. Validates vectors/header/range,
-// not game-specific mappers. Numeric/JP/EU-only region fields are not supported.
+// rejects known SVP/32X/Pico and serial EEPROM headers. Not a game-specific
+// SRAM header ranges are limited to the implemented 0x200000..0x21ffff aperture.
+// compatibility database; CD, lock-on peripherals and non-linear mappers are
+// not implemented. Numeric/JP/EU-only region fields are not supported.
 rom_cart_result_t rom_parse_md(const uint8_t *header, size_t header_size, uint64_t file_size,
                               rom_md_info_t *info);
 // Caller reads candidate 64-byte headers at prefix+0x7fc0 and prefix+0xffc0.

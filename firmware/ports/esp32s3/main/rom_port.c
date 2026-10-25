@@ -4,6 +4,9 @@
 #include <string.h>
 
 #include "nes_rom.h"
+#include "retro_rom.h"
+#include "rom_file.h"
+#include "fpga_link.h"
 
 esp_err_t rom_port_probe(const char *path, rom_info_t *info)
 {
@@ -12,14 +15,10 @@ esp_err_t rom_port_probe(const char *path, rom_info_t *info)
     if (!path) return ESP_ERR_INVALID_ARG;
     FILE *f = fopen(path, "rb");
     if (!f) return ESP_ERR_NOT_FOUND;
-    uint8_t h[16];
-    size_t n = fread(h, 1, sizeof h, f);
-    bool read_ok = !ferror(f);
-    long size = -1;
-    if (read_ok && !fseek(f, 0, SEEK_END)) size = ftell(f);
+    rom_result_t result = rom_probe_file(f, path, info);
     int close_err = fclose(f);
-    if (!read_ok || size < 0 || close_err) return ESP_FAIL;
-    switch (rom_probe(h, n, (uint64_t)size, path, info)) {
+    if (close_err) return ESP_FAIL;
+    switch (result) {
     case ROM_OK: return ESP_OK;
     case ROM_INVALID: return ESP_ERR_INVALID_SIZE;
     default: return ESP_ERR_NOT_SUPPORTED;
@@ -33,8 +32,11 @@ esp_err_t rom_port_load(const char *path, void (*progress)(void *ctx, int pct), 
     rom_info_t info;
     esp_err_t e = rom_port_probe(path, &info);
     if (e != ESP_OK) return e;
-    switch (info.system) {
-    case ROM_NES: return nes_load_file(path, progress, ctx, ms);
-    default: return ESP_ERR_NOT_SUPPORTED;
-    }
+    // Serialize profile detection and transfer; no race with console/menu BOOT.
+    fl_lock();
+    if (retro_present()) e = retro_load_file(path, progress, ctx, ms);
+    else if (info.system == ROM_NES) e = nes_load_file(path, progress, ctx, ms);
+    else e = ESP_ERR_NOT_SUPPORTED;
+    fl_unlock();
+    return e;
 }

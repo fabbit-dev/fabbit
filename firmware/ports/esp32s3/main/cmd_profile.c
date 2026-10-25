@@ -12,6 +12,7 @@
 #include "fpga_link.h"
 #include "nes_rom.h"
 #include "rom_port.h"
+#include "retro_rom.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -145,11 +146,14 @@ static int cmd_rom(int argc, char **argv)
     rom_info_t info;
     esp_err_t e = rom_port_probe(path, &info);
     if (e == ESP_OK) {
-        if (!nes_present()) {
+        fl_lock();
+        if (!retro_present() && !nes_present()) {
+            fl_unlock();
             printf("в ПЛИС не профиль NES\n");
             return 1;
         }
         e = rom_port_load(path, NULL, NULL, &ms);
+        fl_unlock();
     }
     printf("ROM %s: %s, %" PRIu32 " мс\n", path, esp_err_to_name(e), ms);
     return e != ESP_OK;
@@ -171,11 +175,23 @@ static int cmd_joy(int argc, char **argv)
 
 static int cmd_nesreset(int argc, char **argv)
 {
+    fl_lock();
+    if (retro_present()) {
+        uint32_t system;
+        esp_err_t e = fl_csr_read(RETRO_SYSTEM, &system, 1);
+        if (e == ESP_OK && system == ROM_NES) e = retro_reset();
+        else if (e == ESP_OK) e = ESP_ERR_INVALID_STATE;
+        fl_unlock();
+        return e != ESP_OK;
+    }
     if (!nes_present()) {
+        fl_unlock();
         printf("в ПЛИС не профиль NES\n");
         return 1;
     }
-    return fl_csr_set(NES_CTRL, NES_KEY | 2) != ESP_OK;
+    esp_err_t e = fl_csr_set(NES_CTRL, NES_KEY | 2);
+    fl_unlock();
+    return e != ESP_OK;
 }
 
 static void reg(const char *name, const char *help, esp_console_cmd_func_t f)

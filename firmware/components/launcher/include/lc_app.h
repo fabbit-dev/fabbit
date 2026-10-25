@@ -15,6 +15,7 @@ typedef enum { LC_UP, LC_DOWN, LC_LEFT, LC_RIGHT, LC_OK, LC_BACK } lc_key_t;
 typedef struct {
     uint8_t profile;  // выбранный профиль на главном экране
     char game[64];    // имя последней игры
+    char identity[100]; // additive v2 state, old profile+game prefix unchanged
 } lc_saved_t;
 
 // этап загрузки: строка под названием игры; pct < 0, если доли нет. Звать, только пока в ПЛИС

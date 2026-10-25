@@ -30,7 +30,22 @@ int main(void)
     assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK);
     assert(mi.payload_size == 65536 && mi.reset_pc == 512 && !mi.sram);
     memcpy(md + 0x1B0, "RA", 2);
+    md[0x1B2] = 0xf8;
+    put_be32(md + 0x1B4, 0); put_be32(md + 0x1B8, 1);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED && !mi.payload_size);
+    put_be32(md + 0x1B4, 0x200001); put_be32(md + 0x1B8, 0x203fff);
     assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK && mi.sram);
+    assert(mi.ram_size == 8192);
+    put_be32(md + 0x1B8, 0x220001);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED);
+    put_be32(md + 0x1B4, 0x200000); put_be32(md + 0x1B8, 0x21ffff);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK && mi.ram_size == 131072);
+    md[0x1B2] = 0xe8; // serial EEPROM is not linear SRAM
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED && !mi.payload_size);
+    md[0x1B2] = 0xf8;
+    memcpy(md + 0x120, "VIRTUA RACING", 13);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED);
+    memset(md + 0x120, 0, 13);
     for (size_t i = 0; i < 512; i++)
         assert(rom_parse_md(md, i, 65536, &mi) == ROM_CART_INVALID && !mi.payload_size);
     assert(rom_parse_md(NULL, 512, 65536, &mi) == ROM_CART_INVALID);

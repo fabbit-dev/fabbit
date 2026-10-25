@@ -200,6 +200,7 @@ static void games_info(const lc_game_t *g, int n, int sel, int top)
     int y = py + ph + 14;
     ui_fill(px - 2, y, pw + 4, 4 * 26, UI_BG);
     for (int i = 0; i < 4; i++, y += 26) {
+        if (c->system > 1 && i < 3) continue; // never present MD/SNES as NES mapper/PRG/CHR
         ui_text(&ui_font_mono15, px, y, k[i], UI_T3, UI_LEFT);
         ui_text(&ui_font_mono15b, px + pw, y, v[i], UI_INK, UI_RIGHT);
     }

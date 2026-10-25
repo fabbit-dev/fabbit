@@ -14,7 +14,10 @@ rom_cart_result_t rom_parse_md(const uint8_t *h, size_t n, uint64_t size, rom_md
     if (!h || n < 512 || size < 512 || (size & 1) || memcmp(h + 0x100, "SEGA", 4))
         return ROM_CART_INVALID;
     // The fixture's linear cartridge arena deliberately excludes mapper/SVP/CD/32X modes.
-    if (size > 4 * 1024 * 1024 || memcmp(h + 0x100, "SEGA 32X", 8) == 0)
+    if (size > 4 * 1024 * 1024 || memcmp(h + 0x100, "SEGA 32X", 8) == 0 ||
+        !memcmp(h + 0x100, "SEGA PICO", 9) ||
+        !memcmp(h + 0x183, "MK-1229", 7) || !memcmp(h + 0x183, "G-7001", 6) ||
+        !memcmp(h + 0x120, "VIRTUA RACING", 13) || !memcmp(h + 0x150, "VIRTUA RACING", 13))
         return ROM_CART_UNSUPPORTED;
     uint32_t sp = be32(h), pc = be32(h + 4);
     uint32_t start = be32(h + 0x1A0), end = be32(h + 0x1A4);
@@ -25,9 +28,22 @@ rom_cart_result_t rom_parse_md(const uint8_t *h, size_t n, uint64_t size, rom_md
     bool americas = false;
     for (size_t i = 0x1F0; i < 0x200; i++) americas |= h[i] == 'U';
     if (!americas) return ROM_CART_UNSUPPORTED;
+    bool sram = h[0x1B0] == 'R' && h[0x1B1] == 'A';
+    uint32_t ram = 0;
+    if (sram) {
+        uint32_t first = be32(h + 0x1B4), last = be32(h + 0x1B8);
+        // The RTL maps cartridge SRAM using CPU byte address bits [16:0].
+        // Accept only its first 128 KiB aperture: wider/other header ranges
+        // would silently alias or remain ROM. Byte-lane and word SRAM are allowed.
+        if (h[0x1B2] != 0xf8 || first < 0x200000 || last < first || last > 0x21ffff ||
+            last - first >= 131072) return ROM_CART_UNSUPPORTED;
+        ram = last - first + 1;
+        if ((first & 1) == (last & 1)) ram = (last - first) / 2 + 1;
+    }
     info->payload_size = (size_t)size;
     info->reset_pc = pc;
-    info->sram = h[0x1B0] == 'R' && h[0x1B1] == 'A';
+    info->sram = sram;
+    info->ram_size = ram;
     return ROM_CART_OK;
 }
 
