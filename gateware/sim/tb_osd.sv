@@ -109,7 +109,7 @@ module tb_osd;
   logic [23:0] shot [480][640];
   int shot_n = 0;
   always @(posedge clk_pix)
-    if (px.de) shot[px.y][px.x] <= {px.r, px.g, px.b};
+    if (px.de) shot[px.y[8:0]][px.x[9:0]] <= {px.r, px.g, px.b};
   always @(posedge clk_pix) if (px.de && px.x == 639 && px.y == 479) shot_n++;
   task automatic next_frame();
     int n0 = shot_n;
@@ -194,14 +194,26 @@ module tb_osd;
     wait (!busy);
     compare("RECT во время заливки отброшен");
 
-    f0 = frames;
+    // Координаты 12 бит и размеры 16 бит: сумма не должна оборачиваться в начало экрана.
+    osd_rect(4094, 0, 4, 2, 9);
+    osd_fill(0, 4095, 4, 2, 8'hFF);
+    wait (!busy);
+    compare("RECT/FILL вне адресного поля не оборачиваются в экран");
+
+    wbuf = new[6];
+    {wbuf[0], wbuf[1], wbuf[2], wbuf[3], wbuf[4], wbuf[5]} = {16'd2, 16'd2, 8'hFF, 8'h00};
+    q_write(8'h41, yx(0, 0));
+    wait (!busy);
+    compare("FILL с лишним байтом отброшен");
+
+    f0 = int'(frames);
     next_frame();
     next_frame();
     #2us;
-    check(frames - f0 == 2, $sformatf("frames: +%0d за 2 кадра", frames - f0));
+    check(int'(frames) - f0 == 2, $sformatf("frames: +%0d за 2 кадра", int'(frames) - f0));
     save_ppm("build/tb_osd.ppm");
 
-    if (errors) $fatal(1, "ОШИБОК %0d", errors);
+    if (errors != 0) $fatal(1, "ОШИБОК %0d", errors);
     else $display("ВСЁ OK");
     $finish;
   end

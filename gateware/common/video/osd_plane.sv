@@ -16,8 +16,8 @@
 // Пиксели за краем экрана отброшены. Кадр 40/41, начатый при busy = 1, отброшен целиком.
 //
 // Память: 153 600 байт (38 RAMB36), запись в такте шины, чтение в такте пикселя.
-// Палитра и CTRL меняются редко и идут в такт пикселя без синхронизатора: смена даёт не больше
-// одного кадра с частью старых цветов. frames: счётчик кадров видео в такте шины.
+// Палитра меняется редко без атомарного переноса: смена даёт не больше одного кадра с частью
+// старых цветов. CTRL через sync_bit. frames: счётчик кадров видео в такте шины.
 // Задержка ступени 2 такта пикселя.
 module osd_plane
   import video_pkg::*;
@@ -45,9 +45,9 @@ module osd_plane
   // ---------------- запись ----------------
   logic [ 7:0] f_cmd = '0;
   logic [11:0] x0 = '0, y0 = '0;
-  logic [ 2:0] n = '0;  // принято байт заголовка (насыщается на 5)
+  logic [ 2:0] n = '0;  // принято байт заголовка (6: лишний байт FILL/CTRL)
   logic [15:0] w = '0, h = '0;
-  logic [11:0] cx = '0, cy = '0;  // текущий пиксель
+  logic [16:0] cx = '0, cy = '0;  // координата + размер без переполнения
   logic [Aw-1:0] row_base = '0, ptr = '0;
   logic [ 7:0] fill_c = '0;
   logic        filling = 1'b0, drop = 1'b0, ctrl_on = 1'b0;
@@ -64,23 +64,23 @@ module osd_plane
 
   initial for (int i = 0; i < 16; i++) pal[i] = {3{8'(i * 17)}};
 
-  wire in_screen = cx < 12'(W) && cy < 12'(H);
-  wire last_col = cx + 12'd2 >= x0 + w[11:0];
+  wire in_screen = cx < 17'(W) && cy < 17'(H);
+  wire last_col = cx + 17'd2 >= 17'(x0) + 17'(w);
 
   // следующий байт прямоугольника: вправо, в конце строки на начало следующей
   task automatic step();
     if (last_col) begin
-      cx       <= x0;
+      cx       <= 17'(x0);
       cy       <= cy + 1'b1;
       row_base <= row_base + Aw'(Row);
       ptr      <= row_base + Aw'(Row);
     end else begin
-      cx  <= cx + 12'd2;
+      cx  <= cx + 17'd2;
       ptr <= ptr + 1'b1;
     end
   endtask
 
-  wire rows_left = cy < y0 + h[11:0];
+  wire rows_left = cy < 17'(y0) + 17'(h);
 
   always_ff @(posedge clk) begin
     we <= 1'b0;
@@ -90,7 +90,7 @@ module osd_plane
       ctrl_on <= addr[0];
       pal_n <= '0;
       n     <= '0;
-      drop  <= filling;  // кадр 40/41, начатый во время заливки, отброшен целиком
+      drop  <= filling || addr[0];  // кадр 40/41: занят или нечётный x
       if (!filling) begin  // x0, y0 нужны заливке до конца
         x0 <= {addr[11:1], 1'b0};
         y0 <= addr[23:12];
@@ -98,22 +98,22 @@ module osd_plane
     end
 
     if (wr_valid && !drop && (f_cmd == CmdRect || f_cmd == CmdFill)) begin
-      if (n != 3'd5) n <= n + 1'b1;
+      if (n != 3'd6) n <= n + 1'b1;
       unique case (n)
         3'd0: w[15:8] <= wr_data;
         3'd1: w[7:0] <= wr_data;
         3'd2: h[15:8] <= wr_data;
         3'd3: begin
           h[7:0]   <= wr_data;
-          cx       <= x0;
-          cy       <= y0;
+          cx       <= 17'(x0);
+          cy       <= 17'(y0);
           row_base <= Aw'(y0) * Aw'(Row) + Aw'(x0[11:1]);
           ptr      <= Aw'(y0) * Aw'(Row) + Aw'(x0[11:1]);
         end
         default: begin
           if (f_cmd == CmdFill) begin
             if (n == 3'd4) fill_c <= wr_data;
-          end else if (rows_left && w != 0) begin
+          end else if (rows_left && w != 0 && !w[0]) begin
             we    <= in_screen;
             waddr <= ptr;
             wdata <= wr_data;
@@ -125,7 +125,7 @@ module osd_plane
 
     if (wr_valid && f_cmd == CmdCtrl) begin
       key <= {key[23:0], wr_data};
-      if (n != 3'd5) n <= n + 1'b1;
+      if (n != 3'd6) n <= n + 1'b1;
     end
 
     if (wr_valid && f_cmd == CmdPal) begin
@@ -139,7 +139,8 @@ module osd_plane
     end
 
     if (frame_end && f_cmd == CmdCtrl && n == 3'd4 && key == Key) show <= ctrl_on;
-    if (frame_end && !drop && f_cmd == CmdFill && n == 3'd5 && w != 0 && h != 0) filling <= 1'b1;
+    if (frame_end && !drop && f_cmd == CmdFill && n == 3'd5 && w != 0 && h != 0 && !w[0])
+      filling <= 1'b1;
     if (frame_end) f_cmd <= '0;
 
     if (filling) begin
@@ -153,7 +154,7 @@ module osd_plane
     end
   end
 
-  assign busy = filling;
+  assign busy = filling || we;  // последняя запись памяти ещё в конвейере
   assign shown = show;
 
   // ---------------- чтение и вывод ----------------
@@ -194,11 +195,13 @@ module osd_plane
   wire logo_bit = in_logo && Logo[lr][7'(LW - 1) - lc];
 
   vpx_t p1;
+  wire show_pix;
+  sync_bit u_show (.clk(clk_pix), .d(show), .q(show_pix));
   logic ink1 = 1'b0, show1 = 1'b0;
   always_ff @(posedge clk_pix) begin
     p1    <= px_in;
     ink1  <= logo_bit;
-    show1 <= show;
+    show1 <= show_pix;
   end
 
   wire [3:0] nib = p1.x[0] ? rdata[3:0] : rdata[7:4];

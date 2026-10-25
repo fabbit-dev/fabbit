@@ -169,7 +169,8 @@ module nes_top (
     case (csr_raddr)
       8'd0: csr_rdata = "FNES";
       8'd2: csr_rdata = {29'd0, fail_s, done_s, loading_s};
-      8'd3: csr_rdata = 32'(FifoDepth) - 32'(fifo_level) - 32'd16;
+      8'd3: csr_rdata = fifo_level >= 13'(FifoDepth - 16) ? 32'd0 :
+                       32'(FifoDepth - 16) - 32'(fifo_level);
       8'd4: csr_rdata = {8'd0, rx_bytes};
       8'd5: csr_rdata = {pad_bus, 8'd0, joy_bus};
       default: csr_rdata = '0;
