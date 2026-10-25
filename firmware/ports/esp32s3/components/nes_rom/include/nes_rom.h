@@ -16,7 +16,7 @@ typedef struct {
     size_t need;  // заголовок + PRG + CHR
 } nes_info_t;
 
-// заголовок iNES (16 байт); false: не iNES или не влезает в SDRAM профиля
+// Заголовок 16 байт; false: не iNES, trainer, расширенные размеры NES 2.0 или не влезает в SDRAM.
 bool nes_parse(const uint8_t h[16], nes_info_t *info);
 // в ПЛИС профиль NES
 bool nes_present(void);

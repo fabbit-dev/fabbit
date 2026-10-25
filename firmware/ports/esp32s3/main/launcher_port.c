@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #include "esp_heap_caps.h"
 #include "esp_log.h"
@@ -56,6 +57,7 @@ static uint32_t name_hash(const char *s) { return fl_crc32(0, (const uint8_t *)s
 
 static void nvs_get(const char *key, void *v, size_t n)
 {
+    memset(v, 0, n);
     nvs_handle_t h;
     if (nvs_open("launcher", NVS_READONLY, &h) != ESP_OK) return;
     size_t len = n;
@@ -99,8 +101,11 @@ typedef struct {
 
 static bool fbi_open(const char *rom, fbi_head_t *hd, FILE **pf)
 {
+    size_t len = strlen(rom);
+    if (len < 4) return false;
     char path[112];
-    snprintf(path, sizeof path, "%.*s.fbi", (int)(strlen(rom) - 4), rom);
+    int plen = snprintf(path, sizeof path, "%.*s.fbi", (int)(len - 4), rom);
+    if (plen < 0 || (size_t)plen >= sizeof path) return false;
     FILE *f = fopen(path, "rb");
     if (!f) return false;
     if (fread(hd, 1, sizeof *hd, f) != sizeof *hd || memcmp(hd->magic, "FBTH", 4) ||
@@ -108,6 +113,7 @@ static bool fbi_open(const char *rom, fbi_head_t *hd, FILE **pf)
         fclose(f);
         return false;
     }
+    hd->title[sizeof hd->title - 1] = 0;
     *pf = f;
     return true;
 }
@@ -133,7 +139,8 @@ static int p_games(lc_game_t *g, int max)
         FILE *f = fopen(c->path, "rb");
         uint8_t h[16];
         nes_info_t info;
-        bool ok = f && fread(h, 1, 16, f) == 16 && nes_parse(h, &info);
+        bool ok = f && fread(h, 1, 16, f) == 16 && nes_parse(h, &info) &&
+                  fseek(f, 0, SEEK_END) == 0 && ftell(f) >= (long)info.need;
         if (f) fclose(f);
         if (!ok) continue;
         c->mapper = info.mapper;
@@ -191,12 +198,14 @@ static bool wait_golden(uint32_t timeout)
     return false;
 }
 
-static bool p_run(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n)
+static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n)
 {
     run_ctx_t r = {cb, ctx};
     esp_err_t e = pm_load_cb(CORE, false, pm_stage, &r);
     if (e != ESP_OK) {
         snprintf(err, n, "ядро NES не запустилось: %s", esp_err_to_name(e));
+        fl_id_t id;
+        if (fl_id(&id) == ESP_OK && !strcmp(id.magic, "FBPR")) fl_reboot_golden();
         wait_golden(2000);
         return false;
     }
@@ -210,10 +219,18 @@ static bool p_run(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, s
         return false;
     }
     uint32_t *runs = runs_of(g->name, true);
-    (*runs)++;
+    if (*runs < UINT32_MAX) (*runs)++;
     nvs_put("runs", s_runs, sizeof s_runs);
     ESP_LOGI(TAG, "%s: ROM %u мс", g->name, (unsigned)ms);
     return true;
+}
+
+static bool p_run(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n)
+{
+    fl_lock();
+    bool ok = run_locked(g, cb, ctx, err, n);
+    fl_unlock();
+    return ok;
 }
 
 static const lc_port_t s_port = {
@@ -257,12 +274,18 @@ static int golden_kind(void)  // 2: golden с плоскостью, 1: стар�
 static void task(void *arg)
 {
     uint8_t *fb = heap_caps_malloc(UI_FB_SIZE, MALLOC_CAP_SPIRAM);
+    if (!fb) {
+        ESP_LOGE(TAG, "%s", esp_err_to_name(ESP_ERR_NO_MEM));
+        vTaskDelete(NULL);
+        return;
+    }
     nvs_get("runs", s_runs, sizeof s_runs);
     menu_mode_t m = M_WAIT;
     bool started = false, warned = false;
     for (;;) {
         if (m != M_MENU) {
             vTaskDelay(pdMS_TO_TICKS(POLL_MS));
+            fl_lock();
             int k = golden_kind();
             if (k == 3 && m == M_WAIT) {
                 if (!started) lc_app_attach_running();
@@ -276,23 +299,28 @@ static void task(void *arg)
                 ESP_LOGW(TAG, "golden без плоскости меню (версия 1): меню не показываю");
                 warned = true;
             }
+            fl_unlock();
             continue;
         }
-        // ПЛИС ушла из golden мимо лаунчера (консоль `load`, сбой): ждать, как в игре
-        static uint32_t last_check;
-        if (p_now() - last_check > 1000) {
-            last_check = p_now();
-            if (golden_kind() != 2) {
-                lc_app_attach_running();
-                m = M_GAME;
-                continue;
-            }
+        fl_lock();
+        // Консоль могла сменить профиль после последней проверки: не писать OSD в профиль.
+        if (golden_kind() != 2) {
+            lc_app_attach_running();
+            m = M_GAME;
+            fl_unlock();
+            continue;
         }
         uint32_t wait = lc_app_tick();
+        fl_unlock();
         in_event_t e;
         lc_key_t key;
         bool rep;
-        if (in_get(&e, pdMS_TO_TICKS(wait)) && map_key(&e, &key, &rep)) lc_app_key(key, rep);
+        if (in_get(&e, pdMS_TO_TICKS(wait)) && map_key(&e, &key, &rep)) {
+            fl_lock();
+            if (golden_kind() == 2) lc_app_key(key, rep);
+            else lc_app_attach_running();
+            fl_unlock();
+        }
         if (lc_app_running()) m = M_GAME;
     }
 }
@@ -301,8 +329,10 @@ void launcher_start(void)
 {
     esp_err_t e = nvs_flash_init();
     if (e == ESP_ERR_NVS_NO_FREE_PAGES || e == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        nvs_flash_erase();
-        nvs_flash_init();
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        e = nvs_flash_init();
     }
-    xTaskCreatePinnedToCore(task, "menu", 8192, NULL, 5, NULL, 0);
+    ESP_ERROR_CHECK(e);
+    ESP_ERROR_CHECK(xTaskCreatePinnedToCore(task, "menu", 8192, NULL, 5, NULL, 0) == pdPASS
+                        ? ESP_OK : ESP_ERR_NO_MEM);
 }

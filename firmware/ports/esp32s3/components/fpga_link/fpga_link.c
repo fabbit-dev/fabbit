@@ -1,5 +1,5 @@
-// Шина ESP32-S3 -> ПЛИС: SPI2 через IO_MUX, QIO half-duplex. Пины по hardware_log §11.6,
-// IRQ на макете GPIO5 (GPIO46 — стрэпинг, см. docs/protocol.md).
+// Шина ESP32-S3 -> ПЛИС: SPI2 через IO_MUX, QIO half-duplex.
+// Пины и IRQ GPIO5: docs/bus-protocol.md (GPIO46 — стрэпинг).
 #include "fpga_link.h"
 
 #include <stdlib.h>
@@ -173,6 +173,7 @@ uint32_t fl_get_freq(void) { return s_hz; }
 
 static esp_err_t xfer(uint8_t cmd, uint32_t addr, const void *tx, void *rx, size_t len)
 {
+    fl_lock();
     spi_transaction_ext_t t = {0};
     t.base.flags = SPI_TRANS_MODE_QIO | SPI_TRANS_MULTILINE_CMD | SPI_TRANS_MULTILINE_ADDR;
     t.base.cmd = cmd;
@@ -186,7 +187,6 @@ static esp_err_t xfer(uint8_t cmd, uint32_t addr, const void *tx, void *rx, size
         t.base.rx_buffer = s_dma;
         t.base.rxlength = len * 8;
     }
-    fl_lock();
     if (tx && len) memcpy(s_dma, tx, len);
     esp_err_t err = spi_device_polling_transmit(s_dev, &t.base);
     if (err == ESP_OK && rx && len) memcpy(rx, s_dma, len);
@@ -197,12 +197,14 @@ static esp_err_t xfer(uint8_t cmd, uint32_t addr, const void *tx, void *rx, size
 esp_err_t fl_write(uint8_t cmd, uint32_t addr, const void *data, size_t len)
 {
     if (len > FL_BUF_SIZE) return ESP_ERR_INVALID_SIZE;
+    if (len && !data) return ESP_ERR_INVALID_ARG;
     return xfer(cmd, addr, data, NULL, len);
 }
 
 esp_err_t fl_read(uint8_t cmd, uint32_t addr, void *data, size_t len)
 {
     if (len > FL_BUF_SIZE) return ESP_ERR_INVALID_SIZE;
+    if (len && !data) return ESP_ERR_INVALID_ARG;
     return xfer(cmd, addr, NULL, data, len);
 }
 
@@ -276,7 +278,7 @@ esp_err_t fl_result(uint32_t *v)
 
 esp_err_t fl_tune(uint8_t rd_start, bool rd_fall);
 
-static esp_err_t simple(uint8_t cmd, uint32_t addr, uint32_t timeout_ms)
+static esp_err_t simple_locked(uint8_t cmd, uint32_t addr, uint32_t timeout_ms)
 {
     // ERASE/PROG/BOOT ПЛИС исполняет только с ключом в кадре
     bool keyed = cmd == FL_CMD_ERASE || cmd == FL_CMD_PROG || cmd == FL_CMD_BOOT ||
@@ -285,12 +287,20 @@ static esp_err_t simple(uint8_t cmd, uint32_t addr, uint32_t timeout_ms)
     return fl_wait_idle(timeout_ms);
 }
 
+static esp_err_t simple(uint8_t cmd, uint32_t addr, uint32_t timeout_ms)
+{
+    fl_lock();
+    esp_err_t e = simple_locked(cmd, addr, timeout_ms);
+    fl_unlock();
+    return e;
+}
+
 esp_err_t fl_tune(uint8_t rd_start, bool rd_fall)
 {
     return fl_write(FL_CMD_TUNE, rd_start | (rd_fall ? 0x100 : 0), KEY, 4);
 }
 
-esp_err_t fl_flash_id(uint32_t *jedec)
+static esp_err_t flash_id_locked(uint32_t *jedec)
 {
     ESP_RETURN_ON_ERROR(simple(FL_CMD_FL_ID, 0, 100), TAG, "fl_id");
     return fl_result(jedec);
@@ -298,7 +308,7 @@ esp_err_t fl_flash_id(uint32_t *jedec)
 
 esp_err_t fl_flash_erase64k(uint32_t addr) { return simple(FL_CMD_ERASE, addr, 3000); }
 
-esp_err_t fl_flash_sr(uint8_t *sr, uint8_t *cr)
+static esp_err_t flash_sr_locked(uint8_t *sr, uint8_t *cr)
 {
     uint32_t v;
     ESP_RETURN_ON_ERROR(simple(FL_CMD_FL_SR, 0, 100), TAG, "rdsr");
@@ -315,14 +325,14 @@ esp_err_t fl_flash_wrsr(uint8_t sr, uint8_t cr)
     return simple(FL_CMD_FL_WRSR, (uint32_t)cr << 8 | sr, 1000);
 }
 
-esp_err_t fl_flash_program(uint32_t addr, const void *data, size_t len)
+static esp_err_t flash_program_locked(uint32_t addr, const void *data, size_t len)
 {
     ESP_RETURN_ON_ERROR(fl_buf_write(0, data, len), TAG, "buf");
     ESP_RETURN_ON_ERROR(fl_param(len, 0), TAG, "param");
     return simple(FL_CMD_PROG, addr, 1000);
 }
 
-esp_err_t fl_flash_write_image(uint32_t addr, const uint8_t *data, size_t len,
+static esp_err_t flash_write_image_locked(uint32_t addr, const uint8_t *data, size_t len,
                                void (*progress)(size_t, size_t))
 {
     if (addr < FL_PROT_TOP || (addr & 0xFFFF)) return ESP_ERR_INVALID_ARG;
@@ -347,7 +357,7 @@ esp_err_t fl_flash_write_image(uint32_t addr, const uint8_t *data, size_t len,
     return fl_wait_idle(1000);
 }
 
-esp_err_t fl_flash_read(uint32_t addr, void *data, size_t len)
+static esp_err_t flash_read_locked(uint32_t addr, void *data, size_t len)
 {
     uint8_t *p = data;
     while (len) {
@@ -362,11 +372,69 @@ esp_err_t fl_flash_read(uint32_t addr, void *data, size_t len)
     return ESP_OK;
 }
 
-esp_err_t fl_flash_crc(uint32_t addr, uint32_t len, uint32_t *crc)
+static esp_err_t flash_crc_locked(uint32_t addr, uint32_t len, uint32_t *crc)
 {
     ESP_RETURN_ON_ERROR(fl_param(len, 0), TAG, "param");
     ESP_RETURN_ON_ERROR(simple(FL_CMD_CRC, addr, 10000), TAG, "crc");
     return fl_result(crc);
+}
+
+// PARAM, буфер и RESULT общие для всех задач: замок охватывает операцию целиком.
+esp_err_t fl_flash_id(uint32_t *jedec)
+{
+    fl_lock();
+    esp_err_t e = flash_id_locked(jedec);
+    fl_unlock();
+    return e;
+}
+
+esp_err_t fl_flash_sr(uint8_t *sr, uint8_t *cr)
+{
+    fl_lock();
+    esp_err_t e = flash_sr_locked(sr, cr);
+    fl_unlock();
+    return e;
+}
+
+esp_err_t fl_flash_program(uint32_t addr, const void *data, size_t len)
+{
+    if (!len || len > FL_BUF_SIZE || !data) return ESP_ERR_INVALID_ARG;
+    if (addr < FL_PROT_TOP || addr > 0x1000000u - len) return ESP_ERR_INVALID_ARG;
+    fl_lock();
+    esp_err_t e = flash_program_locked(addr, data, len);
+    fl_unlock();
+    return e;
+}
+
+esp_err_t fl_flash_write_image(uint32_t addr, const uint8_t *data, size_t len,
+                               void (*progress)(size_t, size_t))
+{
+    if (!len || !data || len > 0x1000000u || addr > 0x1000000u - len)
+        return ESP_ERR_INVALID_ARG;
+    fl_lock();
+    esp_err_t e = flash_write_image_locked(addr, data, len, progress);
+    fl_unlock();
+    return e;
+}
+
+esp_err_t fl_flash_read(uint32_t addr, void *data, size_t len)
+{
+    if ((len && !data) || len > 0x1000000u || addr > 0x1000000u - len)
+        return ESP_ERR_INVALID_ARG;
+    fl_lock();
+    esp_err_t e = flash_read_locked(addr, data, len);
+    fl_unlock();
+    return e;
+}
+
+esp_err_t fl_flash_crc(uint32_t addr, uint32_t len, uint32_t *crc)
+{
+    if (!crc || !len || len > 0xFFFFFFu || addr > 0x1000000u - len)
+        return ESP_ERR_INVALID_ARG;
+    fl_lock();
+    esp_err_t e = flash_crc_locked(addr, len, crc);
+    fl_unlock();
+    return e;
 }
 
 esp_err_t fl_boot(uint32_t addr) { return fl_write(FL_CMD_BOOT, addr, KEY, 4); }
@@ -391,9 +459,11 @@ static esp_err_t osd_wait(void)
 }
 
 esp_err_t fl_osd_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *px,
-                      size_t stride)
+                       size_t stride)
 {
     if ((x | w) & 1) return ESP_ERR_INVALID_ARG;
+    if (x >= FL_OSD_W || y >= FL_OSD_H || w > FL_OSD_W - x || h > FL_OSD_H - y ||
+        (w && h && (!px || stride < w / 2))) return ESP_ERR_INVALID_ARG;
     size_t row = w / 2;
     if (!row || !h) return ESP_OK;
     size_t band = (FL_BUF_SIZE - 4) / row;
@@ -415,6 +485,8 @@ esp_err_t fl_osd_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint
 esp_err_t fl_osd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t c)
 {
     if ((x | w) & 1) return ESP_ERR_INVALID_ARG;
+    if (x >= FL_OSD_W || y >= FL_OSD_H || w > FL_OSD_W - x || h > FL_OSD_H - y)
+        return ESP_ERR_INVALID_ARG;
     const uint8_t b[5] = {w >> 8, w, h >> 8, h, c};
     fl_lock();
     esp_err_t e = osd_wait();
@@ -427,7 +499,7 @@ esp_err_t fl_osd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t c)
 esp_err_t fl_osd_pal(uint8_t first, const uint32_t *rgb, size_t n)
 {
     uint8_t b[48];
-    if (first + n > 16) return ESP_ERR_INVALID_ARG;
+    if (first > 16 || n > 16 - first || (n && !rgb)) return ESP_ERR_INVALID_ARG;
     for (size_t i = 0; i < n; i++) b[3 * i] = rgb[i] >> 16, b[3 * i + 1] = rgb[i] >> 8, b[3 * i + 2] = rgb[i];
     return fl_write(FL_CMD_OSD_PAL, first, b, 3 * n);
 }
@@ -486,8 +558,8 @@ static int bs_part(uint8_t b, char *o, size_t n)
 
 void fl_bootsts_str(uint32_t v, char *out, size_t n)
 {
-    int k = snprintf(out, n, "сейчас: ");
-    k += bs_part(v & 0xFF, out + k, n - k);
-    k += snprintf(out + k, n - k, "; до этого: ");
-    bs_part((v >> 8) & 0xFF, out + k, n - k);
+    char current[96], previous[96];
+    bs_part(v & 0xFF, current, sizeof current);
+    bs_part((v >> 8) & 0xFF, previous, sizeof previous);
+    snprintf(out, n, "сейчас: %s; до этого: %s", current, previous);
 }
