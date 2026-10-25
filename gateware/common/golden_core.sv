@@ -1,9 +1,9 @@
 `default_nettype none
 
-// Ядро golden-образа: команды шины ESP (docs/protocol.md), буфер 8 КБ, движок флеша, ICAP.
+// Ядро golden-образа: команды шины ESP (docs/bus-protocol.md), буфер 8 КБ, движок флеша, ICAP.
 module golden_core #(
     parameter logic [23:0] ProtTop = 24'h40_0000,  // ниже: golden, стирание и запись запрещены
-    parameter logic [ 7:0] Version = 8'd1,
+    parameter logic [ 7:0] Version = 8'd2,  // 2: плоскость меню (команды 40–43)
     parameter int          PorBits = 23  // пауза до чтения BOOTSTS: 2^PorBits тактов (~84 мс)
 ) (
     input  wire         clk,
@@ -16,6 +16,10 @@ module golden_core #(
     input  wire         rd_req,
     output logic [ 7:0] rd_data,
     input  wire         frame_end,
+    // плоскость меню (osd_plane): команды 40–43 исполняет она, golden только отвечает без ошибки
+    input  wire         osd_busy,
+    input  wire         osd_shown,
+    input  wire  [15:0] frames,
     // состояние
     output wire         busy,
     output logic [ 7:0] err,
@@ -154,7 +158,7 @@ module golden_core #(
   always_comb begin
     unique case (f_cmd)
       CmdId: rd_word = {"FBGL", Version, 8'd0, 16'd0};
-      CmdStatus: rd_word = {6'd0, err != 0, busy, err, bootsts, 16'd0};
+      CmdStatus: rd_word = {4'd0, osd_shown, osd_busy, err != 0, busy, err, bootsts, frames};
       default: rd_word = {e_result, 32'd0};
     endcase
   end
@@ -270,6 +274,7 @@ module golden_core #(
             err      <= ErrOk;
           end
           CmdId, CmdStatus, CmdBufW, CmdBufR, CmdResult, CmdIcapDbg: ;
+          8'h40, 8'h41, 8'h42, 8'h43: ;  // osd_plane
           default: err <= ErrCmd;
         endcase
     end

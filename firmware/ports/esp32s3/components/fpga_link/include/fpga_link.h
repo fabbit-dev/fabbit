@@ -31,7 +31,14 @@ typedef enum {
     FL_CMD_CSR_R = 0x31,
     FL_CMD_STREAM = 0x32,         // оболочка профиля: addr = канал, байты потока
     FL_CMD_PAD = 0x33,            // оболочка профиля: 4 байта {пад 1, пад 0}, BE
+    FL_CMD_OSD_RECT = 0x40,       // плоскость меню golden: addr = {y, x}, w h BE, пиксели 4 бит
+    FL_CMD_OSD_FILL = 0x41,       // addr = {y, x}, w h BE, байт цвета (2 пикселя)
+    FL_CMD_OSD_PAL = 0x42,        // addr = первый индекс, RGB888 × n
+    FL_CMD_OSD_CTRL = 0x43,       // с ключом; addr[0]: 1 плоскость, 0 заставка
 } fl_cmd_t;
+
+#define FL_OSD_W 640
+#define FL_OSD_H 480
 
 typedef struct {
     char magic[5];     // "FBGL" golden, "FBPR" профиль
@@ -42,8 +49,11 @@ typedef struct {
 
 typedef struct {
     uint8_t busy, error;
+    uint8_t osd_busy;   // идёт заливка плоскости (OSD_FILL)
+    uint8_t osd_shown;  // на экране плоскость (иначе заставка)
     uint8_t err_code;
     uint32_t bootsts;
+    uint16_t frames;   // кадров видео golden с включения (версия golden ≥ 2)
 } fl_status_t;
 
 esp_err_t fl_init(uint32_t hz);
@@ -103,5 +113,16 @@ static inline uint32_t fl_csr_get(uint8_t idx)
 }
 // кнопки в профиль: pad0 = джойстик 1, pad1 = джойстик 2 (биты PAD_*, docs/bus-protocol.md)
 esp_err_t fl_pad(uint16_t pad0, uint16_t pad1);
+// плоскость меню golden (версия ≥ 2), 640×480 × 4 бит. x и w чётные. Заливка занимает ПЛИС
+// на w/2·h тактов 100 МГц (весь экран 1,5 мс): fl_osd_fill ждёт её конца сама.
+// RECT: пиксели построчно, байт = 2 пикселя, старший нибл левее; кадр не больше FL_BUF_SIZE,
+// длинный прямоугольник режется на полосы.
+esp_err_t fl_osd_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *px,
+                      size_t stride);
+esp_err_t fl_osd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t c);
+// палитра: n цветов RGB888 (0xRRGGBB) с индекса first
+esp_err_t fl_osd_pal(uint8_t first, const uint32_t *rgb, size_t n);
+esp_err_t fl_osd_show(bool on);
+
 // BOOTSTS (UG470) по-человечески: "сейчас: ...; до этого: ..."
 void fl_bootsts_str(uint32_t v, char *out, size_t n);

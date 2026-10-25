@@ -1,20 +1,25 @@
 `default_nettype none
 
-// Golden-образ Fabbit (адрес 0 флеша): приём команд ESP по quad SPI, запись слотов, IPROG.
+// Golden-образ Fabbit (адрес 0 флеша): приём команд ESP по quad SPI, запись слотов, IPROG,
+// HDMI 640×480@60 с плоскостью меню (osd_plane): до первой команды ESP на экране логотип.
 // LED: короткая вспышка раз в 2 с. UART (R3): "B <BOOTSTS>" при старте, "C <cmd,err>" на кадр.
-module golden_top (
+module golden_top
+  import video_pkg::*;
+(
     input  wire       clk,       // 25 МГц, K4
     output wire       led,
     output wire       uart_tx,
     input  wire       esp_sck,
     input  wire       esp_cs_n,
     inout  wire [3:0] esp_d,
-    output wire       esp_irq,   // 1: golden свободен
+    output wire       esp_irq,   // 1: golden свободен (флеш, ICAP и заливка плоскости)
     output wire       flash_cs_n,
     output wire       flash_mosi,
     input  wire       flash_miso,
     output wire       flash_wp_n,
-    output wire       flash_hold_n
+    output wire       flash_hold_n,
+    output wire [3:0] hdmi_p,
+    output wire [3:0] hdmi_n
 );
   // 25 -> 100 МГц
   logic clk_fb, clk100_raw, clk100, locked;
@@ -79,9 +84,10 @@ module golden_top (
       .frame_end(frame_end)
   );
 
-  logic       busy, dbg_valid;
+  logic       busy, dbg_valid, osd_busy, osd_shown;
   logic [7:0] err, dbg_cmd;
   logic [31:0] bootsts;
+  logic [15:0] frames;
   golden_core u_core (
       .clk          (clk100),
       .hdr_valid    (hdr_valid),
@@ -92,6 +98,9 @@ module golden_top (
       .rd_req       (rd_req),
       .rd_data      (rd_data),
       .frame_end    (frame_end),
+      .osd_busy     (osd_busy),
+      .osd_shown    (osd_shown),
+      .frames       (frames),
       .busy         (busy),
       .err          (err),
       .boot_status  (bootsts),
@@ -106,7 +115,19 @@ module golden_top (
       .flash_wp_n   (flash_wp_n),
       .flash_hold_n (flash_hold_n)
   );
-  assign esp_irq = ~busy;
+  assign esp_irq = ~(busy || osd_busy);  // заливка плоскости тоже держит IRQ в 0
+
+  // видео: развёртка → плоскость меню → HDMI
+  wire clk_pix, clk_5x, vlocked, rst_pix;
+  video_clocks #(.Frac(1'b1)) u_vclk (
+      .clk_25m(clk), .clk_pix(clk_pix), .clk_5x(clk_5x), .locked(vlocked), .rst_pix(rst_pix));
+  vpx_t tim, osd;
+  video_timing u_tim (.clk(clk_pix), .rst(rst_pix), .ce(1'b1), .px(tim));
+  osd_plane u_osd (
+      .clk(clk100), .hdr_valid(hdr_valid), .cmd(cmd), .addr(addr), .wr_valid(wr_valid),
+      .wr_data(wr_data), .frame_end(frame_end), .busy(osd_busy), .shown(osd_shown), .frames(frames),
+      .clk_pix(clk_pix), .px_in(tim), .px_out(osd));
+  hdmi_tx u_tx (.clk_pix(clk_pix), .clk_5x(clk_5x), .px(osd), .pad_p(hdmi_p), .pad_n(hdmi_n));
 
   // LED: вспышка 80 мс раз в ~2.7 с
   logic [27:0] blink = 28'd0;

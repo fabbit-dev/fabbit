@@ -10,10 +10,9 @@
 #include "esp_timer.h"
 #include "fpga_link.h"
 #include "input.h"
+#include "nes_rom.h"
 #include "pad.h"
 
-#define NES_CTRL 1
-#define NES_KEY 0x4E530000u  // "NS": ключ управления профиля NES (nes_top.sv)
 
 static void hotkey(pad_hotkey_t hk)
 {
@@ -22,7 +21,7 @@ static void hotkey(pad_hotkey_t hk)
         printf("[pad] Fn: меню (OSD ещё нет)\n");
         break;
     case PAD_HK_RESET:
-        if (fl_csr_get(0) == 0x464E4553) {  // "FNES"
+        if (fl_csr_get(NES_ID) == NES_MAGIC) {
             fl_csr_set(NES_CTRL, NES_KEY | 2);
             printf("[pad] Fn+Меню: сброс NES\n");
         }

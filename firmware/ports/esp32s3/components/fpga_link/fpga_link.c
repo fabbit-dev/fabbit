@@ -224,8 +224,11 @@ esp_err_t fl_status(fl_status_t *st)
     ESP_RETURN_ON_ERROR(fl_read(FL_CMD_STATUS, 0, b, sizeof b), TAG, "status");
     st->busy = b[0] & 1;
     st->error = (b[0] >> 1) & 1;
+    st->osd_busy = (b[0] >> 2) & 1;
+    st->osd_shown = (b[0] >> 3) & 1;
     st->err_code = b[1];
     st->bootsts = (uint32_t)b[2] << 24 | b[3] << 16 | b[4] << 8 | b[5];
+    st->frames = (uint16_t)(b[6] << 8 | b[7]);
     return ESP_OK;
 }
 
@@ -371,6 +374,65 @@ esp_err_t fl_boot(uint32_t addr) { return fl_write(FL_CMD_BOOT, addr, KEY, 4); }
 esp_err_t fl_set_wdt(uint32_t units) { return simple(FL_CMD_SET_WDT, units & 0xFFFFFF, 100); }
 
 esp_err_t fl_reboot_golden(void) { return fl_write(FL_CMD_REBOOT_GOLDEN, 0, KEY, 4); }
+
+static inline uint32_t osd_addr(uint16_t x, uint16_t y) { return (uint32_t)y << 12 | (x & 0xFFF); }
+
+// заливка держит IRQ в 0: кадр OSD, пришедший до её конца, ПЛИС отбросит. IRQ в 0 бывает и от
+// флеша (CRC слота идёт сотни мс): тогда решает бит osd_busy в STATUS
+static esp_err_t osd_wait(void)
+{
+    int64_t end = esp_timer_get_time() + 20000;
+    fl_status_t st;
+    while (!gpio_get_level(PIN_IRQ)) {
+        if (fl_status(&st) == ESP_OK && !st.osd_busy) return ESP_OK;
+        if (esp_timer_get_time() > end) return ESP_ERR_TIMEOUT;
+    }
+    return ESP_OK;
+}
+
+esp_err_t fl_osd_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *px,
+                      size_t stride)
+{
+    if ((x | w) & 1) return ESP_ERR_INVALID_ARG;
+    size_t row = w / 2;
+    if (!row || !h) return ESP_OK;
+    size_t band = (FL_BUF_SIZE - 4) / row;
+    if (!band) return ESP_ERR_INVALID_SIZE;
+    static uint8_t b[FL_BUF_SIZE];  // под замком шины
+    esp_err_t e = ESP_OK;
+    fl_lock();
+    for (uint16_t y0 = 0; y0 < h && e == ESP_OK; y0 += band) {
+        uint16_t n = (h - y0 < band) ? h - y0 : band;
+        b[0] = w >> 8, b[1] = w, b[2] = n >> 8, b[3] = n;
+        for (uint16_t j = 0; j < n; j++) memcpy(b + 4 + j * row, px + (size_t)(y0 + j) * stride, row);
+        e = osd_wait();
+        if (e == ESP_OK) e = fl_write(FL_CMD_OSD_RECT, osd_addr(x, y + y0), b, 4 + n * row);
+    }
+    fl_unlock();
+    return e;
+}
+
+esp_err_t fl_osd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t c)
+{
+    if ((x | w) & 1) return ESP_ERR_INVALID_ARG;
+    const uint8_t b[5] = {w >> 8, w, h >> 8, h, c};
+    fl_lock();
+    esp_err_t e = osd_wait();
+    if (e == ESP_OK) e = fl_write(FL_CMD_OSD_FILL, osd_addr(x, y), b, 5);
+    if (e == ESP_OK) e = osd_wait();
+    fl_unlock();
+    return e;
+}
+
+esp_err_t fl_osd_pal(uint8_t first, const uint32_t *rgb, size_t n)
+{
+    uint8_t b[48];
+    if (first + n > 16) return ESP_ERR_INVALID_ARG;
+    for (size_t i = 0; i < n; i++) b[3 * i] = rgb[i] >> 16, b[3 * i + 1] = rgb[i] >> 8, b[3 * i + 2] = rgb[i];
+    return fl_write(FL_CMD_OSD_PAL, first, b, 3 * n);
+}
+
+esp_err_t fl_osd_show(bool on) { return fl_write(FL_CMD_OSD_CTRL, on, KEY, 4); }
 
 esp_err_t fl_pad(uint16_t pad0, uint16_t pad1)
 {

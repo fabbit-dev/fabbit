@@ -42,5 +42,9 @@ esp_err_t pm_init(void);
 void pm_list(void);
 // напечатать таблицу слотов из флеша ПЛИС
 esp_err_t pm_slots(void);
-// загрузить профиль: файл в PSRAM, слот (из кэша или запись), BOOT, ожидание ID профиля
+// этап загрузки для экрана: stage — что идёт, pct — доля 0..100 или −1
+typedef void (*pm_progress_cb)(void *ctx, const char *stage, int pct);
+// загрузить профиль: файл в PSRAM, слот (из кэша или запись), BOOT, ожидание ID профиля.
+// cb может быть NULL; зовётся из той же задачи
 esp_err_t pm_load(const char *file, bool force_write);
+esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void *ctx);
