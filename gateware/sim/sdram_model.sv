@@ -8,7 +8,12 @@
 module sdram_model #(
     parameter realtime TAc = 5.4ns,  // выход данных после фронта (CL2, -6)
     parameter realtime TOh = 2.5ns,  // удержание после следующего фронта
-    parameter time TRcd = 15ns   // ACT → READ/WRITE
+    parameter time TRcd = 15ns,  // legacy default; strict fixtures override21ns
+    // Optional conditional ESMT(2S)-7 timing per programmed CAS. Legacy model
+    // defaults intentionally unchanged for the retained NES baseline test.
+    parameter bit DynamicCasTiming = 1'b0,
+    parameter realtime TAcCl2 = 8ns,
+    parameter realtime TAcCl3 = 6ns
 ) (
     input  wire        clk,
     input  wire        cke,
@@ -50,7 +55,8 @@ module sdram_model #(
         #(TOh) dq_e = 0;
       end
       if (h >= 0) begin
-        #(TAc) dq_o = mem.exists(h[20:0]) ? mem[h[20:0]] : 32'hxxxx_xxxx;
+        #(DynamicCasTiming ? (cl == 2 ? TAcCl2 : TAcCl3) : TAc)
+            dq_o = mem.exists(h[20:0]) ? mem[h[20:0]] : 32'hxxxx_xxxx;
         dq_e = 1;
       end
     join_none

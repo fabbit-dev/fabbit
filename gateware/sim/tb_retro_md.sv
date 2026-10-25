@@ -57,16 +57,17 @@ module tb_retro_md;
   wire [31:0] sd_dq_in, sd_dq_out;
   wire sd_dq_oe;
   retro_sdram_io io (.dq_in(sd_dq_in), .dq_out(sd_dq_out), .dq_oe(sd_dq_oe), .sd_dq(sd_dq));
-  // ceil(ns / 18.624ns): RCD/RP=15ns, RFC=60ns, RAS=42ns,
-  // WR=12ns, MRD=2 clocks, CAS=3. Init >=200us, nominal refresh <=7us.
-  retro_sdram #(.InitCycles(10740), .RefreshCycles(375), .Trcd(1), .Trp(1),
-      .Trfc(4), .Tras(3), .Twr(1), .Tmrd(2), .Cas(3)) controller (
+  // ESMT M12L64322A(2S) Dec2015 pp6-7 conditional -7 budget:
+  // RCD/RP21ns, RFC63ns, RAS42ns, write-to-PRE2 FULL clocks, MRD2.
+  // Fitted speed/die suffix and board delay unknown; no physical signoff.
+  retro_sdram #(.InitCycles(10740), .RefreshCycles(375), .Trcd(2), .Trp(2),
+      .Trfc(4), .Tras(3), .Twr(2), .Tmrd(2), .Cas(3)) controller (
       .clk(clk), .rst(rst), .initialized(initialized), .req_valid(mem_valid),
       .req_ready(mem_ready), .req_write(mem_write), .req_addr(mem_addr), .req_wdata(mem_wdata),
       .rsp_valid(mem_rsp_valid), .rsp_ready(mem_rsp_ready), .rsp_rdata(mem_rdata),
       .sd_a(sd_a), .sd_ba(sd_ba), .sd_ras_n(sd_ras_n), .sd_cas_n(sd_cas_n),
       .sd_we_n(sd_we_n), .sd_dq_in(sd_dq_in), .sd_dq_out(sd_dq_out), .sd_dq_oe(sd_dq_oe));
-  sdram_model #(.TAc(5.4ns)) model (
+  sdram_model #(.TAc(6ns), .TOh(2ns), .TRcd(21ns)) model (
       .clk(sd_clk), .cke(1'b1), .cs_n(1'b0), .ras_n(sd_ras_n), .cas_n(sd_cas_n),
       .we_n(sd_we_n), .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(sd_dq));
 
@@ -125,21 +126,21 @@ module tb_retro_md;
     sd_cycle++;
     case ({sd_ras_n, sd_cas_n, sd_we_n})
       3'b011: begin
-        assert (sd_cycle-last_pre[sd_ba] >= 1 && sd_cycle-last_ref >= 4)
+        assert (sd_cycle-last_pre[sd_ba] >= 2 && sd_cycle-last_ref >= 4)
             else $fatal(1, "ACT violates tRP/tRFC");
         last_act[sd_ba] = sd_cycle;
       end
       3'b100: last_write[sd_ba] = sd_cycle;
       3'b010: begin
         for (int i = 0; i < 4; i++) if (sd_a[10] || 2'(i) == sd_ba) begin
-          assert (sd_cycle-last_act[i] >= 3 && sd_cycle-last_write[i] >= 1)
+          assert (sd_cycle-last_act[i] >= 3 && sd_cycle-last_write[i] >= 2)
               else $fatal(1, "PRE violates tRAS/tWR");
           last_pre[i] = sd_cycle;
         end
       end
       3'b001: begin
         for (int i = 0; i < 4; i++)
-          assert (sd_cycle-last_pre[i] >= 1) else $fatal(1, "REF violates tRP");
+          assert (sd_cycle-last_pre[i] >= 2) else $fatal(1, "REF violates tRP");
         assert (sd_cycle-last_ref >= 4) else $fatal(1, "REF violates tRFC");
         if (initialized && sd_cycle-last_ref > max_refresh_gap)
           max_refresh_gap = sd_cycle-last_ref;

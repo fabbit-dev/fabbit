@@ -18,12 +18,18 @@
 // resets console and asserts stop_ack. Only after stop_ack may config/assets/
 // physical SDRAM ownership change. Global reset intentionally discards queued
 // requests (already issued physical writes cannot be undone); reload afterwards.
+// memory_reset is a SEPARATE stopped-only reinitialization of the physical memory
+// protocol. It never invalidates IPL/coefficient coverage. Host/run stay blocked
+// until memory initialization and the stop acknowledgement become true again.
 module snes_system #(
     parameter int unsigned InitCycles = 18000,
     parameter int unsigned RefreshCycles = 480
 ) (
     input wire clk_service, free_master, free_master_ce,
     input wire reset, console_reset, run,
+    // Assert only after stop_ack and accepted host work drained. Reinitializes
+    // physical SDRAM on owner handover WITHOUT clearing runtime asset coverage.
+    input wire memory_reset,
     input wire [1:0] cfg_map,
     input wire [7:0] cfg_chip,
     input wire cfg_pal,
@@ -149,7 +155,8 @@ module snes_system #(
         .audio_l, .audio_r, .audio_ready(raw_audio_ready)
     );
     snes_memory #(.InitCycles(InitCycles), .RefreshCycles(RefreshCycles)) memory (
-        .clk(clk_service), .reset, .master_ce(core_step), .enable(active), .refresh_now,
+        .clk(clk_service), .reset(reset || memory_reset), .master_ce(core_step),
+        .enable(active), .refresh_now,
         .initialized(memory_initialized), .drained(memory_drained),
         .core_hold(memory_hold), .request_inflight, .needs_data,
         .refresh_busy, .deadline_fault, .overrun_fault, .protocol_fault,

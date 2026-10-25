@@ -8,6 +8,9 @@
 // start clears that asset's coverage. done waits until the last REGISTERED
 // backend write is applied and corresponding backend_ready is actually true.
 // Error aborts and clears selected asset; never starts the console itself.
+// A stopped START is an explicit restart: abandon an incomplete upload, clear
+// only the newly selected coverage, and reset address/error state. This permits
+// retry after host ABORT without global reset or losing the other completed asset.
 module snes_asset_loader (
     input wire clk, reset, run,
     input wire start,
@@ -65,7 +68,7 @@ module snes_asset_loader (
             invalidate_pending <= 0;
             state <= Clear;
         end else if (start) begin
-            if (run || state != Idle || channel > 1) begin
+            if (run || channel > 1) begin
                 error <= 1;  // unsafe start/channel
                 state <= Idle;
                 // Caller must stop on error; deferred clear executes on stop.
@@ -77,7 +80,10 @@ module snes_asset_loader (
                 ipl_clear <= !channel[0];
                 coeff_clear <= channel[0];
                 next_addr <= 0;
+                low_byte <= 0;
+                commit_wait <= 0;
                 error <= 0;
+                invalidate_pending <= 0;
                 state <= Clear;
             end
         end else if (state != Idle && run) begin

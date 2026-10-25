@@ -43,7 +43,10 @@ module tb_retro_snes_memory;
     assign sd_dq = sd_dq_oe ? sd_dq_out : {32{1'bz}};
     assign sd_dq_in = sd_dq;
     snes_memory #(.InitCycles(20), .RefreshCycles(480)) dut (.*);
-    sdram_model model (.clk(sd_clk), .cke(sd_cke), .cs_n(sd_cs_n),
+    // Conditional ESMT M12L64322A(2S)-7 CL2 bounds, Rev1.0 pp6-7.
+    // Ideal pins only: no PCB flight/skew or FPGA I/O timing signoff.
+    sdram_model #(.TAc(8ns),.TOh(2ns),.TRcd(21ns)) model (
+        .clk(sd_clk), .cke(sd_cke), .cs_n(sd_cs_n),
         .ras_n(sd_ras_n), .cas_n(sd_cas_n), .we_n(sd_we_n),
         .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(sd_dq));
 

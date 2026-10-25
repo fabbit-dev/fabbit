@@ -74,6 +74,15 @@ module tb_retro_snes_assets;
             coeff_read_addr=9'(i); #1ns;
             assert (coeff_read_data==12'(12'ha00|i)) else $fatal(1,"12-bit LE coefficient");
         end
+        // ABORT at the outer ROM session does not clear a completed coefficient
+        // image. A fresh stopped START must replace an unfinished IPL upload.
+        begin_asset(0);
+        for (int i=0;i<11;i++) send(i,8'(i),0);
+        assert (busy && !ipl_ready && coeff_ready) else $fatal(1,"partial IPL state");
+        begin_asset(0);
+        for (int i=0;i<64;i++) send(i,8'(i^8'h3c),i==63);
+        wait_done();
+        assert (ipl_ready && coeff_ready) else $fatal(1,"restart destroyed other asset");
         // Duplicate address, early last, missing last, invalid high nibble.
         begin_asset(0); send(0,1,0); send(0,2,0); tick();
         assert (error==3 && !ipl_ready && !busy) else $fatal(1,"duplicate address");

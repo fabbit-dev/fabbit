@@ -319,32 +319,32 @@
     {
       "path": "snes_memory.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "fb6c3214cbbab6e0b233c0c01ae0bd1d6c2a1a3074288fee134ff735d7745771",
+      "sha256": "078c2d60423f277b95ccafda7da92ed1558f4a274cd3e779d2f30abf10454a58",
       "license": "GPL-3.0-or-later"
     },
     {
       "path": "snes_asset_loader.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "3579e5f4a2bedecb957ed95a94c8c9dd71a9c09f0d95f769aefd449168d410c7",
+      "sha256": "e8dcdefa152b31782f808f62b89707ef441554d41bc8ee30a23e12357723436d",
       "license": "GPL-3.0-or-later"
     },
     {
       "path": "snes_clock_guard.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "6463c5da56e7d090e7705d82ba66b6162d9422ee0a0789d7fb7362dad8a90f97",
+      "sha256": "50a1b1eacfec2ee9f14066779e30a5926242ed0c894c0b899ecaf6f005a7325a",
       "license": "GPL-3.0-or-later"
     },
     {
       "path": "snes_system.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "82a98d980454c08ec755972ca174f1448ddaaac3344ffe8245f56b5732aec048",
+      "sha256": "3f4ab75f9fe9e956aca94af5376307c152ea0c856ef2280c554373c35c9549a8",
       "license": "GPL-3.0-or-later"
     }
   ],
   "tests": [
     {
       "path": "gateware/sim/tb_retro_snes.sv",
-      "sha256": "d2bdd52fd8643bd0bf03c04c5f2c31250a078aa62fd983121b2460a1c9e4a2c6",
+      "sha256": "da9cc867b2c28c2a60b50a39542b433fe3f8fafcf75cef01ae485ec9c4fed2db",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     },
     {
@@ -354,12 +354,12 @@
     },
     {
       "path": "gateware/sim/tb_retro_snes_memory.sv",
-      "sha256": "542952828baf4b224bc386157d9c850847d499facfefe6ad8681a9a679d36ae9",
+      "sha256": "97332f836aacc5f23ad71fb26905bdfba921e6178049900312d30f7380af358a",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     },
     {
       "path": "gateware/sim/tb_retro_snes_assets.sv",
-      "sha256": "fdab79906378c550946f32a71c4cfd1305aff8a0d9898a92829c8fdb27b0a588",
+      "sha256": "61c4d0fe6c0dca51f298f607d3d1d7b025064f36444e557da8dbcdd23dc3fdd0",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     }
   ],
@@ -374,7 +374,7 @@
   "assets": {
     "ipl": "64 runtime user-supplied bytes; no embedded fallback",
     "gaussian": "512 runtime signed 12-bit coefficients; stream 1024 LE container bytes",
-    "readiness": "Exact sequential address/last/coverage and backend ready required",
+    "readiness": "Exact sequential address/last/coverage and backend ready required; stopped START restarts an incomplete selected upload while retaining the other asset's completed coverage",
     "provenance": "Runtime supplier verifies rights, source, image length and hash"
   },
   "tables": {
@@ -388,9 +388,11 @@
   "clock_contract": {
     "service": "4x related free master",
     "primitive": "BUFGCE whole-console clock hold, no ENABLE pause",
-    "performance": "Conservative clock-stretched functional path, not nominal speed",
+    "performance": "Deadline-aware whole-console hold; native intermediate read edge allowed, unresolved consumption edge blocked. Refresh/contention can still stretch wall time. Timers sized from timing parameters.",
     "stop": "run=0 requests quiesce; preserve last-edge sampling and drain, then stop_ack permits owner/config/assets change",
-    "reset": "Global reset intentionally discards pending/unissued work; issued physical writes cannot be undone"
+    "reset": "Global reset intentionally discards pending/unissued work; issued physical writes cannot be undone",
+    "memory_reset": "Stopped-only physical SDRAM reinitialization, separate from global asset-invalidating reset; preserves IPL/coefficient coverage and blocks host/run until initialized again",
+    "simulation_io": "Conditional ESMT M12L64322A(2S)-7 Rev1.0 CL2 tSACmax8ns, tOHmin2ns, tRCD21ns; ideal forwarded clock phase +2ns. Fitted grade, board delays, slew and routed I/O margins unverified"
   },
   "limitations": [
     "No proprietary BIOS/game compatibility proof",

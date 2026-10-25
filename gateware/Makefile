@@ -80,6 +80,49 @@ nes_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xd
                constraints/vivado_profile.xdc
 
 TARGETS := wiretest_p3 blink_a blink_b wiretest_hdmi hdmi_bars
+retro_top: | build
+	vivado -mode batch -nojournal -log build/retro-top-synth.log -source tools/build_retro.tcl
+
+retro_top_route: | build
+	vivado -mode batch -nojournal -log build/retro-top-route.log -source tools/build_retro.tcl -tclargs route
+
+sim_retro_integration_units: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_memory_cdc \
+	  -Mdir build/tb_retro_memory_cdc common/cdc/sync_bit.sv profiles/retro/retro_mailbox.sv \
+	  profiles/retro/retro_memory_cdc.sv sim/tb_retro_memory_cdc.sv > build/tb_retro_memory_cdc.log 2>&1
+	build/tb_retro_memory_cdc/Vtb_retro_memory_cdc
+	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_asset_atoms \
+	  -Mdir build/tb_retro_asset_atoms profiles/retro/retro_regs_pkg.sv \
+	  profiles/retro/retro_asset_atoms.sv profiles/retro/snes/snes_asset_loader.sv \
+	  profiles/retro/snes/snes_assets.sv sim/tb_retro_asset_atoms.sv > build/tb_retro_asset_atoms.log 2>&1
+	build/tb_retro_asset_atoms/Vtb_retro_asset_atoms
+	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_session \
+	  -Mdir build/tb_retro_session profiles/retro/retro_regs_pkg.sv profiles/retro/retro_session.sv \
+	  sim/tb_retro_session.sv > build/tb_retro_session.log 2>&1
+	build/tb_retro_session/Vtb_retro_session
+
+sim_retro_top: | build
+	python3 -c 'from pathlib import Path; r=Path.cwd().parent; p=Path("build/retro/top/sources.f"); Path("build/retro/top/sim_sources.f").write_text("\n".join(str(Path(x).relative_to(r / "gateware")) for x in p.read_text().splitlines())+"\n")'
+	verilator --binary --assert --timing --timescale 1ns/1ps --no-assert-case \
+	  -Wno-fatal -Wno-BLKANDNBLK -j 4 --top-module tb_retro_top \
+	  -Mdir $(CURDIR)/build/tb_retro_top -Iprofiles/retro/md/rtl/vdp \
+	  -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700 \
+	  -f build/retro/top/sim_sources.f sim/xilinx_stubs.sv sim/retro_clock_models.sv \
+	  sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top.log 2>&1
+	cp profiles/retro/md/rtl/fx68k/microrom.mem profiles/retro/md/rtl/fx68k/nanorom.mem \
+	  build/tb_retro_top/
+	cd build/tb_retro_top && ./Vtb_retro_top $(RETRO_TOP_ARGS)
+
+sim_retro_video: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_video \
+	  -Mdir build/tb_retro_video common/video/video_pkg.sv profiles/nes/nes_palette_pkg.sv \
+	  common/mem/ram_sdp.sv common/cdc/sync_bit.sv common/cdc/cdc_word.sv common/cdc/fifo_async.sv \
+	  common/video/video_timing.sv common/video/tmds_encoder.sv common/video/tmds_phy_se.sv \
+	  profiles/retro/retro_framebuffer.sv profiles/retro/retro_pixels.sv \
+	  profiles/retro/audio/retro_audio_cdc.sv profiles/retro/audio/retro_hdmi_packet.sv \
+	  profiles/retro/audio/retro_hdmi_audio_tx.sv profiles/retro/retro_video.sv \
+	  sim/xilinx_stubs.sv sim/tb_retro_video.sv > build/tb_retro_video.log 2>&1
+	build/tb_retro_video/Vtb_retro_video
 all: $(addprefix build/,$(addsuffix .bit,$(TARGETS)))
 $(TARGETS): %: build/%.bit
 # Golden использует ICAP и дробный видеотакт: openXC7-цель не должна выдавать нерабочий образ.

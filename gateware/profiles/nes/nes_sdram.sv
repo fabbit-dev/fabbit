@@ -14,7 +14,8 @@
 //                         CHR RAM 0x3F8… (адреса cart.sv:1899-1900, mappers/*: prg_ram, chr_aout)
 // Remap = 0: адрес порта сразу номер слова (addr[19:0]) — для теста всей памяти.
 module nes_sdram #(
-    parameter bit Remap = 1'b1
+    parameter bit Remap = 1'b1,
+    parameter bit SplitDq = 1'b0
 ) (
     input  wire        clk,         // 21,429 МГц
     input  wire        fclk,        // 3 × clk, синфазно
@@ -40,7 +41,10 @@ module nes_sdram #(
     output wire        sd_ras_n,
     output wire        sd_cas_n,
     output wire        sd_we_n,
-    inout  wire [31:0] sd_dq
+    inout  wire [31:0] sd_dq,
+    input wire [31:0] dq_input,
+    output wire [31:0] dq_output,
+    output wire dq_drive
 );
   always_ff @(posedge clk)
     if (rst || clkref_sync) clkref <= 1'b1;
@@ -59,6 +63,20 @@ module nes_sdram #(
   endfunction
 
   wire [3:0] dqm_unused;
+  if (SplitDq) begin : g_split
+  retro_nes_sdram_core #(.FREQ(64_286_000)) u_ctl (
+      .clk(fclk), .resetn(rstn_f), .clkref(clkref), .busy(busy),
+      .dq_input(dq_input), .dq_output(dq_output), .dq_drive(dq_drive),
+      .SDRAM_A(sd_a), .SDRAM_DQM(dqm_unused), .SDRAM_BA(sd_ba),
+      .SDRAM_nCS(), .SDRAM_nWE(sd_we_n), .SDRAM_nRAS(sd_ras_n), .SDRAM_nCAS(sd_cas_n),
+      .SDRAM_CKE(),
+      .addrA(word(addr_a)), .weA(we_a), .dinA(din_a), .oeA(oe_a), .doutA(dout_a),
+      .addrB(word(addr_b)), .weB(we_b), .dinB(din_b), .oeB(oe_b), .doutB(dout_b),
+      .rv_addr(20'd0), .rv_din(16'd0), .rv_ds(2'b00), .rv_dout(), .rv_req(1'b0),
+      .rv_req_ack(), .rv_we(1'b0));
+  end else begin : g_legacy
+  assign dq_output=0;
+  assign dq_drive=0;
   sdram_nes #(.FREQ(64_286_000)) u_ctl (
       .clk(fclk), .resetn(rstn_f), .clkref(clkref), .busy(busy),
       .SDRAM_DQ(sd_dq), .SDRAM_A(sd_a), .SDRAM_DQM(dqm_unused), .SDRAM_BA(sd_ba),
@@ -69,6 +87,7 @@ module nes_sdram #(
       .rv_addr(20'd0), .rv_din(16'd0), .rv_ds(2'b00), .rv_dout(), .rv_req(1'b0), .rv_req_ack(),
       .rv_we(1'b0)
   );
+  end
 
   ODDR #(.DDR_CLK_EDGE("SAME_EDGE"), .SRTYPE("SYNC")) u_ck (
       .Q(sd_clk), .C(sdram_clk), .CE(1'b1), .D1(1'b1), .D2(1'b0), .R(1'b0), .S(1'b0));

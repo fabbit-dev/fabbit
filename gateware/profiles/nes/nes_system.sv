@@ -3,7 +3,10 @@
 // Система NES без привязки к плате: загрузчик ROM, ядро NESTang, память на SDRAM и выход кадра
 // в виде записей пикселей. Верх профиля (nes_top) даёт такты, шину ESP и видеотракт; тест
 // (sim/tb_nes.sv) подаёт ROM и модель SDRAM.
-module nes_system (
+module nes_system #(
+    parameter bit Managed = 1'b0,
+    parameter bit SplitDq = 1'b0
+) (
     input  wire        nclk,         // 21,43 МГц
     input  wire        fclk,         // 3 × nclk, синфазно
     input  wire        sdram_clk_in, // fclk со сдвигом фазы
@@ -33,7 +36,14 @@ module nes_system (
     output wire        sdram_ras_n,
     output wire        sdram_cas_n,
     output wire        sdram_we_n,
-    inout  wire [31:0] sdram_dq
+    inout  wire [31:0] sdram_dq,
+    // Freeze core clock before draining memory; revoke run only after drain.
+    input wire core_freeze,
+    input wire run_enable,
+    output wire memory_busy,
+    input wire [31:0] dq_input,
+    output wire [31:0] dq_output,
+    output wire dq_drive
 );
   // ---- загрузка ROM (как nestang_top: запись растянута на 2 такта, байт не чаще раза в 4 такта,
   //      чтобы каждая запись попала в своё окно clkref контроллера SDRAM) ----
@@ -53,13 +63,19 @@ module nes_system (
   // GameLoader снимает error только с первым байтом заголовка: после неудачной загрузки (мусор на
   // шине при перезапуске ESP) старый error оборвал бы новую загрузку на первом такте
   logic got_byte = 1'b0;
+  logic managed_run_old=0;
 
   always_ff @(posedge nclk) begin
     in_clk      <= 1'b0;
     rom_ready   <= 1'b0;
     clkref_sync <= 1'b0;
+    managed_run_old<=run_enable;
+    if (Managed && run_enable && !managed_run_old) begin
+      clkref_sync<=1'b1;
+      reset_nes<=1'b0;
+    end
     if (pace != 0) pace <= pace - 1'b1;
-    if (loading && rom_valid && pace == 0 && !rom_ready) begin
+    if (loading && rom_valid && pace == 0 && !rom_ready && !(Managed && core_freeze)) begin
       rom_ready <= 1'b1;  // байт забран этим тактом
       in_clk    <= 1'b1;
       in_data   <= rom_data;
@@ -72,6 +88,7 @@ module nes_system (
       loader_wdata_mem <= loader_wdata;
     end
     if (in_clk) got_byte <= 1'b1;
+    if (Managed && core_freeze) begin loading<=0;in_clk<=0;end
     if (rst) begin
       loading   <= 1'b0;
       reset_nes <= 1'b1;
@@ -81,7 +98,7 @@ module nes_system (
       got_byte  <= 1'b0;
     end else if (loading && got_byte && (loader_done || loader_fail)) begin
       loading      <= 1'b0;
-      reset_nes    <= loader_fail;
+      reset_nes    <= loader_fail || Managed;
       clkref_sync  <= 1'b1;  // ядро стартует в начале окна clkref, как в nestang_top
       mapper_flags <= loader_flags;
     end else if (reset_go) begin
@@ -95,6 +112,19 @@ module nes_system (
       end
     end
   end
+
+  // Managed mode holds the already-loaded machine until explicit COMMIT.
+  // Legacy default preserves the existing NES profile and CRC test path.
+  wire machine_reset = reset_nes || (Managed && !run_enable);
+  logic [3:0] freeze_age=0;
+  always_ff @(posedge nclk)
+    if (!core_freeze) freeze_age<=0;
+    else if (freeze_age!=15) freeze_age<=freeze_age+1'b1;
+  wire block_requests=Managed && core_freeze && freeze_age>=8;
+  wire core_clk;
+  if (Managed) begin : g_managed_clock
+    BUFGCE #(.SIM_DEVICE("7SERIES")) gate (.I(nclk), .CE(!core_freeze), .O(core_clk));
+  end else assign core_clk = nclk;
 
   GameLoader u_loader (
       .clk(nclk), .reset(rst || load_go), .downloading(loading),
@@ -117,7 +147,7 @@ module nes_system (
   logic joy_clk_d = 1'b0;
 
   NES u_nes (
-      .clk(nclk), .reset_nes(reset_nes), .cold_reset(1'b0), .sys_type(2'b00), .nes_div(),
+      .clk(core_clk), .reset_nes(machine_reset), .cold_reset(1'b0), .sys_type(2'b00), .nes_div(),
       .mapper_flags(mapper_flags), .sample(sample), .color(color),
       .joypad_out(joypad_out), .joypad_clock(joypad_clock),
       .joypad1_data({4'b0, joy_sh[0]}), .joypad2_data(5'b0),
@@ -141,15 +171,20 @@ module nes_system (
 
   // ---- память ----
   wire mem_busy, clkref;
-  nes_sdram u_mem (
+  assign memory_busy = mem_busy;
+  nes_sdram #(.SplitDq(SplitDq)) u_mem (
       .clk(nclk), .fclk(fclk), .sdram_clk(sdram_clk_in), .rst(rst), .clkref_sync(clkref_sync),
       .clkref(clkref), .busy(mem_busy),
-      .addr_a(ppu_addr), .oe_a(ppu_rd), .we_a(ppu_wr), .din_a(ppu_dout), .dout_a(ppu_din),
-      .addr_b(loading ? loader_addr_mem : cpu_addr), .oe_b(!loading && cpu_rd),
-      .we_b(loader_write_mem || cpu_wr), .din_b(loading ? loader_wdata_mem : cpu_dout),
+      .addr_a(ppu_addr), .oe_a(ppu_rd && !block_requests),
+      .we_a(ppu_wr && !block_requests), .din_a(ppu_dout), .dout_a(ppu_din),
+      .addr_b(loading ? loader_addr_mem : cpu_addr),
+      .oe_b(!loading && cpu_rd && !block_requests),
+      .we_b((loader_write_mem || cpu_wr) && !block_requests),
+      .din_b(loading ? loader_wdata_mem : cpu_dout),
       .dout_b(cpu_din),
       .sd_clk(sdram_clk), .sd_a(sdram_a), .sd_ba(sdram_ba), .sd_ras_n(sdram_ras_n),
-      .sd_cas_n(sdram_cas_n), .sd_we_n(sdram_we_n), .sd_dq(sdram_dq));
+      .sd_cas_n(sdram_cas_n), .sd_we_n(sdram_we_n), .sd_dq(sdram_dq),
+      .dq_input(dq_input), .dq_output(dq_output), .dq_drive(dq_drive));
 
 
   // пиксель PPU меняется раз в 4 такта ядра: пишем при смене координаты

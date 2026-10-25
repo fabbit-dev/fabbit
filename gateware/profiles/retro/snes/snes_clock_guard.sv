@@ -10,9 +10,9 @@
 // clocks/CE paths in the physical top; no timing exceptions asserted here.
 //
 // Whole clock is stopped, including ALL PPU/SCPU/SMP/DSP/RAM pipeline flops.
-// Running/ENABLE/reset state does not change on a memory hold. This initial
-// guard conservatively blocks EVERY next core edge while any request is live;
-// it is a clock-stretched functional path, NOT nominal-speed console timing.
+// Running/ENABLE/reset state does not change on a memory hold. The controller
+// decides which edge must wait: a legal intermediate edge need not be blocked.
+// Refresh/contention may still stretch master time; no nominal-rate guarantee.
 module snes_clock_guard (
     input wire clk_service,
     input wire free_master,

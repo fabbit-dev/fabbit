@@ -6,7 +6,8 @@
 // settle after that edge and are sampled on the NEXT service edge (+1).
 // Related clocks only; this interface is NOT an asynchronous CDC bridge.
 // Commands are registered; external sd_clk must sample them AFTER clk.
-// The test uses +2 ns sd_clk, TAc=5.4 ns, TOh=2.5 ns. NOT board signoff.
+// The test uses +2 ns sd_clk, CL2 TAc=8 ns, TOh=2 ns, TRcd=21 ns,
+// conditional ESMT M12L64322A(2S)-7 bounds. NOT board signoff.
 //
 // Physical words {bank[1:0],row[10:0],column[7:0]}, DQM permanently zero:
 // ROM 4 MiB packed: banks 0/1, word = rom_byte_addr >> 2.
@@ -46,7 +47,9 @@ module snes_memory #(
     output wire drained,
     // Whole-master clock guard contract: requests originate only on actual
     // core edges and are sampled one fast edge later. Hold every later core
-    // edge until core_hold clears; service clock/refresh MUST keep running.
+    // edge while core_hold is asserted. The intermediate edge is allowed when
+    // read data can still meet its second-edge consumption deadline. Service
+    // clock/refresh MUST keep running.
     // No backpressure by driving SNES.ENABLE low (that is not a pause).
     output wire core_hold,
     output wire [4:0] request_inflight,
@@ -98,8 +101,23 @@ module snes_memory #(
     state_t state;
     bank_t bank_state [4];
     logic [2:0] owner [4];
-    int unsigned bank_wait [4], ras_wait [4], rr_wait, write_bus_wait, read_bus_wait;
-    int unsigned wait_left, refresh_left;
+    function automatic integer max2(input integer a, input integer b);
+        return a > b ? a : b;
+    endfunction
+    localparam integer BankWaitBits = max2(1,$clog2(max2(max2(Trcd,Trp),max2(Twr,Trtp))+1));
+    localparam integer RasWaitBits = max2(1,$clog2(Tras+1));
+    localparam integer RrdBits = max2(1,$clog2(Trrd+1));
+    localparam integer WriteBusBits = max2(2,$clog2(3));
+    localparam integer ReadBusBits = max2(1,$clog2(Twtr+1));
+    localparam integer InitBits = max2(1,$clog2(max2(InitCycles,max2(Trfc,Trp))+1));
+    localparam integer RefreshBits = max2(1,$clog2(RefreshCycles+1));
+    logic [BankWaitBits-1:0] bank_wait [4];
+    logic [RasWaitBits-1:0] ras_wait [4];
+    logic [RrdBits-1:0] rr_wait;
+    logic [WriteBusBits-1:0] write_bus_wait;
+    logic [ReadBusBits-1:0] read_bus_wait;
+    logic [InitBits-1:0] wait_left;
+    logic [RefreshBits-1:0] refresh_left;
     logic sample_ce, configured, ref_pending;
     logic [2:0] cmd;
     logic dq_enable;
@@ -117,7 +135,7 @@ module snes_memory #(
     logic [3:0] fresh, forwarded, valid_read;
     logic [2:0] posted, physical_write;
     logic [3:0] new_overrun, new_protocol;
-    int unsigned deadline_left [4];
+    logic [2:0] deadline_left [4];
     logic [1:0] read_pipe;
     logic [2:0] read_owner [2];
     logic [1:0] read_lane [2];
@@ -135,7 +153,21 @@ module snes_memory #(
     assign initialized = configured && !reset;
     assign request_inflight = pending;
     assign needs_data = pending[3:0] & ~queued_write[3:0];
-    assign core_hold = (|pending) || (|read_pipe) || write_pipe;
+    // Permit the intermediate master edge while the two-edge read contract still
+    // has time left. At the last BUFGCE decision before the consumption edge,
+    // a READ already in the CAS pipeline completes before that edge. Otherwise
+    // stop the whole core until actual completion. Queued writes do not need a
+    // read deadline, but keep their original conservative hold for now.
+    logic urgent_read;
+    always_comb begin
+        urgent_read = 1'b0;
+        for (int p = 0; p < 4; p++) begin
+            if (pending[p] && !queued_write[p] && deadline_left[p] <= 2 &&
+                !((read_pipe[0] && read_owner[0] == 3'(p)) ||
+                  (read_pipe[1] && read_owner[1] == 3'(p)))) urgent_read = 1'b1;
+        end
+    end
+    assign core_hold = urgent_read || (|(pending & queued_write)) || write_pipe;
     assign drained = initialized && all_closed && pending == 0 && read_pipe == 0 &&
                      !write_pipe && state == Running && !ref_pending;
     assign refresh_busy = ref_pending || state == RefreshWait;
@@ -274,8 +306,8 @@ module snes_memory #(
         write_pipe <= 0;
         if (reset) begin
             state <= PowerWait;
-            wait_left <= InitCycles;
-            refresh_left <= RefreshCycles;
+            wait_left <= InitBits'(InitCycles);
+            refresh_left <= RefreshBits'(RefreshCycles);
             configured <= 0;
             ref_pending <= 0;
             sample_ce <= 0;
@@ -380,11 +412,11 @@ module snes_memory #(
                 PowerWait: begin
                     cmd <= Pre;
                     sd_a <= 11'b10000000000;
-                    wait_left <= Trp - 1;
+                    wait_left <= InitBits'(Trp - 1);
                     state <= InitRefA;
                 end
-                InitRefA: begin cmd <= Ref; wait_left <= Trfc-1; state <= InitRefB; end
-                InitRefB: begin cmd <= Ref; wait_left <= Trfc-1; state <= InitMode; end
+                InitRefA: begin cmd <= Ref; wait_left <= InitBits'(Trfc-1); state <= InitRefB; end
+                InitRefB: begin cmd <= Ref; wait_left <= InitBits'(Trfc-1); state <= InitMode; end
                 InitMode: begin
                     cmd <= Mode;
                     sd_ba <= 0;
@@ -397,8 +429,8 @@ module snes_memory #(
                     if (ref_pending && all_closed && read_pipe == 0 && !write_pipe) begin
                         cmd <= Ref;
                         ref_pending <= 0;
-                        refresh_left <= RefreshCycles;
-                        wait_left <= Trfc-1;
+                        refresh_left <= RefreshBits'(RefreshCycles);
+                        wait_left <= InitBits'(Trfc-1);
                         state <= RefreshWait;
                     end else if (selected >= 0) begin
                         cmd <= selected_cmd;
@@ -408,21 +440,22 @@ module snes_memory #(
                                 sd_a <= address_next[selected][18:8];
                                 owner[selected_bank] <= 3'(selected);
                                 bank_state[selected_bank] <= BankColumn;
-                                bank_wait[selected_bank] <= Trcd-1;
-                                ras_wait[selected_bank] <= Tras-1;
-                                rr_wait <= Trrd-1;
+                                bank_wait[selected_bank] <= BankWaitBits'(Trcd-1);
+                                ras_wait[selected_bank] <= RasWaitBits'(Tras-1);
+                                rr_wait <= RrdBits'(Trrd-1);
                             end
                             Read, Write: begin
                                 sd_a <= {3'b000, address[selected][7:0]};
                                 bank_state[selected_bank] <= BankPre;
-                                bank_wait[selected_bank] <= selected_cmd == Write ? Twr-1 : Trtp-1;
+                                bank_wait[selected_bank] <=
+                                    BankWaitBits'(selected_cmd == Write ? Twr-1 : Trtp-1);
                                 if (selected_cmd == Write) begin
                                     sd_dq_out <= data[selected];
                                     dq_enable <= 1;
                                     write_pipe <= 1;
                                     write_owner <= 3'(selected);
                                     pending[selected] <= 0;
-                                    read_bus_wait <= Twtr-1;
+                                    read_bus_wait <= ReadBusBits'(Twtr-1);
                                 end else begin
                                     read_pipe[0] <= 1;
                                     read_owner[0] <= 3'(selected);
@@ -433,7 +466,7 @@ module snes_memory #(
                             Pre: begin
                                 sd_a <= 0;
                                 bank_state[selected_bank] <= BankRecover;
-                                bank_wait[selected_bank] <= Trp-1;
+                                bank_wait[selected_bank] <= BankWaitBits'(Trp-1);
                             end
                             default: ;
                         endcase

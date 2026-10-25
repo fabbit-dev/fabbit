@@ -14,7 +14,7 @@ module tb_retro_snes;
     wire free_master_ce=phase==3;
     wire sd_clk;
     assign #(SdPhase) sd_clk=clk_service;
-    logic reset=1, console_reset=0, run=0;
+    logic reset=1, console_reset=0, run=0, memory_reset=0;
     logic [1:0] cfg_map=0;
     logic [7:0] cfg_chip=0;
     logic cfg_pal=0;
@@ -53,7 +53,10 @@ module tb_retro_snes;
     wire signed [15:0] audio_l,audio_r;
     wire audio_ready;
     snes_system #(.InitCycles(20),.RefreshCycles(RefreshInterval)) dut (.*);
-    sdram_model model (.clk(sd_clk),.cke(sd_cke),.cs_n(sd_cs_n),
+    // Conditional ESMT M12L64322A(2S)-7 CL2 bounds, Rev1.0 pp6-7.
+    // Ideal pins only: no PCB flight/skew or FPGA I/O timing signoff.
+    sdram_model #(.TAc(8ns),.TOh(2ns),.TRcd(21ns)) model (
+        .clk(sd_clk),.cke(sd_cke),.cs_n(sd_cs_n),
         .ras_n(sd_ras_n),.cas_n(sd_cas_n),.we_n(sd_we_n),
         .ba(sd_ba),.a(sd_a),.dqm(4'b0000),.dq(sd_dq));
 
@@ -81,6 +84,28 @@ module tb_retro_snes;
         dut.console.machine.dsp.STEP_CNT,dut.console.machine.dsp.SUBSTEP_CNT,
         dut.console.machine.smp.SPC700.AddrGen.PCr
     };
+    // Independent consumption deadline monitor. One intermediate core edge is
+    // legal after a new read; the second may run ONLY after a real response.
+    // Observe completion strobes, not the guard's own decision, and never drive RTL.
+    bit [3:0] proof_pending='0;
+    int unsigned proof_launched[4];
+    int unsigned proof_core_edges=0;
+    always @(posedge clk_service) begin
+        if (reset || !measuring) proof_pending='0;
+        else begin
+            for (int p=0;p<4;p++) begin
+                if (dut.memory.valid_read[p]) proof_pending[p]=0;
+                if (core_step && proof_pending[p])
+                    assert (proof_core_edges-proof_launched[p]<1)
+                        else $fatal(1,"unfinished read consumed by second core edge port=%0d",p);
+                if (dut.memory.fresh[p] && dut.memory.rd_in[p]) begin
+                    proof_pending[p]=1;
+                    proof_launched[p]=proof_core_edges;
+                end
+            end
+        end
+        if (core_step) proof_core_edges++;
+    end
     // Observation only: never drives or forces internals. Covers CPU/PPU/DSP/
     // SPC700 pipeline state while the actual whole master clock is stopped.
     always @(negedge clk_service) begin
@@ -147,7 +172,8 @@ module tb_retro_snes;
             if (!core_step) stalls++;
         end
         if (measuring && core_step) begin
-            // No core edge may consume a pending read or overflow posted writes.
+            // The memory guard permits only edges within the native two-edge
+            // contract, or after the selected request has actually completed.
             assert (!memory_hold) else $fatal(1,"core edge during pending operation");
             core_edges++;
             if (audio_ready) audios++;
@@ -267,6 +293,14 @@ module tb_retro_snes;
         assert (!ipl_ready && !coeff_ready && !active) else $fatal(1,"reset default assets");
         load_asset(0); load_asset(1);
         while (!memory_initialized) tick();
+        // Physical-owner handover needs memory init, but must retain user assets.
+        while (!stop_ack) tick();
+        memory_reset=1;
+        repeat (4) tick();
+        assert (ipl_ready && coeff_ready && !host_ready && !memory_initialized)
+            else $fatal(1,"memory-only reset cleared assets or admitted host");
+        memory_reset=0;
+        while (!stop_ack) tick();
         // Only the authored program range, DMA pattern and reset vector are
         // written via actual host controller transactions, never model.mem poke.
         for (int i=0;i<(program_bytes.size()+3)/4;i++)
