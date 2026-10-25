@@ -111,7 +111,7 @@ static void stage(const char *what, int pct)
 
 static void progress(size_t done, size_t total)
 {
-    if (done == total || done % (512 * 1024) == 0) printf("  запись %u/%u\n", done, total);
+    if (done == total || done % (512 * 1024) == 0) printf("  запись %zu/%zu\n", done, total);
     if (done == total || done % (64 * 1024) == 0) stage("запись ядра в слот", (int)(done * 100 / total));
 }
 
