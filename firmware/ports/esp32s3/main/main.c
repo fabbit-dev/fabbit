@@ -12,6 +12,7 @@
 #include "esp_timer.h"
 #include "cmd_pad.h"
 #include "cmd_profile.h"
+#include "cmd_capture.h"
 #include "launcher_port.h"
 #include "fpga_link.h"
 #include "profile_mgr.h"
@@ -459,6 +460,7 @@ void app_main(void)
     reg("golden", "вернуться в golden из профиля", cmd_golden);
     reg("osd", "osd <test|on|off|fill x y w h c>: плоскость меню golden", cmd_osd);
     cmd_profile_register();
+    cmd_capture_register();
     cmd_pad_register();
     launcher_start();
     printf("fabbit loader: шина %" PRIu32 " Hz\n", fl_get_freq());
