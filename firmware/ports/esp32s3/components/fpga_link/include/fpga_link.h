@@ -62,6 +62,9 @@ esp_err_t fl_init(uint32_t hz);
 // нельзя разрывать чужими (например, «записать CSR и прочитать ответ»)
 void fl_lock(void);
 void fl_unlock(void);
+// Called under the bus lock before BOOT/REBOOT. Register once during startup.
+// Callback must not acquire the bus lock; use it to release external demo outputs.
+void fl_set_profile_exit_hook(void (*hook)(void));
 esp_err_t fl_set_freq(uint32_t hz);
 uint32_t fl_get_freq(void);
 // прозвонка: линии SCK, CS, IO0..3, IRQ по очереди в 1 на 300 мс

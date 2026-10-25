@@ -5,6 +5,7 @@
 #include <string.h>
 #include "fpga_link.h"
 #include "la_capture.h"
+#include "la_demo.h"
 #include "la_screen.h"
 #include "ui.h"
 
@@ -15,6 +16,9 @@ static int fail_alloc, fail_id, fail_read, fail_write, tear, wrong_profile, no_p
 static uint32_t keys;
 static int64_t clock_us;
 static unsigned grayscale_seen[16][4];
+static bool demo_enabled;
+bool la_demo_active(void) { return demo_enabled; }
+void la_demo_stop(void) { demo_enabled=false; }
 
 void fl_lock(void) { locks++; }
 void fl_unlock(void) { assert(locks); locks--; }
@@ -168,12 +172,16 @@ int main(void)
     press(IN_RIGHT);
     assert(la_screen_tick());
     fail_read=1;
+    demo_enabled=true;
     press(IN_F1);
     assert(la_screen_tick());
+    assert(!demo_enabled);
     fail_read=0;
     assert(la_screen_tick());  // retry same epoch after bus failure
     fail_id=1;
+    demo_enabled=true;
     assert(la_screen_tick());
+    assert(!demo_enabled);
     fail_id=0;
     before=data_reads;
     assert(la_screen_tick() && data_reads>before);  // error state recovers even with same snapshot
@@ -187,8 +195,14 @@ int main(void)
     fail_write=0;
     before=plane_writes;
     assert(la_screen_tick() && plane_writes>before);  // dirty rectangles retry
+    demo_enabled=true;
+    la_screen_demo();
+    press(IN_F2);
+    assert(arms==3 && regs[10]==128 && !regs[11]);  // demo selects rising marker D7
+    assert(la_screen_tick());
     wrong_profile=1;
     before=plane_writes;
     assert(!la_screen_tick() && plane_writes==before && !locks);
+    assert(!demo_enabled);
     puts("PASS LA screen: attach, packing, input, ARM/STOP, trigger, zoom, tears, retry, profile exit");
 }

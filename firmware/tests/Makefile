@@ -3,14 +3,22 @@ COMP := ../ports/esp32s3/components
 CPPFLAGS := -Istubs -I$(COMP)/fpga_link/include -I$(COMP)/nes_rom/include -I$(COMP)/profile_mgr/include \
             -I$(COMP)/la_capture/include -I../ports/esp32s3/main
 CFLAGS := -std=c11 -g -O1 -Wall -Wextra -Werror -Wno-unused-parameter -fsanitize=address,undefined -fno-omit-frame-pointer
-HEADERS := $(wildcard stubs/*.h stubs/freertos/*.h $(COMP)/*/include/*.h ../ports/esp32s3/main/*.h)
+HEADERS := $(wildcard stubs/*.h stubs/freertos/*.h stubs/driver/*.h $(COMP)/*/include/*.h ../ports/esp32s3/main/*.h)
 
-test: $(OUT)/test_loader $(OUT)/test_la $(OUT)/test_la_view $(OUT)/test_la_screen $(OUT)/test_launcher
+test: $(OUT)/test_loader $(OUT)/test_la $(OUT)/test_la_view $(OUT)/test_la_screen $(OUT)/test_launcher $(OUT)/test_la_demo $(OUT)/test_link_exit
 	cd $(OUT) && ./test_loader
 	$(OUT)/test_la
 	cd $(OUT) && ./test_la_view
 	$(OUT)/test_la_screen
-	$(OUT)/test_launcher
+	cd $(OUT) && ./test_launcher
+	$(OUT)/test_la_demo
+	$(OUT)/test_link_exit
+
+$(OUT)/test_link_exit: test_link_exit.c $(COMP)/fpga_link/fpga_link.c $(HEADERS) | $(OUT)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -ffunction-sections -fdata-sections $(filter %.c,$^) -Wl,--gc-sections -o $@
+
+$(OUT)/test_la_demo: test_la_demo.c ../ports/esp32s3/main/la_demo.c $(HEADERS) | $(OUT)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(filter %.c,$^) -o $@
 
 $(OUT)/test_launcher: test_launcher.c ../components/launcher/lc_app.c \
                        ../components/launcher/lc_view.c ../components/ui/ui.c \

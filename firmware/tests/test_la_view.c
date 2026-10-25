@@ -82,6 +82,10 @@ int main(void)
     }
     lav_draw(&v,columns);
     screenshot("la-capture.ppm");
+    v.demo=true;
+    lav_draw(&v,columns);
+    screenshot("la-demo.ppm");
+    v.demo=false;
     v.state=LAV_WAIT;
     lav_draw(&v,NULL);
     screenshot("la-wait.ppm");

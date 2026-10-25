@@ -35,6 +35,9 @@ static uint32_t s_hz;
 static uint8_t *s_dma;  // DMA-буфер во внутренней памяти
 // шину делят консоль и задача кнопок: кадр целиком под замком, перенастройка шины тоже
 static SemaphoreHandle_t s_lock;
+static void (*s_exit_hook)(void);
+
+void fl_set_profile_exit_hook(void (*hook)(void)) { s_exit_hook = hook; }
 
 void fl_lock(void) { xSemaphoreTakeRecursive(s_lock, portMAX_DELAY); }
 void fl_unlock(void) { xSemaphoreGiveRecursive(s_lock); }
@@ -198,7 +201,11 @@ esp_err_t fl_write(uint8_t cmd, uint32_t addr, const void *data, size_t len)
 {
     if (len > FL_BUF_SIZE) return ESP_ERR_INVALID_SIZE;
     if (len && !data) return ESP_ERR_INVALID_ARG;
-    return xfer(cmd, addr, data, NULL, len);
+    fl_lock();
+    if (s_exit_hook && (cmd == FL_CMD_BOOT || cmd == FL_CMD_REBOOT_GOLDEN)) s_exit_hook();
+    esp_err_t e = xfer(cmd, addr, data, NULL, len);
+    fl_unlock();
+    return e;
 }
 
 esp_err_t fl_read(uint8_t cmd, uint32_t addr, void *data, size_t len)
@@ -472,7 +479,7 @@ esp_err_t fl_osd_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint
     esp_err_t e = ESP_OK;
     fl_lock();
     for (uint16_t y0 = 0; y0 < h && e == ESP_OK; y0 += band) {
-        uint16_t n = (h - y0 < band) ? h - y0 : band;
+        uint16_t n = ((size_t)(h - y0) < band) ? (uint16_t)(h - y0) : (uint16_t)band;
         b[0] = w >> 8, b[1] = w, b[2] = n >> 8, b[3] = n;
         for (uint16_t j = 0; j < n; j++) memcpy(b + 4 + j * row, px + (size_t)(y0 + j) * stride, row);
         e = osd_wait();
@@ -499,7 +506,7 @@ esp_err_t fl_osd_fill(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t c)
 esp_err_t fl_osd_pal(uint8_t first, const uint32_t *rgb, size_t n)
 {
     uint8_t b[48];
-    if (first > 16 || n > 16 - first || (n && !rgb)) return ESP_ERR_INVALID_ARG;
+    if (first > 16 || n > (size_t)(16 - first) || (n && !rgb)) return ESP_ERR_INVALID_ARG;
     for (size_t i = 0; i < n; i++) b[3 * i] = rgb[i] >> 16, b[3 * i + 1] = rgb[i] >> 8, b[3 * i + 2] = rgb[i];
     return fl_write(FL_CMD_OSD_PAL, first, b, 3 * n);
 }

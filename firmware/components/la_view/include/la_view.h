@@ -13,6 +13,7 @@ typedef struct {
     uint32_t count, trigger_index, base_hz, divider;
     uint32_t offset, span;
     unsigned channel;
+    bool demo;
 } lav_view_t;
 typedef struct { uint16_t first, last, low, high; } lav_column_t;
 

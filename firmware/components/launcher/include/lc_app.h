@@ -37,6 +37,7 @@ typedef struct {
     void (*load)(lc_saved_t *s);
     void (*save)(const lc_saved_t *s);
     bool (*run_logic)(lc_progress_cb cb, void *ctx, char *err, size_t n);
+    bool (*run_demo)(lc_progress_cb cb, void *ctx, char *err, size_t n);
 } lc_port_t;
 
 // в ПЛИС golden с плоскостью: заставка с бегущим кроликом (кнопка пропускает), главный экран

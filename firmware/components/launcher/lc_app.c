@@ -13,7 +13,7 @@
 
 typedef enum { ST_INTRO, ST_HOME, ST_GAMES, ST_STUB, ST_LOADING, ST_RUN, ST_ERROR } state_t;
 
-enum { P_RETRO, P_LOGIC, P_N };
+enum { P_RETRO, P_LOGIC, P_DEMO, P_N };
 
 static const lc_port_t *P;
 static state_t s_st;
@@ -54,6 +54,8 @@ static void profiles_init(void)
                                       "Цифровые каналы с гребёнки в sigrok", "16", &ui_icon_logic,
                                       P->run_logic != NULL};
     if (!P->run_logic) snprintf(s_prof[P_LOGIC].tag, sizeof s_prof[P_LOGIC].tag, "скоро");
+    s_prof[P_DEMO] = (lc_profile_t){"Демо ЛА", "Демо ЛА",
+        "Генератор ESP · 8 выходов 3,3 В", "ДЕМО", &ui_icon_logic, P->run_demo != NULL};
 }
 
 // проявить нарисованный в кадре экран развёрткой
@@ -104,8 +106,8 @@ static void enter(state_t st, bool wipe)
         break;
     case ST_STUB: lc_stub(&s_prof[s_psel]); break;
     case ST_ERROR:
-        lc_error(s_psel == P_LOGIC ? s_prof[P_LOGIC].title : TITLE_GAMES,
-                 s_psel == P_LOGIC ? "Нет связи с ПЛИС" : "Игра не запустилась", s_err, 0);
+        lc_error(s_psel != P_RETRO ? s_prof[s_psel].title : TITLE_GAMES,
+                 s_psel != P_RETRO ? "Нет связи с ПЛИС" : "Игра не запустилась", s_err, 0);
         break;
     default: return;
     }
@@ -188,10 +190,12 @@ static void run_logic(void)
 {
     s_st = ST_LOADING;
     load_ctx_t ctx = {.t0 = now()};
-    lc_loading(s_prof[P_LOGIC].title, s_prof[P_LOGIC].name, "", 0);
+    lc_loading(s_prof[s_psel].title, s_prof[s_psel].name, "", 0);
     ui_flush();
     s_err[0] = 0;
-    if (P->run_logic(load_progress, &ctx, s_err, sizeof s_err)) {
+    bool ok = s_psel == P_DEMO ? P->run_demo(load_progress, &ctx, s_err, sizeof s_err) :
+                                 P->run_logic(load_progress, &ctx, s_err, sizeof s_err);
+    if (ok) {
         s_st = ST_RUN;
         return;
     }
@@ -299,7 +303,7 @@ void lc_app_key(lc_key_t k, bool repeat)
             lc_home_sel(s_prof, P_N, old, s_psel);
             ui_flush();
         } else if (k == LC_OK && !repeat) {
-            if (s_psel == P_LOGIC && s_prof[s_psel].ready) run_logic();
+            if (s_psel != P_RETRO && s_prof[s_psel].ready) run_logic();
             else if (s_prof[s_psel].ready) enter(ST_GAMES, true);
             else enter(ST_STUB, true);
         }

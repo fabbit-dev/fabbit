@@ -14,6 +14,7 @@
 #include "cmd_profile.h"
 #include "cmd_capture.h"
 #include "launcher_port.h"
+#include "la_demo.h"
 #include "fpga_link.h"
 #include "profile_mgr.h"
 #include "freertos/FreeRTOS.h"
@@ -422,6 +423,8 @@ static void reg(const char *name, const char *help, esp_console_cmd_func_t f)
 void app_main(void)
 {
     ESP_ERROR_CHECK(fl_init(10 * 1000 * 1000));
+    ESP_ERROR_CHECK(la_demo_init());
+    fl_set_profile_exit_hook(la_demo_stop);
     if (pm_init() != ESP_OK) printf("хранилище профилей не смонтировано\n");
     esp_console_repl_t *repl = NULL;
     esp_console_repl_config_t rc = ESP_CONSOLE_REPL_CONFIG_DEFAULT();

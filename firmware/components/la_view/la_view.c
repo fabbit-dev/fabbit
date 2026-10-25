@@ -69,6 +69,10 @@ void lav_draw(const lav_view_t *v, const lav_column_t columns[LAV_COLUMNS])
     static const char *triggers[] = {"*", "▲", "▼"};
     ui_fill(0, 0, UI_W, UI_H, UI_BG);
     lc_header("ЛОГИЧЕСКИЙ АНАЛИЗАТОР", 0);
+    if (v->demo) {
+        ui_fill(536, 8, 104, 36, UI_BG);
+        ui_text(&ui_font_mono18b, 624, 15, "ДЕМО", UI_INK, UI_RIGHT);
+    }
     ui_text(&ui_font_mono15b, 16, 60, states[v->state], UI_INK, UI_LEFT);
     char text[96];
     uint64_t divisor = (uint64_t)v->divider + 1;

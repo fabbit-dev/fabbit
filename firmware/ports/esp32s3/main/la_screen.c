@@ -5,6 +5,7 @@
 #include "esp_timer.h"
 #include "fpga_link.h"
 #include "la_capture.h"
+#include "la_demo.h"
 #include "la_view.h"
 #include "ui.h"
 
@@ -15,6 +16,16 @@ static uint8_t *samples;
 static bool have_snapshot, refresh;
 static bool enable_pending;
 static int64_t next_poll;
+
+void la_screen_demo(void)
+{
+    view.demo = la_demo_active();
+    if (view.demo) {
+        view.channel = 7;
+        view.trigger = LAV_RISE;
+    }
+    refresh = true;
+}
 
 static bool same(const la_status_t *a, const la_status_t *b)
 {
@@ -127,7 +138,10 @@ bool la_screen_tick(void)
     next_poll = now + 200000;
     la_status_t status;
     esp_err_t e = la_status(&status);
+    if (e != ESP_OK) la_demo_stop();
     if (e == ESP_ERR_NOT_FOUND) return false;
+    bool demo = la_demo_active();
+    if (view.demo != demo) { view.demo = demo; refresh = true; }
     if (e != ESP_OK) {
         if (view.state != LAV_ERROR) { view.state = LAV_ERROR; refresh = true; }
     } else if (status.flags & LA_DONE) {
@@ -140,7 +154,12 @@ bool la_screen_tick(void)
         }
         if (refresh) {
             view.state = LAV_DONE;
-            if (aggregate() != ESP_OK) { view.state = LAV_ERROR; have_snapshot = false; }
+            if (aggregate() != ESP_OK) {
+                la_demo_stop();
+                view.demo = false;
+                view.state = LAV_ERROR;
+                have_snapshot = false;
+            }
         }
     } else {
         lav_state_t state = status.flags & LA_BUSY ? LAV_WAIT : LAV_READY;
