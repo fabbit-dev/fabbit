@@ -1,0 +1,409 @@
+{
+  "upstream": {
+    "repository": "https://github.com/nand2mario/snestang",
+    "commit": "5f0ef193145f67bded7f73f2c477ac8da4d85f7e",
+    "license_file": "LICENSE"
+  },
+  "compiled_sources": [
+    "gateware/profiles/retro/snes/rtl/65C816/common.sv",
+    "gateware/profiles/retro/snes/rtl/spc700/_spc700_package.v",
+    "gateware/profiles/retro/snes/rtl/65C816/ALU.v",
+    "gateware/profiles/retro/snes/rtl/65C816/AddSubBCD.v",
+    "gateware/profiles/retro/snes/rtl/65C816/AddrGen.v",
+    "gateware/profiles/retro/snes/rtl/65C816/BCDAdder.v",
+    "gateware/profiles/retro/snes/rtl/65C816/P65C816.v",
+    "gateware/profiles/retro/snes/rtl/65C816/adder4.v",
+    "gateware/profiles/retro/snes/rtl/65C816/bit_adder.v",
+    "gateware/profiles/retro/snes/rtl/65C816/mcode.sv",
+    "gateware/profiles/retro/snes/rtl/spc700/addrgen.v",
+    "gateware/profiles/retro/snes/rtl/spc700/addsub.v",
+    "gateware/profiles/retro/snes/rtl/spc700/alu.v",
+    "gateware/profiles/retro/snes/rtl/spc700/bcdadj.v",
+    "gateware/profiles/retro/snes/rtl/spc700/mcode.v",
+    "gateware/profiles/retro/snes/rtl/spc700/muldiv.v",
+    "gateware/profiles/retro/snes/rtl/spc700/spc700.v",
+    "gateware/profiles/retro/snes/rtl/CEGen.v",
+    "gateware/profiles/retro/snes/rtl/cpu.v",
+    "gateware/profiles/retro/snes/rtl/dsp.v",
+    "gateware/profiles/retro/snes/rtl/ppu.v",
+    "gateware/profiles/retro/snes/rtl/smp.v",
+    "gateware/profiles/retro/snes/rtl/SNES.v",
+    "gateware/profiles/retro/snes/rtl/swram.v",
+    "gateware/profiles/retro/snes/snes_ppu_memory.sv",
+    "gateware/profiles/retro/snes/snes_vram.sv",
+    "gateware/profiles/retro/snes/snes_assets.sv",
+    "gateware/profiles/retro/snes/snes_pad.sv",
+    "gateware/profiles/retro/snes/snes_cart.sv",
+    "gateware/profiles/retro/snes/snes_console.sv",
+    "gateware/profiles/retro/snes/snes_memory.sv",
+    "gateware/profiles/retro/snes/snes_asset_loader.sv",
+    "gateware/profiles/retro/snes/snes_clock_guard.sv",
+    "gateware/profiles/retro/snes/snes_system.sv"
+  ],
+  "included_headers": [
+    "rtl/dsp.vh",
+    "rtl/ppu_defines.vh",
+    "rtl/spc700/mcode.vh"
+  ],
+  "files": [
+    {
+      "path": "rtl/65C816/common.sv",
+      "upstream_path": "src/65C816/common.sv",
+      "upstream_sha256": "e57c81dddab15de2ec212fe880273f8265446d53fc15094de623631dfd1cb3ff",
+      "sha256": "6f77260e4870f859a26cff6202432ff388e87ee9622b7a26f357de6b773baae8",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/_spc700_package.v",
+      "upstream_path": "src/spc700/_spc700_package.v",
+      "upstream_sha256": "9432d71dfaa694d04a1649d9c8d73be64bfa1c95a09e13a16cc136a1b4379e77",
+      "sha256": "c8e65ffc61d9eb3bf0cc7f5c9356bfe52c5e7b76ab0e2245fd5badbdd7b80a47",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/ALU.v",
+      "upstream_path": "src/65C816/ALU.v",
+      "upstream_sha256": "8d356c91325b13ab9360493148f36a3d8b63a60b8bbc160aa472a98878a0d5b7",
+      "sha256": "4c56cb60226ca75e75414f774671b97ea189d697450323e69a06ae8f7cd615a9",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/AddSubBCD.v",
+      "upstream_path": "src/65C816/AddSubBCD.v",
+      "upstream_sha256": "18bab63b0558de279d6741ffccb23659563903ee5a8cf6407e65ff9ed30dd508",
+      "sha256": "1bc38b3f2fafd9ed3d3d45f64d795dff9ca633e217c4140b2918cd355f0bc523",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/AddrGen.v",
+      "upstream_path": "src/65C816/AddrGen.v",
+      "upstream_sha256": "74f0338b4182f0502ea61b3a37bb93bb8ed56842f96dfede5681e0304ea35d71",
+      "sha256": "9f038872ed26b1f90a61cb1b35b1e03eb30d0defaede32f83f8a2d3d9aae473e",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/BCDAdder.v",
+      "upstream_path": "src/65C816/BCDAdder.v",
+      "upstream_sha256": "c599eb38da3affae8d8e91839d4815947f3b31d2dae327e9809dc9d3592c6636",
+      "sha256": "e30b55c8352f12d0eafedad30d3d20592753f5bd3c08b94f2b80072702639d5b",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/P65C816.v",
+      "upstream_path": "src/65C816/P65C816.v",
+      "upstream_sha256": "e42fe6536478499032ae73e7389bf09d75d71e1103b26a09d095a0cfcbd0d1d7",
+      "sha256": "e593a10fc40be918bf4abeb2b6d3b583172a7f6af36e4d2c0aad2d71d5c860a4",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/adder4.v",
+      "upstream_path": "src/65C816/adder4.v",
+      "upstream_sha256": "2e5355a23ef7fcb0c8b655e13e30142b83e6d264b9317bfa7e909f47d7d909e4",
+      "sha256": "9445f1db38e171201e674def500123d4beaca35725845e77c178b97e7fd7fa05",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/bit_adder.v",
+      "upstream_path": "src/65C816/bit_adder.v",
+      "upstream_sha256": "bec4d59495a51419d1b62a4c05edff45c2035494fe99e5d56d432b7d1760f686",
+      "sha256": "6f9c96a01e4145537e1d999d2775c97b7a83216c2af3919b0625f63b35fea996",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/65C816/mcode.sv",
+      "upstream_path": "src/65C816/mcode.sv",
+      "upstream_sha256": "fcd8e1ccd043525642b076a887d29c147e12d7af79d6a72fd107dd34d749ac14",
+      "sha256": "345e5983f55d0d7b5d4a19dc3ecb347df4fa29b21cedb8168a6737ae33dc9caf",
+      "modifications": [
+        "synchronous reset for microcode register; prevents asynchronous BRAM control reset hazards"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/addrgen.v",
+      "upstream_path": "src/spc700/addrgen.v",
+      "upstream_sha256": "153bebcb2f21c5ae51aa5f0ecfcbeebb19009e237cab05356f5effe032cce71a",
+      "sha256": "4b79b623a9eeaf3d0f8dfc8aaf01ac3d87aa427c725893045820f304c829d2f8",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/addsub.v",
+      "upstream_path": "src/spc700/addsub.v",
+      "upstream_sha256": "9b59a7446529279d9607e3a056fbda3965f6e2ee900711b24c724fe9914fce43",
+      "sha256": "d920c9ad9efb05e7f11bb3faedd7e4ed61640ac04405668ffd07bbb684693fd1",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/alu.v",
+      "upstream_path": "src/spc700/alu.v",
+      "upstream_sha256": "1dd52726a3de21d1945d7fd8c66da64db9a928bcc4644740a6febc45dcf23d99",
+      "sha256": "c1df35050902a84ad9086af73941e02e2b164b319c397bbb6813ef6d4fa341a0",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/bcdadj.v",
+      "upstream_path": "src/spc700/bcdadj.v",
+      "upstream_sha256": "a837325825b04ef051c88c4ea9153c94c90dde027b03c2d4e179b19a3361467d",
+      "sha256": "c02f716ad7d3fdfc2a7aff211254e55ebe4165971bbdd46f5d7ff0a1cf648b22",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/mcode.v",
+      "upstream_path": "src/spc700/mcode.v",
+      "upstream_sha256": "9d6b5689ddd437ea6550d23141a89354df496134273a20a2727090b1bdab14c3",
+      "sha256": "8f173303405fb19d851b6d1c220f402d74d8c4b1f8c76da0d3801b34b968cd24",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/muldiv.v",
+      "upstream_path": "src/spc700/muldiv.v",
+      "upstream_sha256": "29c3775160921cfd756b769a500d2700527cc63bf7ed4e64bbce33417ca40141",
+      "sha256": "af418ef66c971b2680cfe1a7c17ac72726ad9d0c5de1b13769a0081cb485cc1f",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/spc700.v",
+      "upstream_path": "src/spc700/spc700.v",
+      "upstream_sha256": "4634321a1a410033268418966905e87108dadb7ef44b9863b7a63e1d1d111a16",
+      "sha256": "17f8d45cf43affc8f349dd19078c867ee0e39adce9a91780d9012f5466e81354",
+      "modifications": [
+        "3 diagnostic display calls removed"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/CEGen.v",
+      "upstream_path": "src/CEGen.v",
+      "upstream_sha256": "5a4b2d3904022c072b93d824c08b9e62b49498f8a9b9cd1740a54c5cf2febd98",
+      "sha256": "8c2823719fc70c916fef703ed55f7c5e1f98206485648e1e59f985245c55b492",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/cpu.v",
+      "upstream_path": "src/cpu.v",
+      "upstream_sha256": "d1d9503c7d28634532f81587e44c989fb6e37ed964815164ba2563d1f8cc94c4",
+      "sha256": "5620cd622d003af000ea49c3372af1fbf8bb54b2a6305e64fe1f80a763af2c0b",
+      "modifications": [
+        "2 diagnostic display calls removed"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/dsp.v",
+      "upstream_path": "src/dsp.v",
+      "upstream_sha256": "68406b5090b7913e7ed3b40d69ba8acbce97f3a5240b257d411050caf45a1451",
+      "sha256": "9ac75c40da0b1cf3c60371f2ad68791b8f76ca804c983d523c609107f6fd2aa5",
+      "modifications": [
+        "external Gaussian coefficient port, same internal registered-read latency",
+        "1 diagnostic display calls removed"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/ppu.v",
+      "upstream_path": "src/ppu.v",
+      "upstream_sha256": "ec61575314f8b5086477b63e845253bfe37580d26345bacc30f6150abf1e1cc3",
+      "sha256": "8410b6fa5a3aa4f7ee29bc01491756c075de1bdcc63926a2d9b61f5b577354c5",
+      "modifications": [
+        "progressive only: SETINI interlace bits ignored, request reported"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/smp.v",
+      "upstream_path": "src/smp.v",
+      "upstream_sha256": "7f146ae1041cbfeb8dbce64673a2277be55cc9ebde0287e8b9bc3cf8e79cf33b",
+      "sha256": "a45b88084782ad4e632cdf2a60a7316cbd6b6afd418365e91a1056ea4cb85264",
+      "modifications": [
+        "embedded proprietary IPL removed; external asynchronous 64-byte read port",
+        "2 diagnostic display calls removed"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/SNES.v",
+      "upstream_path": "src/SNES.v",
+      "upstream_sha256": "bb9583989099b294e47b7e8070f440e149263c73b4117008536cedddd4d2a3b5",
+      "sha256": "9230712c8612c783612e27535e9436e4f48cc3d5ef2f12648f1316edf0aa6fce",
+      "modifications": [
+        "IPL/coefficient/progressive-request ports; repair disconnected HIGH_RES; tie absent debug sources"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/swram.v",
+      "upstream_path": "src/swram.v",
+      "upstream_sha256": "9ec3693b5de2447c9fb33362ef051bbc9be1336477bf1eca73543cfa2025337a",
+      "sha256": "691d1fd50ab347492b51461977b3ce74e77753ef8b06b925336bef009ef78b12",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/dsp.vh",
+      "upstream_path": "src/dsp.vh",
+      "upstream_sha256": "d26180fcb3e3906151f958f5b38aab436207c984cde8a0fbf7ef60b731e59a7a",
+      "sha256": "0661498ea788ef206c040c93ad9183bea4a8160575b9ec71fe67b21a9404bac2",
+      "modifications": [
+        "unverified-origin Gaussian coefficients removed; audio CE restored to nominal 4.096 MHz"
+      ],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/ppu_defines.vh",
+      "upstream_path": "src/ppu_defines.vh",
+      "upstream_sha256": "438a155a7f72ba64c9204fd137cdc073521701af08ab4ecd3f94816984fcc711",
+      "sha256": "d9e376e60de86e2bbcec6eb2836098942eeeb5753cfca9687795595715606b86",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "rtl/spc700/mcode.vh",
+      "upstream_path": "src/spc700/mcode.vh",
+      "upstream_sha256": "acee5ff98197dc378229e2a35039ec858da2a0f806c1ac6e34be06332a62de1d",
+      "sha256": "5650b43641964e6a59079948db687d70836c8c245a5aa004209ecfd9bd543420",
+      "modifications": [],
+      "license": "GPL-3.0, upstream root LICENSE; original notices retained"
+    },
+    {
+      "path": "snes_ppu_memory.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "553e585151a9f3607bc9b0380d629d0b15da535460836851f84dea78ec5d0529",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_vram.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "517240bc9846eb0a3b2562c2f929aa7d07b6733777f82134414dd5ac887cc718",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_assets.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "854f60b73f941e3cec4e92740e4f76989c36b256b2c6b59c8d76a8eb7f221cb4",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_pad.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "30316cec13660f6abbbfe5e5a240c7cf3217e9f1aa7eb11c1caf5b46bd0dfb3a",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_cart.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "76b58bdb0d553ee4de06d5162c8facf78b57d65fada998b38ae3d5ad7c6ffbb3",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_console.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "14e21009ed4d2bfd9a7414d0dee7c521b689986cca32e28c3fb17dacaea21c55",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_memory.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "fb6c3214cbbab6e0b233c0c01ae0bd1d6c2a1a3074288fee134ff735d7745771",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_asset_loader.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "3579e5f4a2bedecb957ed95a94c8c9dd71a9c09f0d95f769aefd449168d410c7",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_clock_guard.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "6463c5da56e7d090e7705d82ba66b6162d9422ee0a0789d7fb7362dad8a90f97",
+      "license": "GPL-3.0-or-later"
+    },
+    {
+      "path": "snes_system.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "82a98d980454c08ec755972ca174f1448ddaaac3344ffe8245f56b5732aec048",
+      "license": "GPL-3.0-or-later"
+    }
+  ],
+  "tests": [
+    {
+      "path": "gateware/sim/tb_retro_snes.sv",
+      "sha256": "d2bdd52fd8643bd0bf03c04c5f2c31250a078aa62fd983121b2460a1c9e4a2c6",
+      "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
+    },
+    {
+      "path": "gateware/sim/tb_retro_snes_core.sv",
+      "sha256": "3aede610bfdb9c9450704dd8587b81126c5855253803e421babfbd6d3a31ca0d",
+      "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
+    },
+    {
+      "path": "gateware/sim/tb_retro_snes_memory.sv",
+      "sha256": "542952828baf4b224bc386157d9c850847d499facfefe6ad8681a9a679d36ae9",
+      "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
+    },
+    {
+      "path": "gateware/sim/tb_retro_snes_assets.sv",
+      "sha256": "fdab79906378c550946f32a71c4cfd1305aff8a0d9898a92829c8fdb27b0a588",
+      "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
+    }
+  ],
+  "excluded": [
+    "upstream embedded SPC700 IPL bytes",
+    "upstream Gaussian silicon coefficients",
+    "DSPn program/data hex",
+    "all cartridge enhancement-chip RTL",
+    "vendor PLL/RAM/controllers",
+    "upstream board top/iosys/HDMI"
+  ],
+  "assets": {
+    "ipl": "64 runtime user-supplied bytes; no embedded fallback",
+    "gaussian": "512 runtime signed 12-bit coefficients; stream 1024 LE container bytes",
+    "readiness": "Exact sequential address/last/coverage and backend ready required",
+    "provenance": "Runtime supplier verifies rights, source, image length and hash"
+  },
+  "tables": {
+    "M_TAB": "Authored 65C816 micro-operations, 2048x52, not firmware",
+    "MCODE0": "Authored SPC700 micro-operations, 2048x31, not IPL",
+    "ALUFlags": "Instruction-control case decoders, not firmware",
+    "DMA": "Transfer pattern and length logic constants",
+    "DSP": "Scheduling/counter-mask tables only; Gaussian coefficients external",
+    "PPU": "Fetch schedule and sprite-size logic tables"
+  },
+  "clock_contract": {
+    "service": "4x related free master",
+    "primitive": "BUFGCE whole-console clock hold, no ENABLE pause",
+    "performance": "Conservative clock-stretched functional path, not nominal speed",
+    "stop": "run=0 requests quiesce; preserve last-edge sampling and drain, then stop_ack permits owner/config/assets change",
+    "reset": "Global reset intentionally discards pending/unissued work; issued physical writes cannot be undone"
+  },
+  "limitations": [
+    "No proprietary BIOS/game compatibility proof",
+    "No unconditional wall-clock two-master SDRAM deadline (refresh counterexample retained)",
+    "No physical timing/route/combined-fit signoff"
+  ],
+  "reproduction": {
+    "includes": [
+      "gateware/profiles/retro/snes/rtl",
+      "gateware/profiles/retro/snes/rtl/spc700"
+    ],
+    "simulation": "verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_snes -f gateware/profiles/retro/snes/sources.f +incdir+gateware/profiles/retro/snes/rtl +incdir+gateware/profiles/retro/snes/rtl/spc700 gateware/sim/sdram_model.sv gateware/sim/tb_retro_snes.sv",
+    "core_simulation_top": "tb_retro_snes_core",
+    "rom_modes": "Run each synthetic test with +hirom=0 and +hirom=1"
+  }
+}

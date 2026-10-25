@@ -6,8 +6,8 @@
 // по A10, PRE, REF. Данные чтения выходят через CL тактов, держатся tOH после следующего фронта.
 // Проверяет tRCD (в нс), чтение/запись в закрытую строку и команды без MRS; нарушения считает в errors.
 module sdram_model #(
-    parameter time TAc = 5.4ns,  // выход данных после фронта (CL2, -6)
-    parameter time TOh = 2.5ns,  // удержание после следующего фронта
+    parameter realtime TAc = 5.4ns,  // выход данных после фронта (CL2, -6)
+    parameter realtime TOh = 2.5ns,  // удержание после следующего фронта
     parameter time TRcd = 15ns   // ACT → READ/WRITE
 ) (
     input  wire        clk,
@@ -57,7 +57,7 @@ module sdram_model #(
     if (cke && !cs_n) begin
       case ({ras_n, cas_n, we_n})
         3'b000: begin  // MRS
-          cl = a[6:4];
+          cl = int'(a[6:4]);
           mode_set = 1;
           if (a[2:0] != 0) err("BL не 1");
         end
@@ -72,7 +72,7 @@ module sdram_model #(
           if (!mode_set) err("доступ до MRS");
           if (!open_[ba]) err($sformatf("доступ в закрытый банк %0d", ba));
           if ($time - act_t[ba] < TRcd) err($sformatf("tRCD %0t", $time - act_t[ba]));
-          addr = {ba, row[ba], a[7:0]};
+          addr = int'({ba, row[ba], a[7:0]});
           if (we_n) rpipe[cl-2] = addr;  // данные выходят после фронта k+CL−1, верны на k+CL
           else begin
             logic [31:0] old;
