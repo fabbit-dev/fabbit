@@ -22,6 +22,7 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "profile_mgr.h"
+#include "rom_port.h"
 
 static const char *TAG = "menu";
 
@@ -139,16 +140,11 @@ static int p_games(lc_game_t *g, int max)
         memset(c, 0, sizeof *c);
         if (l + sizeof ROMS + 1 > sizeof c->path) continue;  // путь не влезает
         snprintf(c->path, sizeof c->path, ROMS "/%.*s", (int)(sizeof c->path - sizeof ROMS - 1), e->d_name);
-        FILE *f = fopen(c->path, "rb");
-        uint8_t h[16];
-        nes_info_t info;
-        bool ok = f && fread(h, 1, 16, f) == 16 && nes_parse(h, &info) &&
-                  fseek(f, 0, SEEK_END) == 0 && ftell(f) >= (long)info.need;
-        if (f) fclose(f);
-        if (!ok) continue;
-        c->mapper = info.mapper;
-        c->prg_kb = info.prg_kb;
-        c->chr_kb = info.chr_kb;
+        rom_info_t info;
+        if (rom_port_probe(c->path, &info) != ESP_OK || info.system != ROM_NES) continue;
+        c->mapper = info.nes.mapper;
+        c->prg_kb = info.nes.prg_kb;
+        c->chr_kb = info.nes.chr_kb;
         snprintf(c->name, sizeof c->name, "%.*s", (int)(l - 4), e->d_name);
         fbi_head_t hd;
         FILE *t;
@@ -203,8 +199,14 @@ static bool wait_golden(uint32_t timeout)
 
 static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n)
 {
+    rom_info_t info;
+    esp_err_t e = rom_port_probe(g->path, &info);
+    if (e != ESP_OK) {
+        snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
+        return false;  // отказ до pm_load и любого recovery reboot
+    }
     run_ctx_t r = {cb, ctx};
-    esp_err_t e = pm_load_cb(CORE, false, pm_stage, &r);
+    e = pm_load_cb(CORE, false, pm_stage, &r);
     if (e != ESP_OK) {
         snprintf(err, n, "ядро NES не запустилось: %s", esp_err_to_name(e));
         fl_id_t id;
@@ -214,7 +216,7 @@ static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *e
     }
     // дальше плоскости нет: ПЛИС в профиле, на экране NES
     uint32_t ms = 0;
-    e = nes_load_file(g->path, NULL, NULL, &ms);
+    e = rom_port_load(g->path, NULL, NULL, &ms);
     if (e != ESP_OK) {
         snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
         fl_reboot_golden();

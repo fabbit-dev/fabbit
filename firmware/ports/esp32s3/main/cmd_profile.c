@@ -11,6 +11,7 @@
 #include "esp_timer.h"
 #include "fpga_link.h"
 #include "nes_rom.h"
+#include "rom_port.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -137,15 +138,19 @@ static int cmd_soak(int argc, char **argv)
 static int cmd_rom(int argc, char **argv)
 {
     if (argc < 2) return 1;
-    if (!nes_present()) {
-        printf("в ПЛИС не профиль NES\n");
-        return 1;
-    }
     char path[160];
     if (strchr(argv[1], '/')) snprintf(path, sizeof path, "%s", argv[1]);
     else snprintf(path, sizeof path, "/data/roms/%s%s", argv[1], strchr(argv[1], '.') ? "" : ".nes");
     uint32_t ms = 0;
-    esp_err_t e = nes_load_file(path, NULL, NULL, &ms);
+    rom_info_t info;
+    esp_err_t e = rom_port_probe(path, &info);
+    if (e == ESP_OK) {
+        if (!nes_present()) {
+            printf("в ПЛИС не профиль NES\n");
+            return 1;
+        }
+        e = rom_port_load(path, NULL, NULL, &ms);
+    }
     printf("ROM %s: %s, %" PRIu32 " мс\n", path, esp_err_to_name(e), ms);
     return e != ESP_OK;
 }

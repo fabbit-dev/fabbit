@@ -18,6 +18,7 @@ static int mode, locks, resets, streamed, writes, boots, callbacks, opens;
 static int64_t us;
 static bool profile;
 static pm_table_t table;
+static uint8_t rom_header[16];
 
 static void reset(int m)
 {
@@ -84,8 +85,14 @@ esp_err_t fl_csr_write(uint8_t idx, const uint32_t *v, size_t n)
 }
 esp_err_t fl_write(uint8_t cmd, uint32_t addr, const void *p, size_t n)
 {
-    assert(locks > 0 && cmd == FL_CMD_STREAM);
+    assert(locks > 0 && cmd == FL_CMD_STREAM && addr == 0);
     if (mode == STREAM_FAIL) return ESP_ERR_INVALID_RESPONSE;
+    assert(n <= (size_t)(16400 - streamed));
+    for (size_t i = 0; i < n; i++) {
+        size_t offset = (size_t)streamed + i;
+        uint8_t want = offset < 16 ? rom_header[offset] : (uint8_t)(offset - 16);
+        assert(((const uint8_t *)p)[i] == want);
+    }
     streamed += (int)n;
     return ESP_OK;
 }
@@ -167,10 +174,12 @@ int main(void)
     h[7] = 0; h[4] = 0;
     assert(!nes_parse(h, &info));
     h[4] = 1;
+    memcpy(rom_header, h, sizeof h);
     FILE *f = fopen("test.nes", "wb");
     assert(f);
     assert(fwrite(h, 1, sizeof h, f) == sizeof h);
     for (int i = 0; i < 16384; i++) fputc(i & 255, f);
+    for (int i = 0; i < 7; i++) fputc(0xEE, f);  // хвост не должен попасть в STREAM
     fclose(f);
     const int cases[] = {NORMAL, ALLOC_FAIL, READ_FAIL, NO_START, STREAM_FAIL, NO_SPACE,
                          BAD_SPACE, NO_DONE, WRONG_CORE};
@@ -181,6 +190,7 @@ int main(void)
         reset(cases[i]);
         esp_err_t e = nes_load_file("test.nes", NULL, NULL, NULL);
         assert(e == expect[i] && locks == 0);
+        if (cases[i] == NORMAL) assert(streamed == 16400);
         if (cases[i] == NO_START || cases[i] == WRONG_CORE) assert(!streamed);
     }
     puts("ok NES: parser, no memory, bus errors, start/stream/done timeouts, wrong core");
