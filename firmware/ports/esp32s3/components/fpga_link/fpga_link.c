@@ -13,6 +13,7 @@
 #include "esp_rom_sys.h"
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #include "freertos/task.h"
 
 #define PIN_CLK 12
@@ -32,6 +33,11 @@ static const char *TAG = "fpga_link";
 static spi_device_handle_t s_dev;
 static uint32_t s_hz;
 static uint8_t *s_dma;  // DMA-буфер во внутренней памяти
+// шину делят консоль и задача кнопок: кадр целиком под замком, перенастройка шины тоже
+static SemaphoreHandle_t s_lock;
+
+void fl_lock(void) { xSemaphoreTakeRecursive(s_lock, portMAX_DELAY); }
+void fl_unlock(void) { xSemaphoreGiveRecursive(s_lock); }
 
 static esp_err_t add_device(uint32_t hz)
 {
@@ -53,6 +59,8 @@ static esp_err_t add_device(uint32_t hz)
 
 esp_err_t fl_init(uint32_t hz)
 {
+    if (!s_lock) s_lock = xSemaphoreCreateRecursiveMutex();
+    if (!s_lock) return ESP_ERR_NO_MEM;
     spi_bus_config_t bus = {
         .sclk_io_num = PIN_CLK,
         .data0_io_num = PIN_D0,
@@ -84,7 +92,7 @@ esp_err_t fl_init(uint32_t hz)
     return fl_tune(16, true);
 }
 
-esp_err_t fl_wiretest(void)
+static esp_err_t fl_wiretest_locked(void)
 {
     static const int pins[] = {PIN_CLK, PIN_CS, PIN_D0, PIN_D1, PIN_D2, PIN_D3, PIN_IRQ};
     uint32_t hz = s_hz;
@@ -108,7 +116,15 @@ esp_err_t fl_wiretest(void)
     return fl_init(hz);
 }
 
-esp_err_t fl_pins(uint8_t *with_pd, uint8_t *with_pu)
+esp_err_t fl_wiretest(void)
+{
+    fl_lock();
+    esp_err_t e = fl_wiretest_locked();
+    fl_unlock();
+    return e;
+}
+
+static esp_err_t fl_pins_locked(uint8_t *with_pd, uint8_t *with_pu)
 {
     static const int pins[] = {PIN_CLK, PIN_CS, PIN_D0, PIN_D1, PIN_D2, PIN_D3, PIN_IRQ};
     uint32_t hz = s_hz;
@@ -131,10 +147,26 @@ esp_err_t fl_pins(uint8_t *with_pd, uint8_t *with_pu)
     return fl_init(hz);
 }
 
-esp_err_t fl_set_freq(uint32_t hz)
+esp_err_t fl_pins(uint8_t *with_pd, uint8_t *with_pu)
+{
+    fl_lock();
+    esp_err_t e = fl_pins_locked(with_pd, with_pu);
+    fl_unlock();
+    return e;
+}
+
+static esp_err_t fl_set_freq_locked(uint32_t hz)
 {
     ESP_RETURN_ON_ERROR(spi_bus_remove_device(s_dev), TAG, "remove");
     return add_device(hz);
+}
+
+esp_err_t fl_set_freq(uint32_t hz)
+{
+    fl_lock();
+    esp_err_t e = fl_set_freq_locked(hz);
+    fl_unlock();
+    return e;
 }
 
 uint32_t fl_get_freq(void) { return s_hz; }
@@ -146,7 +178,6 @@ static esp_err_t xfer(uint8_t cmd, uint32_t addr, const void *tx, void *rx, size
     t.base.cmd = cmd;
     t.base.addr = addr & 0xFFFFFF;
     if (tx && len) {
-        memcpy(s_dma, tx, len);
         t.base.tx_buffer = s_dma;
         t.base.length = len * 8;
     } else if (rx && len) {
@@ -155,8 +186,11 @@ static esp_err_t xfer(uint8_t cmd, uint32_t addr, const void *tx, void *rx, size
         t.base.rx_buffer = s_dma;
         t.base.rxlength = len * 8;
     }
+    fl_lock();
+    if (tx && len) memcpy(s_dma, tx, len);
     esp_err_t err = spi_device_polling_transmit(s_dev, &t.base);
     if (err == ESP_OK && rx && len) memcpy(rx, s_dma, len);
+    fl_unlock();
     return err;
 }
 
@@ -337,6 +371,12 @@ esp_err_t fl_boot(uint32_t addr) { return fl_write(FL_CMD_BOOT, addr, KEY, 4); }
 esp_err_t fl_set_wdt(uint32_t units) { return simple(FL_CMD_SET_WDT, units & 0xFFFFFF, 100); }
 
 esp_err_t fl_reboot_golden(void) { return fl_write(FL_CMD_REBOOT_GOLDEN, 0, KEY, 4); }
+
+esp_err_t fl_pad(uint16_t pad0, uint16_t pad1)
+{
+    const uint8_t b[4] = {pad1 >> 8, pad1 & 0xFF, pad0 >> 8, pad0 & 0xFF};
+    return fl_write(FL_CMD_PAD, 0, b, 4);
+}
 
 esp_err_t fl_csr_write(uint8_t idx, const uint32_t *v, size_t n)
 {

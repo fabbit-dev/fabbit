@@ -50,6 +50,9 @@ module nes_system (
   logic loader_write_r = 1'b0, loader_write_mem = 1'b0;
   logic [21:0] loader_addr_mem = '0;
   logic [7:0] loader_wdata_mem = '0;
+  // GameLoader снимает error только с первым байтом заголовка: после неудачной загрузки (мусор на
+  // шине при перезапуске ESP) старый error оборвал бы новую загрузку на первом такте
+  logic got_byte = 1'b0;
 
   always_ff @(posedge nclk) begin
     in_clk      <= 1'b0;
@@ -68,13 +71,15 @@ module nes_system (
       loader_addr_mem  <= loader_addr;
       loader_wdata_mem <= loader_wdata;
     end
+    if (in_clk) got_byte <= 1'b1;
     if (rst) begin
       loading   <= 1'b0;
       reset_nes <= 1'b1;
     end else if (load_go) begin
       loading   <= 1'b1;
       reset_nes <= 1'b1;
-    end else if (loading && (loader_done || loader_fail)) begin
+      got_byte  <= 1'b0;
+    end else if (loading && got_byte && (loader_done || loader_fail)) begin
       loading      <= 1'b0;
       reset_nes    <= loader_fail;
       clkref_sync  <= 1'b1;  // ядро стартует в начале окна clkref, как в nestang_top

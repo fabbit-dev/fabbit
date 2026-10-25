@@ -8,13 +8,16 @@
 //   31 CSR_R       чтение 4·n: то же на чтение
 //   32 STREAM      запись n: байты в поток канала addr[7:0] (без обратного давления: свободное место
 //                  ESP узнаёт из регистра профиля)
+//   33 PAD         запись 4: кнопки {пад 1, пад 0} по 16 бит (раскладка RetroPad, docs/bus-protocol.md);
+//                  слово принимается целиком по CS#↑ и только при ровно 4 байтах
 // Регистры и поток видит профиль в домене clk; переход в свои такты — его забота (common/cdc).
 module profile_shell #(
     parameter logic [15:0] ProfileId = 16'd0,
-    parameter logic [ 7:0] Version = 8'd2,
+    parameter logic [ 7:0] Version = 8'd3,
     parameter bit          UseIcap = 1'b0
 ) (
     input  wire        clk,         // 100 МГц
+    input  wire        rst,         // синхронный сброс, пока PLL не захватил частоту
     input  wire        esp_sck,
     input  wire        esp_cs_n,
     input  wire  [3:0] d_in,
@@ -30,11 +33,15 @@ module profile_shell #(
     // поток байтов
     output logic        st_valid,
     output logic [ 7:0] st_chan,
-    output logic [ 7:0] st_data
+    output logic [ 7:0] st_data,
+    // кнопки: {пад 1, пад 0}, pad_stb на такт после смены
+    output logic [31:0] pad = 32'd0,
+    output logic        pad_stb = 1'b0
 );
   localparam logic [31:0] Key = "FBKY";
   localparam logic [7:0] CmdId = 8'h01, CmdTune = 8'h07, CmdReboot = 8'h22;
-  localparam logic [7:0] CmdCsrW = 8'h30, CmdCsrR = 8'h31, CmdStream = 8'h32;
+  localparam logic [7:0] CmdCsrW = 8'h30, CmdCsrR = 8'h31, CmdStream = 8'h32,
+                         CmdPad = 8'h33;
 
   logic [7:0] rd_start = 8'd16;
   logic       rd_fall = 1'b1;
@@ -96,9 +103,25 @@ module profile_shell #(
         st_data  <= wr_data;
       end
     end
+    pad_stb <= 1'b0;
+    if (frame_end && f_cmd == CmdPad && f_n == 4'd4) begin
+      pad     <= f_key;
+      pad_stb <= 1'b1;
+    end
     if (frame_end && f_cmd == CmdTune && f_n == 4'd4 && f_key == Key) begin
       rd_start <= f_addr[7:0];
       rd_fall  <= f_addr[8];
+    end
+    // до захвата PLL такт нестабилен и регистры без сброса набирают мусор: на стенде выдача
+    // данных молчала до первого TUNE, CSR профиля читались случайными
+    if (rst) begin
+      rd_start <= 8'd16;
+      rd_fall  <= 1'b1;
+      f_cmd    <= 8'd0;
+      pad      <= 32'd0;
+      pad_stb  <= 1'b0;
+      csr_we   <= 1'b0;
+      st_valid <= 1'b0;
     end
   end
 

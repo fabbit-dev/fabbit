@@ -10,6 +10,7 @@
 #include "esp_log.h"
 #include "esp_random.h"
 #include "esp_timer.h"
+#include "cmd_pad.h"
 #include "cmd_profile.h"
 #include "fpga_link.h"
 #include "profile_mgr.h"
@@ -128,7 +129,7 @@ static int cmd_rd(int argc, char **argv)
 
 static void prog_cb(size_t done, size_t total)
 {
-    if (done == total || (done % (256 * 1024)) == 0) printf("  %u/%u\n", done, total);
+    if (done == total || (done % (256 * 1024)) == 0) printf("  %zu/%zu\n", done, total);
 }
 
 // progtest <addr> [КБ]: записать случайные данные, сверить CRC ПЛИС с локальным
@@ -410,6 +411,7 @@ void app_main(void)
     reg("icapdbg", "icapdbg <рег>: чтение через ICAP, 16 тактов выхода", cmd_icapdbg);
     reg("golden", "вернуться в golden из профиля", cmd_golden);
     cmd_profile_register();
+    cmd_pad_register();
     printf("fabbit loader: шина %" PRIu32 " Hz\n", fl_get_freq());
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
 }
