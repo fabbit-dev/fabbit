@@ -77,7 +77,7 @@ class Descriptor:
         checked(packet, "status")
         result = cls(**{key: integer(packet, key) for key in cls.__dataclass_fields__})
         if (result.flags & ~15 or not 1 <= result.capacity <= MAX_SAMPLES or
-                result.base_hz != 100_000_000 or result.source > 1 or
+                result.base_hz not in (100_000_000, 200_000_000) or result.source > 1 or
                 result.count > result.capacity):
             raise CaptureError("Повреждённый ответ ПЛИС")
         if result.flags & 4:
@@ -258,7 +258,8 @@ def main(argv=None):
     transport.add_argument("--port", help="Порт консоли ESP; открытие может перезапустить ESP")
     transport.add_argument("--log", type=Path, help="Готовая выгрузка @LA, без доступа к железу")
     parser.add_argument("--arm", action="store_true", help="Начать новый захват; иначе прочитать текущий")
-    parser.add_argument("--samples", type=lambda v: int(v, 0), default=MAX_SAMPLES)
+    parser.add_argument("--samples", type=lambda v: int(v, 0),
+                        help="Число отсчётов; по умолчанию ёмкость загруженного профиля")
     parser.add_argument("--post", type=lambda v: int(v, 0))
     parser.add_argument("--divider", type=lambda v: int(v, 0), default=0)
     for name in ("mask", "value", "rise", "fall", "source"):
@@ -282,13 +283,18 @@ def main(argv=None):
             raise CaptureError("Неверное время ожидания")
         arm = None
         if args.arm:
-            post = args.post if args.post is not None else max(1, args.samples // 2)
-            arm = (args.samples, post, args.divider, args.mask, args.value, args.rise, args.fall, args.source)
+            total = args.samples if args.samples is not None else MAX_SAMPLES
+            post = args.post if args.post is not None else max(1, total // 2)
+            arm = (total, post, args.divider, args.mask, args.value, args.rise, args.fall, args.source)
             validate_arm(arm)
         if args.log:
             snapshot, data = acquire(LogConsole(args.log.read_text(encoding="utf-8")), timeout=args.timeout)
         else:
             with open_console(args.port) as console:
+                if args.arm and args.samples is None:
+                    capability = Descriptor.parse(console.exchange("capture status"))
+                    post = args.post if args.post is not None else max(1, capability.capacity // 2)
+                    arm = (capability.capacity, post, *arm[2:])
                 snapshot, data = acquire(console, arm, args.timeout)
         save_capture(args.output, snapshot, data)
         print(f"{args.output}: {snapshot.count} отсчётов, {snapshot.rate} Гц, "

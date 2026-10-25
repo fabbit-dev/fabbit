@@ -58,6 +58,19 @@ class CaptureTests(unittest.TestCase):
         _, data = la.acquire(la.LogConsole(as_log(transcript(short))))
         self.assertEqual(data, short)  # final block contains only two bytes
 
+    def test_ddr_rate_capacity_and_export(self):
+        raw = bytes(range(256)) * 1023 + bytes(252)  # 131070 samples, one guard frame
+        descriptor, data = la.acquire(la.LogConsole(as_log(transcript(
+            raw, status(capacity=131070, count=131070, trigger_index=65535, base_hz=200_000_000)))))
+        self.assertEqual(descriptor.rate, 200_000_000)
+        self.assertEqual(data, raw)
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "ddr.bin"
+            la.save_capture(output, descriptor, data)
+            metadata = json.loads(output.with_suffix(".bin.json").read_text())
+            self.assertEqual(metadata["sample_rate_numerator"], 200_000_000)
+            self.assertEqual(metadata["sample_rate_denominator"], 1)
+
     def test_bad_blocks(self):
         alterations = [dict(epoch=8), dict(offset=1), dict(hex="00"), dict(hex="gg"*1024),
                        dict(crc32="00000000"), dict(crc32="bad"), dict(offset=True),
@@ -78,7 +91,8 @@ class CaptureTests(unittest.TestCase):
                 la.acquire(la.LogConsole(as_log(replies)))
         for update in [dict(flags=7), dict(flags=14), dict(capacity=0), dict(count=0),
                        dict(count=131073), dict(trigger_index=2048), dict(base_hz=0),
-                       dict(divider=-1), dict(epoch=True), dict(source=2), dict(flags=32)]:
+                       dict(divider=-1), dict(epoch=True), dict(source=2), dict(flags=32),
+                       dict(base_hz=150_000_000)]:
             with self.subTest(update=update), self.assertRaises(la.CaptureError):
                 la.Descriptor.parse(status(**update))
 
@@ -145,6 +159,23 @@ class CaptureTests(unittest.TestCase):
                 with self.assertRaises(SystemExit):
                     la.main([output, "--port", "not-a-real-port", *flags])
             opened.assert_not_called()
+
+    def test_default_arm_uses_loaded_profile_capacity(self):
+        class Console(la.LogConsole):
+            def exchange(inner, command):
+                inner.commands.append(command)
+                return super().exchange(command)
+        before = status(base_hz=200_000_000, capacity=30, count=0, trigger_index=0, flags=0)
+        after = status(base_hz=200_000_000, capacity=30, count=30, trigger_index=15, epoch=8)
+        console = Console(as_log([before] + transcript(bytes(60), after)))
+        console.commands = []
+        from contextlib import nullcontext
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+                la, "open_console", return_value=nullcontext(console)):
+            output = Path(directory) / "default.bin"
+            self.assertEqual(la.main([str(output), "--port", "fake", "--arm"]), 0)
+            self.assertEqual(console.commands[:2], ["capture status", "capture arm 30 15 0 0 0 0 0 0"])
+            self.assertEqual(output.read_bytes(), bytes(60))
 
     def test_raw_save_no_clobber(self):
         descriptor = la.Descriptor.parse(status(divider=2))

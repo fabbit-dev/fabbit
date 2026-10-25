@@ -1,7 +1,9 @@
 `default_nettype none
 
 // Breadboard capture profile: P2 inputs, existing ESP link on P3. No SDRAM dependency.
-module la_top (
+module la_top #(
+    parameter bit Ddr = 1'b0
+) (
     input  wire        clk,
     output wire        led,
     output wire        uart_tx,
@@ -29,7 +31,7 @@ module la_top (
       .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata),
       .st_valid(), .st_chan(), .st_data(), .pad(), .pad_stb(),
       .rb_addr(rb_addr), .rb_data(rb_data));
-  la_system u_la (
+  la_system #(.Ddr(Ddr)) u_la (
       .clk(clk_bus), .rst(rst_capture), .probe(probe), .csr_we(csr_we), .csr_waddr(csr_waddr),
       .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata),
       .rb_addr(rb_addr), .rb_data(rb_data), .capture_done(done));

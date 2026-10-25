@@ -2,7 +2,12 @@
 `timescale 1ns / 1ps
 
 // Capture/readback through the real 10 MHz QSPI receiver, not direct register pokes.
-module tb_la_profile;
+module tb_la_profile #(
+    parameter bit Ddr = 1'b0,
+    localparam int Samples = Ddr ? 2046 : 2048,
+    localparam int Post = Samples/2,
+    localparam int First = 5000 - (Samples-Post)
+);
   logic clk = 0, rst = 1;
   always #5 clk = ~clk;
   initial #200ns rst = 0;
@@ -32,7 +37,7 @@ module tb_la_profile;
       .d_oe(s_oe), .irq(), .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata),
       .csr_raddr(csr_raddr), .csr_rdata(csr_rdata), .st_valid(), .st_chan(), .st_data(),
       .pad(), .pad_stb(), .rb_addr(rb_addr), .rb_data(rb_data));
-  la_system #(.Depth(2048)) dut (
+  la_system #(.Depth(2048), .Ddr(Ddr)) dut (
       .clk(clk), .rst(rst), .probe(probe), .csr_we(csr_we), .csr_waddr(csr_waddr),
       .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata),
       .rb_addr(rb_addr), .rb_data(rb_data), .capture_done());
@@ -97,13 +102,14 @@ module tb_la_profile;
     q_read(8'h01, 0, 8);
     if (rword(0) != "FBPR" || {rbuf[6], rbuf[7]} != 16'h4C41) $fatal(1, "profile ID");
     q_read(8'h31, 0, 20);
-    if (rword(0) != "FBLA" || rword(3) != 2048 || rword(4) != 100_000_000)
+    if (rword(0) != "FBLA" || rword(3) != Samples ||
+        rword(4) != (Ddr ? 200_000_000 : 100_000_000))
       $fatal(1, "LA capabilities");
     q_read(8'h34, 0, 32);
     foreach (rbuf[i]) if (i < 32 && rbuf[i] != 0) $fatal(1, "read before freeze leaked RAM");
     write_csr(16, 1);  // counter source
-    write_csr(5, 2048);
-    write_csr(6, 1024);
+    write_csr(5, 32'(Samples));
+    write_csr(6, 32'(Post));
     write_csr(8, 65535);
     write_csr(9, 5000);  // wrap ring twice before trigger
     write_csr(1, 32'hDEAD_0001);
@@ -112,15 +118,17 @@ module tb_la_profile;
     write_csr(1, 32'h4C41_0001);
     #100us;
     q_read(8'h31, 12, 24);
-    if (rword(0) != 2048 || rword(1) != 1024 || rword(2) != 1 || rword(3) != 0 ||
+    if (rword(0) != Samples || rword(1) != Samples-Post ||
+        rword(2) != 1 || rword(3) != 0 ||
         rword(5) != 1) $fatal(1, "snapshot metadata");
     q_read(8'h34, 0, 4096);
-    expect_counter(0, 4096, 3976);
-    $display("ok   QSPI: 2048 samples, ring wrap, LE16, 4096-byte burst without 1024-byte wrap");
+    expect_counter(0, Samples*2, First);
+    for (int i = Samples*2; i < 4096; i++) if (rbuf[i] != 0) $fatal(1, "tail RAM leak");
+    $display("ok   QSPI: DDR=%0d, samples=%0d, wrap, LE16, 4096-byte burst", Ddr, Samples);
     q_read(8'h34, 1023, 2031);
-    expect_counter(1023, 2031, 3976);
-    q_read(8'h34, 4093, 11);
-    expect_counter(4093, 3, 3976);
+    expect_counter(1023, 2031, First);
+    q_read(8'h34, 24'(Samples*2-3), 11);
+    expect_counter(Samples*2-3, 3, First);
     for (int i = 3; i < 11; i++) if (rbuf[i] != 0) $fatal(1, "out-of-range RAM leak");
     q_read(8'h34, 24'hFF_FFFF, 4);
     if (rword(0) != 0) $fatal(1, "24-bit address range check/wrap");

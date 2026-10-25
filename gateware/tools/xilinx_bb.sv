@@ -5,6 +5,18 @@
 module BUFG (output wire O, input wire I);
 endmodule
 
+// Declaration only; behavioral tests bind the vendor UNISIM implementation.
+module IDDR #(
+    parameter string DDR_CLK_EDGE = "OPPOSITE_EDGE",
+    parameter bit INIT_Q1 = 1'b0,
+    parameter bit INIT_Q2 = 1'b0,
+    parameter string SRTYPE = "SYNC"
+) (
+    output wire Q1, Q2,
+    input wire C, CE, D, R, S
+);
+endmodule
+
 module ODDR #(
     parameter string DDR_CLK_EDGE = "OPPOSITE_EDGE",
     parameter bit INIT = 1'b0,

@@ -73,7 +73,12 @@ nes_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xd
                constraints/vivado_profile.xdc
 
 # LA: P2 16 inputs, BRAM snapshot, bidirectional QSPI, return to golden through ICAP.
-LA_CORE := common/mem/ram_sdp.sv profiles/la/la_ring.sv profiles/la/la_system.sv
+LA_CORE := common/mem/ram_sdp.sv profiles/la/la_ring.sv profiles/la/la_sampler.sv \
+           profiles/la/la_system.sv
+LA_DDR ?= 0
+la_top_VIVPARAMS := Ddr=$(LA_DDR)
+# Set XILINX_VIVADO (settings64.sh), or pass UNISIM=<Vivado>/data/verilog/src.
+UNISIM ?= $(XILINX_VIVADO)/data/verilog/src
 la_top_SRC := common/cdc/reset_sync.sv common/qspi_slave.sv common/icap_ctrl.sv \
               common/profile_shell.sv common/profile_bus.sv $(LA_CORE) profiles/la/la_top.sv
 la_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc \
@@ -166,6 +171,24 @@ sim_la: | build
 	  common/profile_shell.sv $(LA_CORE) sim/tb_la_profile.sv > build/tb_la_profile.log 2>&1
 	build/tb_la_profile/Vtb_la_profile
 
+sim_la_sampler: | build
+	iverilog -g2012 -s tb_la_sampler -s glbl -o build/tb_la_sampler.vvp \
+	  profiles/la/la_sampler.sv sim/tb_la_sampler.sv $(UNISIM)/unisims/IDDR.v $(UNISIM)/glbl.v \
+	  > build/tb_la_sampler.log 2>&1
+	vvp -n build/tb_la_sampler.vvp
+
+sim_la_ddr: | build
+	iverilog -g2012 -s tb_la_ddr -s glbl -o build/tb_la_ddr.vvp $(LA_CORE) sim/tb_la_ddr.sv \
+	  $(UNISIM)/unisims/IDDR.v $(UNISIM)/glbl.v > build/tb_la_ddr.log 2>&1
+	vvp -n build/tb_la_ddr.vvp
+
+sim_la_ddr_qspi: | build
+	iverilog -g2012 -s tb_la_profile -s glbl -Ptb_la_profile.Ddr=1 \
+	  -o build/tb_la_ddr_qspi.vvp common/qspi_slave.sv common/icap_ctrl.sv sim/xilinx_stubs.sv \
+	  common/profile_shell.sv $(LA_CORE) sim/tb_la_profile.sv \
+	  $(UNISIM)/unisims/IDDR.v $(UNISIM)/glbl.v > build/tb_la_ddr_qspi.log 2>&1
+	vvp -n build/tb_la_ddr_qspi.vvp
+
 sim_cdc: | build
 	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_cdc -Mdir build/tb_cdc \
 	  $(CDC) sim/tb_cdc.sv > build/tb_cdc.log 2>&1
@@ -186,5 +209,5 @@ sim_osd: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_la sim_la_ring sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
+.PHONY: all clean sim sim_la sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames

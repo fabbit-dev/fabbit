@@ -174,6 +174,14 @@ int main(int argc, char **argv)
     config.rise = config.fall = 0;
     regs[14] = UINT32_MAX;
     assert(la_arm(&config, &s) == ESP_OK && s.epoch == 0 && !locks);
+    reset(NORMAL);
+    regs[3] = LA_MAX_SAMPLES - 2;
+    regs[4] = 200000000;
+    assert(la_status(&s) == ESP_OK && s.capacity == 131070 && s.base_hz == 200000000);
+    config.total = LA_MAX_SAMPLES;
+    assert(la_arm(&config, &s) == ESP_ERR_INVALID_ARG && !writes && !locks);
+    config.total = 32;
+    assert(la_arm(&config, &s) == ESP_OK && s.base_hz == 200000000 && !locks);
     puts("ok LA client: locks, faults, tears, epochs, bounds, ARM/ABORT, invalid descriptors");
     reset(NORMAL);
     assert(!run("capture arm 2048 1024 0 65535 5000 0 0 1"));
