@@ -13,6 +13,7 @@
 static uint8_t fb[UI_FB_SIZE], plane[UI_FB_SIZE];
 static size_t bus_bytes;
 static int errors;
+static bool fail_rect;
 
 static void put(int x, int y, uint8_t c)
 {
@@ -20,22 +21,25 @@ static void put(int x, int y, uint8_t c)
     *p = (x & 1) ? (*p & 0xF0) | c : (*p & 0x0F) | (c << 4);
 }
 
-static void port_rect(int x, int y, int w, int h, const uint8_t *px, size_t stride)
+static bool port_rect(int x, int y, int w, int h, const uint8_t *px, size_t stride)
 {
+    if (fail_rect) return false;
     if ((x | w) & 1 || x < 0 || y < 0 || x + w > UI_W || y + h > UI_H) {
         printf("FAIL rect вне экрана или нечётный: %d %d %d %d\n", x, y, w, h);
         errors++;
-        return;
+        return false;
     }
     for (int j = 0; j < h; j++) memcpy(plane + (y + j) * UI_STRIDE + x / 2, px + j * stride, w / 2);
     bus_bytes += 4 + (size_t)w / 2 * h;
+    return true;
 }
 
-static void port_fill(int x, int y, int w, int h, uint8_t c)
+static bool port_fill(int x, int y, int w, int h, uint8_t c)
 {
     for (int j = y; j < y + h; j++)
         for (int i = x; i < x + w; i++) put(i, j, c);
     bus_bytes += 5;
+    return true;
 }
 
 static const ui_port_t port = {port_rect, port_fill};
@@ -87,7 +91,24 @@ static void shot(const char *name)
 
 int main(void)
 {
+    // Размер буфера и ширина ограничивают текст независимо, UTF-8 не режется посреди буквы.
+    char tiny[8];
+    memset(tiny, 0x55, sizeof tiny);
+    ui_ellipsize(&ui_font_mono18, "длинная строка", 1, tiny + 1, 2);
+    pcsim_check(tiny[0] == 0x55 && tiny[3] == 0x55 && tiny[1] == 0,
+                "обрезка: буфер 2 байта и ширина меньше многоточия");
+    ui_ellipsize(&ui_font_mono18, "АБ", 100, tiny, 4);
+    pcsim_check(!strcmp(tiny, "А"), "обрезка: UTF-8 при нехватке байтов");
     ui_init(fb, &port);
+    ui_fill(0, 0, UI_W, UI_H, UI_INK);
+    fail_rect = true;
+    pcsim_check(ui_flush() == 0, "ошибка вывода: байты не засчитаны");
+    fail_rect = false;
+    pcsim_check(ui_flush() == UI_FB_SIZE && !memcmp(fb, plane, sizeof fb),
+                "ошибка вывода: область отправлена повторно");
+    fail_rect = true;
+    pcsim_check(!ui_reveal(0, 40), "ошибка развёртки возвращается автомату");
+    fail_rect = false;
     lc_profile_t prof[] = {
         {"Ретро-консоль", "РЕТРО-КОНСОЛЬ", "Схема приставки в ПЛИС, картинка по HDMI", "NES · 2 игры",
          &ui_icon_retro, true},

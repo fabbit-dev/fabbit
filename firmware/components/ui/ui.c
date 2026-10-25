@@ -101,27 +101,31 @@ void ui_dirty_all(void)
 size_t ui_flush(void)
 {
     size_t bytes = 0;
+    int pending = 0;
     for (int i = 0; i < s_ndirty; i++) {
         rect_t r = s_dirty[i];
-        if (s_port && s_port->rect)
+        if (s_port && s_port->rect &&
             s_port->rect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0, s_fb + r.y0 * UI_STRIDE + r.x0 / 2,
-                         UI_STRIDE);
-        bytes += (size_t)(r.x1 - r.x0) / 2 * (r.y1 - r.y0);
+                         UI_STRIDE)) bytes += (size_t)(r.x1 - r.x0) / 2 * (r.y1 - r.y0);
+        else s_dirty[pending++] = r;
     }
-    s_ndirty = 0;
+    s_ndirty = pending;
     return bytes;
 }
 
 #define REVEAL_LINE 3
 
-void ui_reveal(int y0, int y1)
+bool ui_reveal(int y0, int y1)
 {
     s_ndirty = 0;
     y0 = imax(y0, 0);
     y1 = imin(y1, UI_H);
-    if (!s_port) return;
-    if (y1 > y0 && s_port->rect) s_port->rect(0, y0, UI_W, y1 - y0, s_fb + y0 * UI_STRIDE, UI_STRIDE);
-    if (y1 < UI_H && s_port->fill) s_port->fill(0, y1, UI_W, imin(REVEAL_LINE, UI_H - y1), UI_INK);
+    if (!s_port) return false;
+    if (y1 > y0 && (!s_port->rect ||
+        !s_port->rect(0, y0, UI_W, y1 - y0, s_fb + y0 * UI_STRIDE, UI_STRIDE))) return false;
+    if (y1 < UI_H && (!s_port->fill ||
+        !s_port->fill(0, y1, UI_W, imin(REVEAL_LINE, UI_H - y1), UI_INK))) return false;
+    return true;
 }
 
 // ---------------- примитивы ----------------
@@ -238,23 +242,22 @@ int ui_text(const ui_font_t *f, int x, int y, const char *s, uint8_t c, ui_align
 void ui_ellipsize(const ui_font_t *f, const char *s, int w, char *out, size_t n)
 {
     if (!n) return;
-    if (ui_text_width(f, s) <= w) {
-        strncpy(out, s, n - 1);
-        out[n - 1] = 0;
-        return;
-    }
-    int ell = glyph(f, 0x2026)->adv, acc = 0;
+    out[0] = 0;
+    bool ellipsis = ui_text_width(f, s) > w;
+    int ell = ellipsis ? glyph(f, 0x2026)->adv : 0, acc = 0;
+    if (ellipsis && (n < 4 || ell > w)) return;
+    size_t limit = n - 1 - (ellipsis ? 3 : 0);
     const char *p = s, *cut = s;
     while (*p) {
         const char *q = p;
         int adv = glyph(f, utf8_next(&q))->adv;
-        if (acc + adv + ell > w) break;
+        if (acc + adv + ell > w || (size_t)(q - s) > limit) break;
         acc += adv;
         p = q;
         cut = p;
     }
     size_t k = (size_t)(cut - s);
-    if (k > n - 4) k = n - 4;
     memcpy(out, s, k);
-    memcpy(out + k, "\xE2\x80\xA6", 4);  // «…» и 0
+    if (ellipsis) memcpy(out + k, "\xE2\x80\xA6", 4);  // «…» и 0
+    else out[k] = 0;
 }

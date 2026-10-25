@@ -24,7 +24,8 @@ module tb_golden;
   logic [7:0] rd_start;
   logic rd_fall;
   qspi_slave u_q (
-      .clk(clk), .rd_start(rd_start), .rd_fall(rd_fall), .sck(sck), .cs_n(cs_n), .d_in(d_bus), .d_out(s_out), .d_oe(s_oe),
+      .clk(clk), .rd_start(rd_start), .rd_fall(rd_fall), .sck(sck), .cs_n(cs_n),
+      .d_in(d_bus), .d_out(s_out), .d_oe(s_oe),
       .hdr_valid(hdr_valid), .cmd(cmd), .addr(addr), .wr_valid(wr_valid), .wr_data(wr_data),
       .rd_req(rd_req), .rd_data(rd_data), .frame_end(frame_end));
   golden_core #(
@@ -32,7 +33,8 @@ module tb_golden;
   ) u_c (
       .clk(clk), .hdr_valid(hdr_valid), .cmd(cmd), .addr(addr), .wr_valid(wr_valid),
       .wr_data(wr_data), .rd_req(rd_req), .rd_data(rd_data), .frame_end(frame_end),
-      .osd_busy(1'b0), .osd_shown(1'b0), .frames(16'h1234), .busy(busy), .err(err), .boot_status(bootsts), .dbg_cmd(dbg_cmd),
+      .osd_busy(1'b0), .osd_shown(1'b0), .frames(16'h1234), .busy(busy), .err(err),
+      .boot_status(bootsts), .dbg_cmd(dbg_cmd),
       .rd_start(rd_start), .rd_fall(rd_fall),
       .dbg_cmd_valid(dbg_valid), .flash_cs_n(f_cs), .flash_mosi(f_mosi), .flash_miso(f_miso),
       .flash_wp_n(f_wp), .flash_hold_n(f_hold));
@@ -195,12 +197,11 @@ module tb_golden;
     check("BOOT -> IPROG WBSTAR 0x640000",
           u_c.u_icap.u_icap.iprog && u_c.u_icap.u_icap.wbstar == 32'h640000);
     if (errors == 0) $display("ВСЁ OK");
-    else $display("ОШИБОК: %0d", errors);
+    else $fatal(1, "ОШИБОК: %0d", errors);
     $finish;
   end
   initial begin
     #50_000_000;
-    $display("TIMEOUT");
-    $finish;
+    $fatal(1, "TIMEOUT");
   end
 endmodule

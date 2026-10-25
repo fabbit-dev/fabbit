@@ -4,7 +4,9 @@
 #include <dirent.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #include "esp_check.h"
 #include "esp_heap_caps.h"
@@ -27,7 +29,7 @@ esp_err_t pm_init(void)
 static bool header_ok(const pm_header_t *h)
 {
     return !memcmp(h->magic, "FBP1", 4) && h->version == 1 &&
-           fl_crc32(0, (const uint8_t *)h, 60) == h->hdr_crc && h->len <= PM_SLOT_SIZE;
+           fl_crc32(0, (const uint8_t *)h, 60) == h->hdr_crc && h->len > 0 && h->len <= PM_SLOT_SIZE;
 }
 
 static esp_err_t read_header(const char *path, pm_header_t *h)
@@ -67,14 +69,17 @@ static uint32_t table_crc(const pm_table_t *t)
     return fl_crc32(0, (const uint8_t *)t, offsetof(pm_table_t, crc));
 }
 
-static void table_read(pm_table_t *t)
+static esp_err_t table_read(pm_table_t *t)
 {
-    if (fl_flash_read(PM_TABLE_ADDR, t, sizeof *t) != ESP_OK || memcmp(t->magic, "FBST", 4) ||
+    esp_err_t e = fl_flash_read(PM_TABLE_ADDR, t, sizeof *t);
+    if (e != ESP_OK) return e;
+    if (memcmp(t->magic, "FBST", 4) || t->version != 1 ||
         t->crc != table_crc(t)) {
         memset(t, 0, sizeof *t);
         memcpy(t->magic, "FBST", 4);
         t->version = 1;
     }
+    return ESP_OK;
 }
 
 static esp_err_t table_write(pm_table_t *t)
@@ -88,7 +93,7 @@ static esp_err_t table_write(pm_table_t *t)
 esp_err_t pm_slots(void)
 {
     pm_table_t t;
-    table_read(&t);
+    ESP_RETURN_ON_ERROR(table_read(&t), TAG, "table");
     printf("таблица seq %" PRIu32 "\n", t.seq);
     for (int i = 0; i < PM_SLOTS; i++) {
         pm_slot_t *s = &t.slot[i];
@@ -115,29 +120,46 @@ static void progress(size_t done, size_t total)
     if (done == total || done % (64 * 1024) == 0) stage("запись ядра в слот", (int)(done * 100 / total));
 }
 
+static esp_err_t wait_ready(void)
+{
+    int64_t end = esp_timer_get_time() + 1500000;
+    do {
+        fl_status_t st;
+        ESP_RETURN_ON_ERROR(fl_status(&st), TAG, "status");
+        // Старый err не означает busy: новая команда сама обновит результат.
+        if (!st.busy) return ESP_OK;
+        vTaskDelay(1);
+    } while (esp_timer_get_time() < end);
+    return ESP_ERR_TIMEOUT;
+}
+
 esp_err_t pm_load(const char *file, bool force_write) { return pm_load_cb(file, force_write, NULL, NULL); }
 
-esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void *ctx)
+static esp_err_t load_locked(const char *file, bool force_write)
 {
-    s_cb = cb;
-    s_ctx = ctx;
+    if (!file || !*file || strchr(file, '/')) return ESP_ERR_INVALID_ARG;
     char path[300];
-    snprintf(path, sizeof path, ROOT "/%s%s", file, strchr(file, '.') ? "" : ".fbp");
+    int plen = snprintf(path, sizeof path, ROOT "/%s%s", file, strchr(file, '.') ? "" : ".fbp");
+    if (plen < 0 || (size_t)plen >= sizeof path) return ESP_ERR_INVALID_SIZE;
     pm_header_t h;
     esp_err_t err = read_header(path, &h);
     ESP_RETURN_ON_ERROR(err, TAG, "заголовок %s", path);
+    fl_id_t current;
+    ESP_RETURN_ON_ERROR(fl_id(&current), TAG, "id");
+    if (strcmp(current.magic, "FBGL")) return ESP_ERR_INVALID_STATE;
+    ESP_RETURN_ON_ERROR(wait_ready(), TAG, "golden busy");
 
     int64_t t0 = esp_timer_get_time();
     stage("проверка слотов", -1);
     // кэш: слот с тем же CRC и длиной, содержимое во флеше сверяется CRC (считает ПЛИС)
     pm_table_t t;
-    table_read(&t);
+    ESP_RETURN_ON_ERROR(table_read(&t), TAG, "table");
     int slot = -1;
     for (int i = 0; i < PM_SLOTS && !force_write; i++)
-        if (t.slot[i].crc == h.crc && t.slot[i].len == h.len) {
+        if (t.slot[i].crc == h.crc && t.slot[i].len == h.len && t.slot[i].id == h.id) {
             uint32_t c = 0;
-            if (fl_flash_crc(PM_SLOT_BASE + i * PM_SLOT_SIZE, h.len, &c) == ESP_OK && c == h.crc)
-                slot = i;
+            ESP_RETURN_ON_ERROR(fl_flash_crc(PM_SLOT_BASE + i * PM_SLOT_SIZE, h.len, &c), TAG, "slot crc");
+            if (c == h.crc) slot = i;
             else
                 ESP_LOGW(TAG, "слот %d: CRC во флеше не сошёлся, перезапись", i);
             break;
@@ -148,7 +170,11 @@ esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void
         img = heap_caps_malloc(h.len, MALLOC_CAP_SPIRAM);
         if (!img) return ESP_ERR_NO_MEM;
         FILE *f = fopen(path, "rb");
-        fseek(f, sizeof h, SEEK_SET);
+        if (!f || fseek(f, sizeof h, SEEK_SET)) {
+            if (f) fclose(f);
+            free(img);
+            return ESP_ERR_NOT_FOUND;
+        }
         size_t n = fread(img, 1, h.len, f);
         fclose(f);
         if (n != h.len || fl_crc32(0, img, h.len) != h.crc) {
@@ -162,6 +188,7 @@ esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void
     if (slot < 0) {
         // пустой слот, иначе самый давно записанный
         uint32_t best = UINT32_MAX;
+        slot = 0;
         for (int i = 0; i < PM_SLOTS; i++) {
             uint32_t u = t.slot[i].crc ? t.slot[i].used : 0;
             if (u < best) {
@@ -182,7 +209,8 @@ esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void
         if (err == ESP_OK) err = fl_flash_crc(addr, h.len, &c);
         if (err == ESP_OK && c != h.crc) err = ESP_ERR_INVALID_CRC;
         if (err == ESP_OK) {
-            t.slot[slot] = (pm_slot_t){.crc = h.crc, .len = h.len, .id = h.id, .used = maxused + 1};
+            t.slot[slot] = (pm_slot_t){.crc = h.crc, .len = h.len, .id = h.id,
+                                      .used = maxused == UINT32_MAX ? maxused : maxused + 1};
             err = table_write(&t);
         }
         written = true;
@@ -207,7 +235,8 @@ esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void
         }
     }
     int64_t t_up = esp_timer_get_time();
-    printf("проверка кэша %lld мс, файл %lld мс, %s %lld мс, старт профиля %lld мс, всего %lld мс\n",
+    printf("проверка кэша %" PRId64 " мс, файл %" PRId64 " мс, %s %" PRId64
+           " мс, старт профиля %" PRId64 " мс, всего %" PRId64 " мс\n",
            (t_file - t0) / 1000, (t_check - t_file) / 1000, written ? "запись" : "слот из кэша",
            (t_slot - t_check) / 1000, (t_up - t_boot) / 1000, (t_up - t0) / 1000);
     if (!ok) {
@@ -224,4 +253,17 @@ esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void
     }
     printf("профиль %u \"%.32s\" запущен в слоте %d\n", h.id, h.name, slot);
     return ESP_OK;
+}
+
+esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void *ctx)
+{
+    // Callback и PARAM/RESULT принадлежат всей загрузке, не отдельному кадру SPI.
+    fl_lock();
+    s_cb = cb;
+    s_ctx = ctx;
+    esp_err_t e = load_locked(file, force_write);
+    s_cb = NULL;
+    s_ctx = NULL;
+    fl_unlock();
+    return e;
 }

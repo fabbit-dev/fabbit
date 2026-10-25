@@ -96,7 +96,7 @@ module tb_sdram;
     end else begin
       check(e != 0, $sformatf("сдвиг %0d пс (вне окна): тестер видит ошибки (%0d)", ps, e));
     end
-    if (fails) $display("ОШИБОК %0d", fails);
+    if (fails) $fatal(1, "ОШИБОК %0d", fails);
     else $display("ВСЁ OK");
     $finish;
   end

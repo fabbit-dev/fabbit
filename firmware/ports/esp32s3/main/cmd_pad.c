@@ -16,6 +16,12 @@
 
 static void hotkey(pad_hotkey_t hk)
 {
+    fl_lock();
+    fl_id_t id;
+    if (fl_id(&id) != ESP_OK || strcmp(id.magic, "FBPR")) {
+        fl_unlock();
+        return;
+    }
     switch (hk) {
     case PAD_HK_MENU:
         printf("[pad] Fn: меню (OSD ещё нет)\n");
@@ -31,6 +37,7 @@ static void hotkey(pad_hotkey_t hk)
         fl_reboot_golden();
         break;
     }
+    fl_unlock();
 }
 
 static void print_word(uint16_t w)

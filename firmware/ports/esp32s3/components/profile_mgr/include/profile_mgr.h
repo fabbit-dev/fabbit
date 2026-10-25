@@ -1,4 +1,4 @@
-// Профили: файлы .fbp (host/fbp_pack.py), слоты во флеше ПЛИС, кэш по CRC, загрузка через golden.
+// Профили: файлы .fbp (host/tools/fbp_pack.py), слоты во флеше ПЛИС, кэш по CRC, загрузка через golden.
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>

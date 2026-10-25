@@ -106,13 +106,12 @@ module tb_pad;
     pad = 16'h00D0; @(posedge dclk); @(posedge dclk);
     check(joy[0], "A держится при турбо A");
 
-    if (errors) $display("ОШИБОК %0d", errors);
+    if (errors) $fatal(1, "ОШИБОК %0d", errors);
     else $display("ВСЁ OK");
     $finish;
   end
   initial begin
     #20ms;
-    $display("TIMEOUT");
-    $finish;
+    $fatal(1, "TIMEOUT");
   end
 endmodule

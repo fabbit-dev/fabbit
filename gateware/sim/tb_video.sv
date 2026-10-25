@@ -149,18 +149,18 @@ module tb_video;
     check(phase >= 0, $sformatf("граница слова найдена (бит %0d)", phase));
     check(got >= 3 * 640 * 480, $sformatf("принято пикселей %0d (≥ 3 кадров)", got));
     check(mism == 0, $sformatf("несовпадений пикселей %0d", mism));
-    check(clk_bad == 0, $sformatf("слово линии такта 0000011111: ошибок %0d из %0d", clk_bad, words));
+    check(clk_bad == 0,
+          $sformatf("слово линии такта 0000011111: ошибок %0d из %0d", clk_bad, words));
     check(err_pn == 0, $sformatf("N = инверсия P на всех линиях (сбой: %b)", err_pn));
     check(disp_max <= 10, $sformatf("баланс линий: |сумма(1−0)/2| ≤ %0d", disp_max));
-    if (errors) $display("ОШИБОК %0d", errors);
+    if (errors) $fatal(1, "ОШИБОК %0d", errors);
     else $display("ВСЁ OK");
     $finish;
   end
 
   initial begin
     #200ms;
-    $display("TIMEOUT");
-    $finish;
+    $fatal(1, "TIMEOUT");
   end
 
 endmodule

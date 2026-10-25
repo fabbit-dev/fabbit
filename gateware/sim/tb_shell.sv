@@ -134,6 +134,21 @@ module tb_shell;
     q_write(8'h33, 0, 4);
     check(pad == 32'h0001_8011 && pad_n == 1,
           $sformatf("PAD: слово %08h, стробов %0d", pad, pad_n));
+    // Обрыв следующего кадра до заголовка не должен повторно исполнить PAD.
+    cs_n = 0;
+    m_oe = 1;
+    #(T / 2);
+    nib_out(4'h3);
+    fin();
+    check(pad_n == 1, "обрыв заголовка не повторяет прошлый PAD");
+    header(8'h33, 0);
+    for (int i = 0; i < 4; i++) begin
+      nib_out(wbuf[i][7:4]);
+      nib_out(wbuf[i][3:0]);
+    end
+    nib_out(4'hF);
+    fin();
+    check(pad_n == 1, "PAD с лишним полубайтом отброшен");
     {wbuf[0], wbuf[1], wbuf[2]} = 24'hFFFFFF;
     q_write(8'h33, 0, 3);
     {wbuf[0], wbuf[1], wbuf[2], wbuf[3], wbuf[4]} = 40'hFF_FFFF_FFFF;
@@ -144,7 +159,7 @@ module tb_shell;
     q_write(8'h07, 24'h000011, 4);
     check(dut.rd_start == 8'd16, "TUNE с неверным ключом не меняет выдачу");
 
-    if (errors) $display("ОШИБОК %0d", errors);
+    if (errors) $fatal(1, "ОШИБОК %0d", errors);
     else $display("ВСЁ OK");
     $finish;
   end

@@ -81,7 +81,8 @@ module qspi_slave (
       if (rd_pend == 3'd1) rd_byte <= rd_data;
     end
     if (!active) begin
-      if (ncnt != 0) frame_end <= 1'b1;
+      // Неполный заголовок не повторяет прошлую команду; полбайта после ключа не даёт commit.
+      if (ncnt >= 8'd8 && (is_read || hi)) frame_end <= 1'b1;
       ncnt <= 8'd0;
       d_oe <= 1'b0;
       hi   <= 1'b1;
