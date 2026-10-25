@@ -41,7 +41,7 @@ static esp_err_t status_locked(la_status_t *out)
                          .count = r[12], .trigger_index = r[13], .epoch = epoch,
                          .divider = r[15], .source = r[17]};
         if ((flags & ~15u) || !s.capacity || s.capacity > LA_MAX_SAMPLES ||
-            (s.base_hz != 100000000u && s.base_hz != 200000000u) ||
+            (s.base_hz != 100000000u && s.base_hz != 200000000u && s.base_hz != 400000000u) ||
             s.source > 1 || s.count > s.capacity ||
             ((flags & LA_DONE) && ((flags & (LA_BUSY | LA_BAD_CONFIG)) ||
               !(flags & LA_TRIGGERED) || !s.count || s.trigger_index >= s.count)) ||

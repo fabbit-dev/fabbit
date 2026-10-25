@@ -4,12 +4,16 @@
 // Capture/readback through the real 10 MHz QSPI receiver, not direct register pokes.
 module tb_la_profile #(
     parameter bit Ddr = 1'b0,
-    localparam int Samples = Ddr ? 2046 : 2048,
+    parameter bit Serdes = 1'b0,
+    localparam int K = Serdes ? 4 : (Ddr ? 2 : 1),
+    localparam int Samples = 2048-((K > 1) ? K : 0),
     localparam int Post = Samples/2,
     localparam int First = 5000 - (Samples-Post)
 );
   logic clk = 0, rst = 1;
   always #5 clk = ~clk;
+  logic clk_fast = 1;
+  always #2500ps clk_fast = ~clk_fast;
   initial #200ns rst = 0;
   logic sck = 0, cs_n = 1;
   logic [3:0] m_out = 0;
@@ -37,8 +41,9 @@ module tb_la_profile #(
       .d_oe(s_oe), .irq(), .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata),
       .csr_raddr(csr_raddr), .csr_rdata(csr_rdata), .st_valid(), .st_chan(), .st_data(),
       .pad(), .pad_stb(), .rb_addr(rb_addr), .rb_data(rb_data));
-  la_system #(.Depth(2048), .Ddr(Ddr)) dut (
-      .clk(clk), .rst(rst), .probe(probe), .csr_we(csr_we), .csr_waddr(csr_waddr),
+  la_system #(.Depth(2048), .Ddr(Ddr), .Serdes(Serdes)) dut (
+      .clk(clk), .clk_fast(clk_fast), .rst(rst),
+      .probe(probe), .csr_we(csr_we), .csr_waddr(csr_waddr),
       .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata),
       .rb_addr(rb_addr), .rb_data(rb_data), .capture_done());
 
@@ -103,7 +108,7 @@ module tb_la_profile #(
     if (rword(0) != "FBPR" || {rbuf[6], rbuf[7]} != 16'h4C41) $fatal(1, "profile ID");
     q_read(8'h31, 0, 20);
     if (rword(0) != "FBLA" || rword(3) != Samples ||
-        rword(4) != (Ddr ? 200_000_000 : 100_000_000))
+        rword(4) != 100_000_000*K)
       $fatal(1, "LA capabilities");
     q_read(8'h34, 0, 32);
     foreach (rbuf[i]) if (i < 32 && rbuf[i] != 0) $fatal(1, "read before freeze leaked RAM");
@@ -177,6 +182,7 @@ module tb_la_profile #(
     $display("ok   QSPI: shadow config isolated, sample interval exactly divider+1 clocks");
     $display("ok   QSPI: probe capture, divider snapshot, control key, abort/rearm, bad config");
     $display("ВСЁ OK");
+    $display("ALL LA OK");
     $finish;
   end
   initial begin

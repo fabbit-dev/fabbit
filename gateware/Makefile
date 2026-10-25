@@ -76,7 +76,8 @@ nes_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xd
 LA_CORE := common/mem/ram_sdp.sv profiles/la/la_ring.sv profiles/la/la_sampler.sv \
            profiles/la/la_system.sv
 LA_DDR ?= 0
-la_top_VIVPARAMS := Ddr=$(LA_DDR)
+LA_SERDES ?= 0
+la_top_VIVPARAMS := Ddr=$(LA_DDR) Serdes=$(LA_SERDES)
 # Set XILINX_VIVADO (settings64.sh), or pass UNISIM=<Vivado>/data/verilog/src.
 UNISIM ?= $(XILINX_VIVADO)/data/verilog/src
 la_top_SRC := common/cdc/reset_sync.sv common/qspi_slave.sv common/icap_ctrl.sv \
@@ -189,6 +190,16 @@ sim_la_ddr_qspi: | build
 	  $(UNISIM)/unisims/IDDR.v $(UNISIM)/glbl.v > build/tb_la_ddr_qspi.log 2>&1
 	vvp -n build/tb_la_ddr_qspi.vvp
 
+sim_la_serdes: | build
+	vivado -mode batch -nojournal -log build/xsim_la_sampler.log \
+	  -source tools/sim_la_serdes.tcl -tclargs sampler
+	vivado -mode batch -nojournal -log build/xsim_la_datapath.log \
+	  -source tools/sim_la_serdes.tcl -tclargs datapath
+
+sim_la_serdes_qspi: | build
+	vivado -mode batch -nojournal -log build/xsim_la_qspi.log \
+	  -source tools/sim_la_serdes.tcl -tclargs qspi
+
 sim_cdc: | build
 	verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style --top-module tb_cdc -Mdir build/tb_cdc \
 	  $(CDC) sim/tb_cdc.sv > build/tb_cdc.log 2>&1
@@ -209,5 +220,5 @@ sim_osd: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_la sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
+.PHONY: all clean sim sim_la sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_la_serdes sim_la_serdes_qspi sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames

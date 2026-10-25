@@ -71,6 +71,20 @@ class CaptureTests(unittest.TestCase):
             self.assertEqual(metadata["sample_rate_numerator"], 200_000_000)
             self.assertEqual(metadata["sample_rate_denominator"], 1)
 
+    def test_serdes_rate_capacity_and_export(self):
+        raw = bytes(131068*2)
+        descriptor, data = la.acquire(la.LogConsole(as_log(transcript(
+            raw, status(capacity=131068, count=131068, trigger_index=65534, base_hz=400_000_000)))))
+        self.assertEqual(descriptor.rate, 400_000_000)
+        self.assertEqual(len(data), 262136)
+        if shutil.which("sigrok-cli"):
+            with tempfile.TemporaryDirectory() as directory:
+                output = Path(directory) / "serdes.sr"
+                la.save_capture(output, descriptor, data)
+                decoded = subprocess.run(["sigrok-cli", "-i", str(output), "-O", "binary"],
+                                         capture_output=True, check=True, timeout=10)
+                self.assertEqual(decoded.stdout, raw)
+
     def test_bad_blocks(self):
         alterations = [dict(epoch=8), dict(offset=1), dict(hex="00"), dict(hex="gg"*1024),
                        dict(crc32="00000000"), dict(crc32="bad"), dict(offset=True),

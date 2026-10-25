@@ -14,9 +14,10 @@ module tb_la_sampler;
   wire valid_sdr, valid_ddr;
   wire [15:0] sdr;
   wire [31:0] ddr;
-  la_sampler u_sdr (.clk(clk), .rst(rst), .probe(probe), .valid(valid_sdr), .samples(sdr));
+  la_sampler u_sdr (
+      .clk(clk), .clk_fast(1'b0), .rst(rst), .probe(probe), .valid(valid_sdr), .samples(sdr));
   la_sampler #(.Ddr(1'b1)) u_ddr (
-      .clk(clk), .rst(rst), .probe(probe), .valid(valid_ddr), .samples(ddr));
+      .clk(clk), .clk_fast(1'b0), .rst(rst), .probe(probe), .valid(valid_ddr), .samples(ddr));
   logic [15:0] prior_rise = 0, older_rise = 0, prior_fall = 0, older_fall = 0;
   int checks = 0;
   always @(negedge clk) begin

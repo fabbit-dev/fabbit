@@ -20,4 +20,4 @@ set_property -dict {PACKAGE_PIN R2 IOSTANDARD LVCMOS33 PULLDOWN TRUE} [get_ports
 set_property -dict {PACKAGE_PIN H2 IOSTANDARD LVCMOS33} [get_ports phy_reset_n]
 # Timing mode intentionally samples asynchronous signals. Only the pad -> first IOB FF
 # path is excepted; settling, trigger and memory paths remain timed by the generated clock.
-set_false_path -from [get_ports {probe[*]}] -to [get_cells -hier -filter {NAME =~ *probe_iob_reg* || REF_NAME == IDDR}]
+set_false_path -from [get_ports {probe[*]}] -to [get_cells -hier -filter {NAME =~ *probe_iob_reg* || REF_NAME == IDDR || REF_NAME == ISERDESE2}]

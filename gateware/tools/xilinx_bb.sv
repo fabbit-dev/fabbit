@@ -17,6 +17,20 @@ module IDDR #(
 );
 endmodule
 
+module ISERDESE2 #(
+    parameter string DATA_RATE = "DDR",
+    parameter int DATA_WIDTH = 4,
+    parameter string INTERFACE_TYPE = "NETWORKING",
+    parameter string IOBDELAY = "NONE",
+    parameter int NUM_CE = 1,
+    parameter string SERDES_MODE = "MASTER"
+) (
+    output wire O, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, SHIFTOUT1, SHIFTOUT2,
+    input wire BITSLIP, CE1, CE2, CLK, CLKB, CLKDIV, CLKDIVP, D, DDLY,
+               DYNCLKDIVSEL, DYNCLKSEL, OCLK, OCLKB, OFB, RST, SHIFTIN1, SHIFTIN2
+);
+endmodule
+
 module ODDR #(
     parameter string DDR_CLK_EDGE = "OPPOSITE_EDGE",
     parameter bit INIT = 1'b0,

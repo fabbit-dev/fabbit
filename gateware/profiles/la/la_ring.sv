@@ -10,6 +10,7 @@ module la_ring #(
     localparam int FrameAw = $clog2(FrameDepth),
     localparam int LaneBits = $clog2(SamplesPerFrame),
     localparam int PointerBits = FrameAw + LaneBits,
+    localparam int CountBits = PointerBits + 1,
     localparam int FrameWidth = Channels * SamplesPerFrame,
     localparam int Capacity = (FrameDepth - ((SamplesPerFrame > 1) ? 1 : 0)) * SamplesPerFrame
 ) (
@@ -42,13 +43,13 @@ module la_ring #(
         SamplesPerFrame < 1 || (SamplesPerFrame & (SamplesPerFrame-1)) != 0)
       $error("la_ring requires positive width and power-of-two frame depth/lane count");
   end
-  logic [31:0] total, post, pre_needed, pre_seen, remaining;
+  logic [CountBits-1:0] total, post, pre_left, remaining;
   logic [Channels-1:0] mask, value, rise_mask, fall_mask, previous;
   logic previous_valid;
   logic [FrameAw-1:0] write_frame;
   wire take = busy && sample_valid && !rst && !arm && !abort_capture;
-  assign sample_count = done ? total : 32'd0;
-  assign trigger_index = done ? total - post : 32'd0;
+  assign sample_count = done ? 32'(total) : 32'd0;
+  assign trigger_index = done ? 32'(total - post) : 32'd0;
 
   ram_sdp #(.Width(FrameWidth), .Depth(FrameDepth)) u_mem (
       .wclk(clk), .we(take), .waddr(write_frame), .wdata(sample_data),
@@ -69,7 +70,7 @@ module la_ring #(
       edges_match = ((rise_mask | fall_mask) == '0) ||
           (prior_valid && ((~prior_sample & current_sample & rise_mask) == rise_mask) &&
            ((prior_sample & ~current_sample & fall_mask) == fall_mask));
-      if (!hit && (pre_seen + 32'(j) >= pre_needed) && edges_match &&
+      if (!hit && (pre_left <= CountBits'(j)) && edges_match &&
           (((current_sample ^ value) & mask) == '0)) begin
         hit = 1'b1;
         hit_lane = 32'(j);
@@ -78,9 +79,9 @@ module la_ring #(
   end
 
   // Number of samples up to the end of this frame's valid capture prefix.
-  wire [31:0] end_count = triggered ? remaining : hit_lane + post;
-  wire finish_frame = triggered ? (remaining <= SamplesPerFrame) :
-                                  (hit && (post <= SamplesPerFrame - hit_lane));
+  wire [31:0] end_count = triggered ? 32'(remaining) : hit_lane + 32'(post);
+  wire finish_frame = triggered ? (remaining <= CountBits'(SamplesPerFrame)) :
+                                  (hit && (post <= CountBits'(SamplesPerFrame - hit_lane)));
   wire [31:0] frame_base = 32'(write_frame) << LaneBits;
 
   always_ff @(posedge clk) begin
@@ -99,11 +100,10 @@ module la_ring #(
                     (cfg_post == 0) || (cfg_post > cfg_total) || ((cfg_rise & cfg_fall) != '0);
       if ((cfg_total != 0) && (cfg_total <= Capacity) && (cfg_post != 0) &&
           (cfg_post <= cfg_total) && ((cfg_rise & cfg_fall) == '0)) busy <= 1'b1;
-      total <= cfg_total;
-      post <= cfg_post;
-      pre_needed <= cfg_total - cfg_post;
-      pre_seen <= 32'd0;
-      remaining <= 32'd0;
+      total <= CountBits'(cfg_total);
+      post <= CountBits'(cfg_post);
+      pre_left <= CountBits'(cfg_total - cfg_post);
+      remaining <= '0;
       mask <= cfg_mask;
       value <= cfg_value;
       rise_mask <= cfg_rise;
@@ -116,13 +116,12 @@ module la_ring #(
       write_frame <= write_frame + 1'b1;
       previous <= sample_data[(SamplesPerFrame-1)*Channels+:Channels];
       previous_valid <= 1'b1;
-      if (pre_seen < pre_needed)
-        pre_seen <= ((pre_needed - pre_seen) <= SamplesPerFrame) ? pre_needed :
-                    pre_seen + SamplesPerFrame;
+      pre_left <= (pre_left <= CountBits'(SamplesPerFrame)) ? '0 :
+                  pre_left - CountBits'(SamplesPerFrame);
       if (!triggered && hit) begin
         triggered <= 1'b1;
-        remaining <= post - (SamplesPerFrame - hit_lane);
-      end else if (triggered) remaining <= remaining - SamplesPerFrame;
+        remaining <= post - CountBits'(SamplesPerFrame - hit_lane);
+      end else if (triggered) remaining <= remaining - CountBits'(SamplesPerFrame);
       if (finish_frame) begin
         busy <= 1'b0;
         done <= 1'b1;

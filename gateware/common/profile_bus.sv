@@ -25,16 +25,20 @@ module profile_bus #(
     output wire  [31:0] pad,         // кнопки {пад 1, пад 0}, команда PAD (profile_shell)
     output wire        pad_stb,
     output wire [23:0] rb_addr,
-    input  wire [ 7:0] rb_data
+    input  wire [ 7:0] rb_data,
+    output wire        clk_fast     // 200 MHz, phase-related to clk_bus; unused output is trimmed
 );
-  wire fb, c100_raw, locked;
+  wire fb, c100_raw, c200_raw, locked;
   PLLE2_BASE #(
-      .CLKIN1_PERIOD(40.0), .DIVCLK_DIVIDE(1), .CLKFBOUT_MULT(40), .CLKOUT0_DIVIDE(10)
+      .CLKIN1_PERIOD(40.0), .DIVCLK_DIVIDE(1), .CLKFBOUT_MULT(40),
+      .CLKOUT0_DIVIDE(10), .CLKOUT1_DIVIDE(5)
   ) u_pll (
-      .CLKIN1(clk_25m), .CLKFBIN(fb), .CLKFBOUT(fb), .CLKOUT0(c100_raw), .CLKOUT1(), .CLKOUT2(),
+      .CLKIN1(clk_25m), .CLKFBIN(fb), .CLKFBOUT(fb),
+      .CLKOUT0(c100_raw), .CLKOUT1(c200_raw), .CLKOUT2(),
       .CLKOUT3(), .CLKOUT4(), .CLKOUT5(), .LOCKED(locked), .PWRDWN(1'b0), .RST(1'b0)
   );
   BUFG u_bufg (.I(c100_raw), .O(clk_bus));
+  BUFG u_fast (.I(c200_raw), .O(clk_fast));
   reset_sync u_rst (.clk(clk_bus), .rst_in(!locked), .rst_out(rst_bus));
 
   wire [3:0] d_in, d_out;

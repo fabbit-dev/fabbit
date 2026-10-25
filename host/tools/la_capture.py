@@ -77,7 +77,7 @@ class Descriptor:
         checked(packet, "status")
         result = cls(**{key: integer(packet, key) for key in cls.__dataclass_fields__})
         if (result.flags & ~15 or not 1 <= result.capacity <= MAX_SAMPLES or
-                result.base_hz not in (100_000_000, 200_000_000) or result.source > 1 or
+                result.base_hz not in (100_000_000, 200_000_000, 400_000_000) or result.source > 1 or
                 result.count > result.capacity):
             raise CaptureError("Повреждённый ответ ПЛИС")
         if result.flags & 4:

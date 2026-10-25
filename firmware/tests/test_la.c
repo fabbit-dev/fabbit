@@ -182,6 +182,9 @@ int main(int argc, char **argv)
     assert(la_arm(&config, &s) == ESP_ERR_INVALID_ARG && !writes && !locks);
     config.total = 32;
     assert(la_arm(&config, &s) == ESP_OK && s.base_hz == 200000000 && !locks);
+    regs[3] = LA_MAX_SAMPLES - 4;
+    regs[4] = 400000000;
+    assert(la_arm(&config, &s) == ESP_OK && s.base_hz == 400000000 && s.capacity == 131068);
     puts("ok LA client: locks, faults, tears, epochs, bounds, ARM/ABORT, invalid descriptors");
     reset(NORMAL);
     assert(!run("capture arm 2048 1024 0 65535 5000 0 0 1"));

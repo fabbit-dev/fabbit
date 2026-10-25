@@ -175,12 +175,13 @@ module la_ring_case #(
 endmodule
 
 module tb_la_ring;
-  wire a, b, c;
+  wire a, b, c, d;
   la_ring_case #(.K(1)) u_one (.finished(a));
   la_ring_case #(.K(2)) u_two (.finished(b));
   la_ring_case #(.K(8)) u_eight (.finished(c));
+  la_ring_case #(.K(4)) u_four (.finished(d));
   initial begin
-    wait (a && b && c);
+    wait (a && b && c && d);
     $display("ВСЁ OK");
     $finish;
   end
