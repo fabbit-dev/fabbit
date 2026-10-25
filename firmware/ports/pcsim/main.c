@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "lc_view.h"
+#include "pcsim.h"
 #include "ui.h"
 #include "ui_bitmaps.h"
 
@@ -53,6 +54,24 @@ static void save(const char *name)
     fclose(f);
 }
 
+void pcsim_check(bool ok, const char *what)
+{
+    printf("%s %s\n", ok ? "ok  " : "FAIL", what);
+    if (!ok) errors++;
+}
+
+void pcsim_plane_clear(void) { memset(plane, 0, sizeof plane); }
+
+// экран сценария: плоскость (то, что ушло по шине) совпала с кадром
+void pcsim_shot(const char *name)
+{
+    if (memcmp(fb, plane, sizeof fb)) {
+        printf("FAIL %s: плоскость не совпала с кадром\n", name);
+        errors++;
+    } else printf("ok   %s\n", name);
+    save(name);
+}
+
 // изменённое ушло в плоскость, и плоскость совпала с кадром
 static void shot(const char *name)
 {
@@ -70,7 +89,8 @@ int main(void)
 {
     ui_init(fb, &port);
     lc_profile_t prof[] = {
-        {"Ретро-консоль", "РЕТРО-КОНСОЛЬ", "Схема приставки в ПЛИС, картинка по HDMI", "NES · 2 игры", &ui_icon_retro, true},
+        {"Ретро-консоль", "РЕТРО-КОНСОЛЬ", "Схема приставки в ПЛИС, картинка по HDMI", "NES · 2 игры",
+         &ui_icon_retro, true},
         {"Логический анализатор", "ЛОГИЧЕСКИЙ АНАЛИЗАТОР", "Цифровые каналы с гребёнки в sigrok", "скоро", &ui_icon_logic, false},
     };
     lc_home(prof, 2, 0);
@@ -79,12 +99,19 @@ int main(void)
     lc_home_card(prof, 1, true);
     shot("home-sel");
 
-    static uint8_t thumb[LC_THUMB_W / 2 * LC_THUMB_H];
+    // превью: THUMB=файл.fbi (host/tools/rom_thumbs.py), иначе шахматка
+    static uint8_t thumb[LC_THUMB_BYTES];
     for (int j = 0; j < LC_THUMB_H; j++)
         for (int i = 0; i < LC_THUMB_W / 2; i++) thumb[j * LC_THUMB_W / 2 + i] = (((i / 8) ^ (j / 16)) & 1) ? 0x99 : 0x33;
+    FILE *tf = getenv("THUMB") ? fopen(getenv("THUMB"), "rb") : NULL;
+    if (tf) {
+        fseek(tf, 72, SEEK_SET);
+        if (fread(thumb, 1, sizeof thumb, tf) != sizeof thumb) printf("FAIL THUMB: короткий файл\n");
+        fclose(tf);
+    }
     lc_game_t g[12] = {
-        {"Super Mario Bros. 3", 4, 256, 128, 12, thumb},
-        {"nes15", 0, 16, 8, 3, NULL},
+        {.name = "Super Mario Bros. 3", .mapper = 4, .prg_kb = 256, .chr_kb = 128, .runs = 12, .thumb = thumb},
+        {.name = "nes15", .mapper = 0, .prg_kb = 16, .chr_kb = 8, .runs = 3},
     };
     const char *more[] = {"Battle City", "Contra", "Duck Tales", "Mega Man 2", "Tetris",
                           "The Legend of Zelda", "Очень длинное имя файла с игрой, которое не влезает",
@@ -121,6 +148,9 @@ int main(void)
         printf("FAIL развёртка: плоскость не совпала с кадром\n");
         errors++;
     } else printf("ok   развёртка 12 шагов\n");
+
+    memset(plane, 0, sizeof plane);
+    pcsim_app(fb, &port);
 
     printf(errors ? "ОШИБОК %d\n" : "ВСЁ OK\n", errors);
     return errors != 0;

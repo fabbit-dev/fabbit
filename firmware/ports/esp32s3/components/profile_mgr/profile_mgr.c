@@ -101,13 +101,26 @@ esp_err_t pm_slots(void)
     return ESP_OK;
 }
 
+static pm_progress_cb s_cb;
+static void *s_ctx;
+
+static void stage(const char *what, int pct)
+{
+    if (s_cb) s_cb(s_ctx, what, pct);
+}
+
 static void progress(size_t done, size_t total)
 {
     if (done == total || done % (512 * 1024) == 0) printf("  запись %u/%u\n", done, total);
+    if (done == total || done % (64 * 1024) == 0) stage("запись ядра в слот", (int)(done * 100 / total));
 }
 
-esp_err_t pm_load(const char *file, bool force_write)
+esp_err_t pm_load(const char *file, bool force_write) { return pm_load_cb(file, force_write, NULL, NULL); }
+
+esp_err_t pm_load_cb(const char *file, bool force_write, pm_progress_cb cb, void *ctx)
 {
+    s_cb = cb;
+    s_ctx = ctx;
     char path[300];
     snprintf(path, sizeof path, ROOT "/%s%s", file, strchr(file, '.') ? "" : ".fbp");
     pm_header_t h;
@@ -115,6 +128,7 @@ esp_err_t pm_load(const char *file, bool force_write)
     ESP_RETURN_ON_ERROR(err, TAG, "заголовок %s", path);
 
     int64_t t0 = esp_timer_get_time();
+    stage("проверка слотов", -1);
     // кэш: слот с тем же CRC и длиной, содержимое во флеше сверяется CRC (считает ПЛИС)
     pm_table_t t;
     table_read(&t);
@@ -178,6 +192,7 @@ esp_err_t pm_load(const char *file, bool force_write)
     int64_t t_slot = esp_timer_get_time();
 
     uint32_t addr = PM_SLOT_BASE + slot * PM_SLOT_SIZE;
+    stage("запуск ядра", -1);
     ESP_RETURN_ON_ERROR(fl_set_wdt(PM_WDT_UNITS), TAG, "wdt");
     ESP_RETURN_ON_ERROR(fl_boot(addr), TAG, "boot");
     int64_t t_boot = esp_timer_get_time();
