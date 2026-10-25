@@ -44,7 +44,8 @@ module tb_la_profile #(
       .clk(clk), .rst(rst), .esp_sck(sck), .esp_cs_n(cs_n), .d_in(d_bus), .d_out(s_out),
       .d_oe(s_oe), .irq(), .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata),
       .csr_raddr(csr_raddr), .csr_rdata(csr_rdata), .st_valid(), .st_chan(), .st_data(),
-      .pad(), .pad_stb(), .rb_addr(rb_addr), .rb_data(rb_data));
+      .pad(), .pad_stb(), .rb_addr(rb_addr), .rb_data(rb_data),
+      .bus_header(), .bus_command(), .bus_address(), .bus_write(), .bus_data(), .bus_end());
   la_system #(.Depth(2048), .Ddr(Ddr), .Serdes(Serdes)) dut (
       .clk(clk), .clk_fast(clk_fast), .rst(rst),
       .probe(probe), .csr_we(csr_we), .csr_waddr(csr_waddr),

@@ -51,7 +51,9 @@ static void profiles_init(void)
     snprintf(s_prof[P_RETRO].tag, sizeof s_prof[P_RETRO].tag, "NES · %d %s", s_ngames,
              plural(s_ngames, "игра", "игры", "игр"));
     s_prof[P_LOGIC] = (lc_profile_t){"Логический анализатор", "ЛОГИЧЕСКИЙ АНАЛИЗАТОР",
-                                     "Цифровые каналы с гребёнки в sigrok", "скоро", &ui_icon_logic, false};
+                                      "Цифровые каналы с гребёнки в sigrok", "16", &ui_icon_logic,
+                                      P->run_logic != NULL};
+    if (!P->run_logic) snprintf(s_prof[P_LOGIC].tag, sizeof s_prof[P_LOGIC].tag, "скоро");
 }
 
 // проявить нарисованный в кадре экран развёрткой
@@ -101,7 +103,10 @@ static void enter(state_t st, bool wipe)
         lc_games(TITLE_GAMES, s_games, s_ngames, s_gsel, s_gtop);
         break;
     case ST_STUB: lc_stub(&s_prof[s_psel]); break;
-    case ST_ERROR: lc_error(TITLE_GAMES, "Игра не запустилась", s_err, 0); break;
+    case ST_ERROR:
+        lc_error(s_psel == P_LOGIC ? s_prof[P_LOGIC].title : TITLE_GAMES,
+                 s_psel == P_LOGIC ? "Нет связи с ПЛИС" : "Игра не запустилась", s_err, 0);
+        break;
     default: return;
     }
     if (wipe) wipe_start();
@@ -179,6 +184,21 @@ static void run_game(void)
     enter(ST_ERROR, true);
 }
 
+static void run_logic(void)
+{
+    s_st = ST_LOADING;
+    load_ctx_t ctx = {.t0 = now()};
+    lc_loading(s_prof[P_LOGIC].title, s_prof[P_LOGIC].name, "", 0);
+    ui_flush();
+    s_err[0] = 0;
+    if (P->run_logic(load_progress, &ctx, s_err, sizeof s_err)) {
+        s_st = ST_RUN;
+        return;
+    }
+    plane_restore();
+    enter(ST_ERROR, false);
+}
+
 // ---------------- заставка ----------------
 
 #define TRACK_X0 200
@@ -249,13 +269,12 @@ void lc_app_attach_running(void)
 void lc_app_back(void)
 {
     // ПЛИС только что загрузила golden: на экране его заставка, плоскость пуста
-    s_psel = P_RETRO;
     s_asleep = false;
     s_wipe_y = -1;
     load_games();
     s_last_key = now();
     intro_begin(false);
-    enter(ST_GAMES, true);
+    enter(s_psel == P_RETRO ? ST_GAMES : ST_HOME, true);
 }
 
 bool lc_app_running(void) { return s_st == ST_RUN || s_st == ST_LOADING; }
@@ -280,7 +299,8 @@ void lc_app_key(lc_key_t k, bool repeat)
             lc_home_sel(s_prof, P_N, old, s_psel);
             ui_flush();
         } else if (k == LC_OK && !repeat) {
-            if (s_prof[s_psel].ready) enter(ST_GAMES, true);
+            if (s_psel == P_LOGIC && s_prof[s_psel].ready) run_logic();
+            else if (s_prof[s_psel].ready) enter(ST_GAMES, true);
             else enter(ST_STUB, true);
         }
         break;
@@ -296,7 +316,8 @@ void lc_app_key(lc_key_t k, bool repeat)
         if ((k == LC_BACK || k == LC_OK) && !repeat) enter(ST_HOME, true);
         break;
     case ST_ERROR:
-        if ((k == LC_BACK || k == LC_OK) && !repeat) enter(ST_GAMES, true);
+        if ((k == LC_BACK || k == LC_OK) && !repeat)
+            enter(s_psel == P_RETRO ? ST_GAMES : ST_HOME, true);
         break;
     default: break;
     }

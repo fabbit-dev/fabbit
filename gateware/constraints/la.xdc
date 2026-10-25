@@ -32,3 +32,7 @@ set_property -dict {PACKAGE_PIN J1 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_p
 # Timing mode intentionally samples asynchronous signals. Only the pad -> first IOB FF
 # path is excepted; settling, trigger and memory paths remain timed by the generated clock.
 set_false_path -from [get_ports {probe[*]}] -to [get_cells -hier -filter {NAME =~ *probe_iob_reg* || REF_NAME == IDDR || REF_NAME == ISERDESE2}]
+# The slow display-enable level crosses through sync_bit. Exempt only its first stage;
+# the synchronizer's second stage and every sampler/capture path remain timed.
+set display_sync [get_cells {u_plane/u_show/s_reg[0]}]
+set_false_path -from [get_cells u_plane/shown_reg] -to $display_sync

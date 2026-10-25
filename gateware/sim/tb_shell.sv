@@ -38,7 +38,8 @@ module tb_shell;
       .clk(clk), .rst(rst), .esp_sck(sck), .esp_cs_n(cs_n), .d_in(d_bus), .d_out(s_out),
       .d_oe(s_oe), .irq(irq), .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata),
       .csr_raddr(csr_raddr), .csr_rdata(csr_rdata), .st_valid(st_valid), .st_chan(st_chan),
-      .st_data(st_data), .pad(pad), .pad_stb(pad_stb), .rb_addr(), .rb_data(8'd0));
+      .st_data(st_data), .pad(pad), .pad_stb(pad_stb), .rb_addr(), .rb_data(8'd0),
+      .bus_header(), .bus_command(), .bus_address(), .bus_write(), .bus_data(), .bus_end());
 
   // ---- ESP: quad SPI 10 МГц, 8 dummy, как fpga_link ----
   localparam time T = 100ns;

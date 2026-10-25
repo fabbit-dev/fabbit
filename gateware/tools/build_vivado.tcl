@@ -10,6 +10,9 @@ set generics {}
 foreach p $params { lappend generics -generic $p }
 foreach d $defs { lappend generics -verilog_define $d }
 synth_design -top $top -part $part {*}$generics
+if {$top eq "la_top" && [llength [get_cells {u_plane/u_show/s_reg[0]}]] != 1} {
+    error "LA display synchronizer not found"
+}
 opt_design
 place_design
 route_design

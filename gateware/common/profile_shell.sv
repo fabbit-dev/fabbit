@@ -42,7 +42,13 @@ module profile_shell #(
     // Random-access readback: no destructive pop, profile returns zero if unavailable.
     // Data must settle within two clk cycles of rb_addr changing.
     output wire [23:0] rb_addr,
-    input  wire [ 7:0] rb_data
+    input  wire [ 7:0] rb_data,
+    output wire        bus_header,
+    output wire [ 7:0] bus_command,
+    output wire [23:0] bus_address,
+    output wire        bus_write,
+    output wire [ 7:0] bus_data,
+    output wire        bus_end
 );
   localparam logic [31:0] Key = "FBKY";
   localparam int ReadIndexBits = Readback ? 24 : 10;
@@ -63,6 +69,12 @@ module profile_shell #(
       .frame_end(frame_end)
   );
   assign irq = 1'b1;
+  assign bus_header = hdr_valid;
+  assign bus_command = cmd;
+  assign bus_address = addr;
+  assign bus_write = wr_valid;
+  assign bus_data = wr_data;
+  assign bus_end = frame_end;
 
   logic [7:0] f_cmd = 8'd0;
   logic [23:0] f_addr = 24'd0;

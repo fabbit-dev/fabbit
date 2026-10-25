@@ -26,7 +26,13 @@ module profile_bus #(
     output wire        pad_stb,
     output wire [23:0] rb_addr,
     input  wire [ 7:0] rb_data,
-    output wire        clk_fast     // 200 MHz, phase-related to clk_bus; unused output is trimmed
+    output wire        clk_fast,    // 200 MHz, phase-related to clk_bus; unused output is trimmed
+    output wire        bus_header,
+    output wire [ 7:0] bus_command,
+    output wire [23:0] bus_address,
+    output wire        bus_write,
+    output wire [ 7:0] bus_data,
+    output wire        bus_end
 );
   wire fb, c100_raw, c200_raw, locked;
   PLLE2_BASE #(
@@ -52,6 +58,8 @@ module profile_bus #(
       .d_out(d_out), .d_oe(d_oe), .irq(esp_irq),
       .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata), .csr_raddr(csr_raddr),
       .csr_rdata(csr_rdata), .st_valid(st_valid), .st_chan(st_chan), .st_data(st_data),
-      .pad(pad), .pad_stb(pad_stb), .rb_addr(rb_addr), .rb_data(rb_data));
+      .pad(pad), .pad_stb(pad_stb), .rb_addr(rb_addr), .rb_data(rb_data),
+      .bus_header(bus_header), .bus_command(bus_command), .bus_address(bus_address),
+      .bus_write(bus_write), .bus_data(bus_data), .bus_end(bus_end));
 
 endmodule

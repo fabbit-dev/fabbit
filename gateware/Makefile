@@ -82,10 +82,10 @@ LA_LOOPBACK ?= 0
 la_top_VIVPARAMS := Ddr=$(LA_DDR) Serdes=$(LA_SERDES) TestGenerator=$(LA_LOOPBACK)
 # Set XILINX_VIVADO (settings64.sh), or pass UNISIM=<Vivado>/data/verilog/src.
 UNISIM ?= $(XILINX_VIVADO)/data/verilog/src
-la_top_SRC := common/cdc/reset_sync.sv common/qspi_slave.sv common/icap_ctrl.sv \
-              common/profile_shell.sv common/profile_bus.sv $(LA_CORE) profiles/la/la_top.sv
+la_top_SRC := $(VIDEO) common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/qspi_slave.sv common/icap_ctrl.sv \
+              common/profile_shell.sv common/profile_bus.sv $(LA_CORE) profiles/la/la_plane.sv profiles/la/la_top.sv
 la_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc \
-              constraints/la.xdc constraints/vivado_profile.xdc
+              constraints/la.xdc constraints/hdmi.xdc constraints/vivado_profile.xdc
 
 TARGETS := wiretest_p3 blink_a blink_b wiretest_hdmi hdmi_bars
 all: $(addprefix build/,$(addsuffix .bit,$(TARGETS)))
@@ -163,6 +163,13 @@ sim_pad: | build
 
 # платформа: асинхронная FIFO на несвязанных тактах
 CDC := common/mem/ram_sdp.sv common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/cdc/fifo_async.sv
+sim_la_plane: | build
+	verilator --binary --timing --timescale 1ns/1ps --top-module tb_la_plane -Mdir build/obj_la_plane \
+	  common/video/video_pkg.sv common/cdc/sync_bit.sv common/qspi_slave.sv \
+	  common/profile_shell.sv common/mem/ram_sdp.sv common/video/video_timing.sv \
+	  profiles/la/la_plane.sv $(filter-out common/mem/ram_sdp.sv,$(LA_CORE)) sim/tb_la_plane.sv
+	build/obj_la_plane/Vtb_la_plane
+
 sim_la_ring: | build
 	verilator --binary --timing --timescale 1ns/1ps -Wno-fatal --top-module tb_la_ring \
 	  -Mdir build/tb_la_ring common/mem/ram_sdp.sv profiles/la/la_ring.sv sim/tb_la_ring.sv > build/tb_la_ring.log 2>&1
@@ -231,5 +238,5 @@ sim_osd: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_la sim_la_loopback sim_la_loopback_serdes sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_la_serdes sim_la_serdes_qspi sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
+.PHONY: all clean sim sim_la_plane sim_la sim_la_loopback sim_la_loopback_serdes sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_la_serdes sim_la_serdes_qspi sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames
