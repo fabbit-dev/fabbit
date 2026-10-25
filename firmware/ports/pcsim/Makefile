@@ -9,8 +9,11 @@ CFLAGS := -std=c11 -O2 -Wall -Wextra -Werror -Wno-unused-parameter -I$(UI)/inclu
 run: $(OUT)/pcsim
 	OUT=$(OUT) $(OUT)/pcsim
 
-$(OUT)/pcsim: $(SRC) $(wildcard $(UI)/include/*.h $(LC)/include/*.h *.h)
+$(OUT)/pcsim: $(SRC) $(wildcard $(UI)/include/*.h $(LC)/include/*.h *.h) Makefile
 	mkdir -p $(OUT)
-	$(CC) $(CFLAGS) -o $@ $(SRC)
+	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ $(SRC)
 
-.PHONY: run
+sanitize:
+	$(MAKE) OUT=$(OUT)/sanitize EXTRA_CFLAGS='-g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer' run
+
+.PHONY: run sanitize

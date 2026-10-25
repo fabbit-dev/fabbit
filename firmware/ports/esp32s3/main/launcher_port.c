@@ -32,11 +32,14 @@ static const char *TAG = "menu";
 
 // ---------------- плоскость ----------------
 
-static void p_rect(int x, int y, int w, int h, const uint8_t *px, size_t stride)
+static bool p_rect(int x, int y, int w, int h, const uint8_t *px, size_t stride)
 {
-    fl_osd_rect(x, y, w, h, px, stride);
+    return fl_osd_rect(x, y, w, h, px, stride) == ESP_OK;
 }
-static void p_fill(int x, int y, int w, int h, uint8_t c) { fl_osd_fill(x, y, w, h, c * 0x11); }
+static bool p_fill(int x, int y, int w, int h, uint8_t c)
+{
+    return fl_osd_fill(x, y, w, h, c * 0x11) == ESP_OK;
+}
 static const ui_port_t s_ui = {p_rect, p_fill};
 
 static void p_palette(const uint32_t rgb[16]) { fl_osd_pal(0, rgb, 16); }

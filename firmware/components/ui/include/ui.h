@@ -55,10 +55,11 @@ extern const ui_font_t ui_font_mono15, ui_font_mono15b, ui_font_mono18, ui_font_
 
 typedef enum { UI_LEFT, UI_CENTER, UI_RIGHT } ui_align_t;
 
-// вывод в плоскость (порт): x, w чётные; px указывает на (x, y) кадра, stride в байтах
+// вывод в плоскость (порт): x, w чётные; px указывает на (x, y) кадра, stride в байтах;
+// false: передача не завершена, повторить область целиком
 typedef struct {
-    void (*rect)(int x, int y, int w, int h, const uint8_t *px, size_t stride);
-    void (*fill)(int x, int y, int w, int h, uint8_t c);  // прямо в плоскость, мимо кадра
+    bool (*rect)(int x, int y, int w, int h, const uint8_t *px, size_t stride);
+    bool (*fill)(int x, int y, int w, int h, uint8_t c);  // прямо в плоскость, мимо кадра
 } ui_port_t;
 
 // fb: UI_FB_SIZE байт (на ESP в PSRAM)
@@ -88,9 +89,9 @@ void ui_ellipsize(const ui_font_t *f, const char *s, int w, char *out, size_t n)
 // пометить область изменённой (примитивы делают это сами)
 void ui_dirty(int x, int y, int w, int h);
 void ui_dirty_all(void);
-// отправить изменённые области в плоскость; возвращает отправленные байты
+// отправить изменённые области в плоскость; сбойные оставить для повтора. Возвращает отправленные байты
 size_t ui_flush(void);
 // смена экрана: кадр уже нарисован целиком, в плоскости ещё старый. Шаг развёртки: строки
 // [y0, y1) из кадра в плоскость и белая полоса развёртки под ними (прямо в плоскость).
 // Изменённые области сбрасываются: после последнего шага (y1 = UI_H) плоскость = кадр
-void ui_reveal(int y0, int y1);
+bool ui_reveal(int y0, int y1);

@@ -66,7 +66,7 @@ static void wipe_step(bool finish)
     if (s_wipe_y < 0) return;
     uint32_t dt = now() - s_wipe_t0;
     int y = finish || dt >= WIPE_MS ? UI_H : (int)(UI_H * dt / WIPE_MS) & ~1;
-    if (y > s_wipe_y || y == UI_H) ui_reveal(s_wipe_y, y);
+    if ((y > s_wipe_y || y == UI_H) && !ui_reveal(s_wipe_y, y)) return;
     s_wipe_y = y;
     if (y == UI_H) s_wipe_y = -1;
 }
@@ -163,11 +163,14 @@ static void run_game(void)
     wipe_start();
     while (s_wipe_y >= 0) {
         wipe_step(false);
+        // Нет связи: развёртка не должна навсегда блокировать запуск и обработку возврата.
+        if (now() - ctx.t0 >= 1000) { s_wipe_y = -1; break; }
         P->sleep_ms(TICK_MS);
     }
     s_saved.profile = (uint8_t)s_psel;
     snprintf(s_saved.game, sizeof s_saved.game, "%s", g->name);
-    P->save(&s_saved);
+    if (P->save) P->save(&s_saved);
+    s_err[0] = 0;
     if (P->run(g, load_progress, &ctx, s_err, sizeof s_err)) {
         s_st = ST_RUN;
         return;
@@ -211,6 +214,8 @@ static void intro_end(void) { enter(ST_HOME, true); }
 static void load_games(void)
 {
     s_ngames = P->games ? P->games(s_games, LC_GAMES_MAX) : 0;
+    if (s_ngames < 0) s_ngames = 0;
+    if (s_ngames > LC_GAMES_MAX) s_ngames = LC_GAMES_MAX;
     s_gsel = s_gtop = 0;
     for (int i = 0; i < s_ngames; i++)
         if (!strcmp(s_games[i].name, s_saved.game)) s_gsel = i;
@@ -222,9 +227,12 @@ static void load_games(void)
 void lc_app_start(const lc_port_t *port, uint8_t *fb, const ui_port_t *ui)
 {
     P = port;
+    s_asleep = false;
+    s_wipe_y = -1;
     ui_init(fb, ui);
     memset(&s_saved, 0, sizeof s_saved);
     if (P->load) P->load(&s_saved);
+    s_saved.game[sizeof s_saved.game - 1] = 0;
     s_psel = s_saved.profile < P_N ? s_saved.profile : 0;
     s_last_key = now();
     load_games();
@@ -234,12 +242,16 @@ void lc_app_start(const lc_port_t *port, uint8_t *fb, const ui_port_t *ui)
 void lc_app_attach_running(void)
 {
     s_st = ST_RUN;
+    s_wipe_y = -1;
+    s_asleep = false;
 }
 
 void lc_app_back(void)
 {
     // ПЛИС только что загрузила golden: на экране его заставка, плоскость пуста
     s_psel = P_RETRO;
+    s_asleep = false;
+    s_wipe_y = -1;
     load_games();
     s_last_key = now();
     intro_begin(false);
@@ -329,6 +341,9 @@ uint32_t lc_app_tick(void)
         }
         ui_flush();
         return 40;
+    case ST_STUB:
+        ui_flush();
+        return 100;
     default: return 100;
     }
     return TICK_MS;
