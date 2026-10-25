@@ -144,7 +144,7 @@ module tb_shell;
     q_write(8'h07, 24'h000011, 4);
     check(dut.rd_start == 8'd16, "TUNE с неверным ключом не меняет выдачу");
 
-    if (errors) $display("ОШИБОК %0d", errors);
+    if (errors) $fatal(1, "ОШИБОК %0d", errors);
     else $display("ВСЁ OK");
     $finish;
   end

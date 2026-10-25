@@ -201,15 +201,14 @@ module tb_osd;
     check(frames - f0 == 2, $sformatf("frames: +%0d за 2 кадра", frames - f0));
     save_ppm("build/tb_osd.ppm");
 
-    if (errors) $display("ОШИБОК %0d", errors);
+    if (errors) $fatal(1, "ОШИБОК %0d", errors);
     else $display("ВСЁ OK");
     $finish;
   end
 
   initial begin
     #200ms;
-    $display("TIMEOUT");
-    $finish;
+    $fatal(1, "TIMEOUT");
   end
 
 endmodule

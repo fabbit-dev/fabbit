@@ -133,7 +133,7 @@ module tb_nes;
     $display("кадр %0d: CRC %08h, цветов %0d, картинка %s", frames, ~crc, colors, ppm_file);
     check(colors > 1, $sformatf("кадр не пустой: %0d цветов", colors));
     check(u_sd.errors == 0, $sformatf("нарушений SDRAM: %0d", u_sd.errors));
-    if (errors) $display("ОШИБОК %0d", errors);
+    if (errors) $fatal(1, "ОШИБОК %0d", errors);
     else $display("ВСЁ OK");
     $finish;
   end
