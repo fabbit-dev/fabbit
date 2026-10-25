@@ -18,6 +18,17 @@ set_property -dict {PACKAGE_PIN V3 IOSTANDARD LVCMOS33 PULLDOWN TRUE} [get_ports
 set_property -dict {PACKAGE_PIN U3 IOSTANDARD LVCMOS33 PULLDOWN TRUE} [get_ports {probe[14]}]
 set_property -dict {PACKAGE_PIN R2 IOSTANDARD LVCMOS33 PULLDOWN TRUE} [get_ports {probe[15]}]
 set_property -dict {PACKAGE_PIN H2 IOSTANDARD LVCMOS33} [get_ports phy_reset_n]
+# Optional loopback source: P6 contacts 3,4,5,6,7,9,12,22, all bank 35 (3.3 V).
+# SOURCE: i9+ SO-DIMM table + i5/i9 ext-board schematic. These are not power pins.
+# Minimum LVCMOS33 drive and slow slew reduce edge aggressiveness; not short-circuit protection.
+set_property -dict {PACKAGE_PIN L4 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[0]}]
+set_property -dict {PACKAGE_PIN G4 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[1]}]
+set_property -dict {PACKAGE_PIN G3 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[2]}]
+set_property -dict {PACKAGE_PIN K2 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[3]}]
+set_property -dict {PACKAGE_PIN M1 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[4]}]
+set_property -dict {PACKAGE_PIN K1 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[5]}]
+set_property -dict {PACKAGE_PIN H3 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[6]}]
+set_property -dict {PACKAGE_PIN J1 IOSTANDARD LVCMOS33 DRIVE 4 SLEW SLOW} [get_ports {test_out[7]}]
 # Timing mode intentionally samples asynchronous signals. Only the pad -> first IOB FF
 # path is excepted; settling, trigger and memory paths remain timed by the generated clock.
 set_false_path -from [get_ports {probe[*]}] -to [get_cells -hier -filter {NAME =~ *probe_iob_reg* || REF_NAME == IDDR || REF_NAME == ISERDESE2}]

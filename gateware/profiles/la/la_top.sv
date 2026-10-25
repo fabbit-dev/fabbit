@@ -3,7 +3,8 @@
 // Breadboard capture profile: P2 inputs, existing ESP link on P3. No SDRAM dependency.
 module la_top #(
     parameter bit Ddr = 1'b0,
-    parameter bit Serdes = 1'b0
+    parameter bit Serdes = 1'b0,
+    parameter bit TestGenerator = 1'b0
 ) (
     input  wire        clk,
     output wire        led,
@@ -13,12 +14,13 @@ module la_top #(
     input  wire        esp_cs_n,
     inout  wire [ 3:0] esp_d,
     output wire        esp_irq,
-    input  wire [15:0] probe
+    input  wire [15:0] probe,
+    output wire [7:0] test_out
 );
   wire clk_bus, clk_fast, rst_bus, csr_we;
   wire [7:0] csr_waddr, csr_raddr, rb_data;
   wire [23:0] rb_addr;
-  wire [31:0] csr_wdata, csr_rdata;
+  wire [31:0] csr_wdata, csr_rdata, capture_rdata;
   wire done;
   // reset_sync asserts asynchronously. BRAM enables must only depend on a clocked reset.
   logic rst_capture = 1'b1;
@@ -35,6 +37,22 @@ module la_top #(
   la_system #(.Ddr(Ddr), .Serdes(Serdes)) u_la (
       .clk(clk_bus), .clk_fast(clk_fast), .rst(rst_capture),
       .probe(probe), .csr_we(csr_we), .csr_waddr(csr_waddr),
-      .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata),
+      .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(capture_rdata),
       .rb_addr(rb_addr), .rb_data(rb_data), .capture_done(done));
+
+  if (TestGenerator) begin : g_loopback
+    wire [31:0] generator_rdata;
+    wire [7:0] generator_data;
+    wire generator_enable;
+    la_loopback u_generator (
+        .clk(clk_bus), .rst(rst_capture), .csr_we(csr_we), .csr_waddr(csr_waddr),
+        .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(generator_rdata),
+        .output_enable(generator_enable), .data(generator_data));
+    assign csr_rdata = (csr_raddr >= 8'd32 && csr_raddr <= 8'd35) ?
+                       generator_rdata : capture_rdata;
+    assign test_out = generator_enable ? generator_data : 8'bzzzz_zzzz;
+  end else begin : g_no_loopback
+    assign test_out = 8'bzzzz_zzzz;
+    assign csr_rdata = capture_rdata;
+  end
 endmodule

@@ -1,12 +1,13 @@
 # Run the installed AMD SecureIP ISERDESE2 model; vendor RTL is never copied into this project.
-# Vivado: -mode batch -source tools/sim_la_serdes.tcl -tclargs sampler|datapath|qspi
+# Vivado: -mode batch -source tools/sim_la_serdes.tcl -tclargs sampler|datapath|qspi|loopback
 set root [pwd]
 set mode [lindex $argv 0]
-if {$mode ni {sampler datapath qspi}} { error "Expected sampler, datapath or qspi" }
+if {$mode ni {sampler datapath qspi loopback}} { error "Expected sampler, datapath, qspi or loopback" }
 set out [file join $root build xsim_la_$mode]
 file mkdir $out
 cd $out
 set srcs [list common/mem/ram_sdp.sv profiles/la/la_ring.sv profiles/la/la_sampler.sv \
+               profiles/la/la_loopback.sv \
                profiles/la/la_system.sv]
 if {$mode eq "sampler"} {
     lappend srcs sim/tb_la_serdes_sampler.sv
@@ -15,6 +16,9 @@ if {$mode eq "sampler"} {
     lappend srcs common/qspi_slave.sv common/icap_ctrl.sv sim/xilinx_stubs.sv \
                  common/profile_shell.sv sim/tb_la_profile.sv
     set top tb_la_profile
+} elseif {$mode eq "loopback"} {
+    lappend srcs sim/tb_la_loopback.sv
+    set top tb_la_loopback
 } else {
     lappend srcs sim/tb_la_ddr.sv
     set top tb_la_ddr
@@ -38,6 +42,7 @@ puts $result
 if {[string match {*Fatal:*} $result] || ![string match {*ok   *} $result] ||
     ($mode eq "qspi" && ![string match {*ALL LA OK*} $result]) ||
     ($mode eq "sampler" && ![string match {*ALL LA SAMPLER OK*} $result]) ||
+    ($mode eq "loopback" && ![string match {*ALL LA LOOPBACK OK*} $result]) ||
     ($mode eq "datapath" && ![string match {*ALL LA DATAPATH OK*} $result])} {
     error "LA simulation did not pass; see $out/run.log"
 }

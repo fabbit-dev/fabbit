@@ -24,7 +24,11 @@ module tb_la_profile #(
   wire csr_we;
   wire [7:0] csr_waddr, csr_raddr, rb_data;
   wire [23:0] rb_addr;
-  wire [31:0] csr_wdata, csr_rdata;
+  wire [31:0] csr_wdata, csr_rdata, capture_rdata, generator_rdata;
+  wire generator_enable;
+  wire [7:0] generator_data;
+  assign csr_rdata = (csr_raddr >= 32 && csr_raddr <= 35) ?
+                     generator_rdata : capture_rdata;
   logic [15:0] probe = 0;
   int cycles = 0, last_sample_cycle = -1, expected_spacing = 0;
   always @(posedge clk) begin
@@ -44,8 +48,12 @@ module tb_la_profile #(
   la_system #(.Depth(2048), .Ddr(Ddr), .Serdes(Serdes)) dut (
       .clk(clk), .clk_fast(clk_fast), .rst(rst),
       .probe(probe), .csr_we(csr_we), .csr_waddr(csr_waddr),
-      .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata),
+      .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(capture_rdata),
       .rb_addr(rb_addr), .rb_data(rb_data), .capture_done());
+  la_loopback generator (
+      .clk(clk), .rst(rst), .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata),
+      .csr_raddr(csr_raddr), .csr_rdata(generator_rdata),
+      .output_enable(generator_enable), .data(generator_data));
 
   localparam time T = 100ns;
   logic [7:0] rbuf [8192];
@@ -181,6 +189,17 @@ module tb_la_profile #(
     expect_counter(0, 32, 9992);
     $display("ok   QSPI: shadow config isolated, sample interval exactly divider+1 clocks");
     $display("ok   QSPI: probe capture, divider snapshot, control key, abort/rearm, bad config");
+    q_read(8'h31, 32, 16);
+    if (rword(0) != 0 || rword(1) != 1000 || rword(2) != 32'hA5 || rword(3) != "FBLG")
+      $fatal(1, "loopback reset state and capabilities");
+    write_csr(32, 32'hDEAD_0001);
+    if (generator_enable) $fatal(1, "loopback bad key");
+    write_csr(34, 32'h5A);
+    write_csr(32, 32'h4C47_0001);
+    if (!generator_enable || generator_data != 8'h5A) $fatal(1, "loopback static enable");
+    write_csr(32, 32'h4C47_0000);
+    if (generator_enable) $fatal(1, "loopback disable");
+    $display("ok   QSPI: loopback registers, keyed enable, static value, disable");
     $display("ВСЁ OK");
     $display("ALL LA OK");
     $finish;

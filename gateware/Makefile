@@ -74,10 +74,12 @@ nes_top_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xd
 
 # LA: P2 16 inputs, BRAM snapshot, bidirectional QSPI, return to golden through ICAP.
 LA_CORE := common/mem/ram_sdp.sv profiles/la/la_ring.sv profiles/la/la_sampler.sv \
+           profiles/la/la_loopback.sv \
            profiles/la/la_system.sv
 LA_DDR ?= 0
 LA_SERDES ?= 0
-la_top_VIVPARAMS := Ddr=$(LA_DDR) Serdes=$(LA_SERDES)
+LA_LOOPBACK ?= 0
+la_top_VIVPARAMS := Ddr=$(LA_DDR) Serdes=$(LA_SERDES) TestGenerator=$(LA_LOOPBACK)
 # Set XILINX_VIVADO (settings64.sh), or pass UNISIM=<Vivado>/data/verilog/src.
 UNISIM ?= $(XILINX_VIVADO)/data/verilog/src
 la_top_SRC := common/cdc/reset_sync.sv common/qspi_slave.sv common/icap_ctrl.sv \
@@ -172,6 +174,15 @@ sim_la: | build
 	  common/profile_shell.sv $(LA_CORE) sim/tb_la_profile.sv > build/tb_la_profile.log 2>&1
 	build/tb_la_profile/Vtb_la_profile
 
+sim_la_loopback: | build
+	verilator --binary --timing --timescale 1ns/1ps -Wno-fatal --top-module tb_la_loopback \
+	  -Mdir build/tb_la_loopback $(LA_CORE) sim/tb_la_loopback.sv > build/tb_la_loopback.log 2>&1
+	build/tb_la_loopback/Vtb_la_loopback
+
+sim_la_loopback_serdes: | build
+	vivado -mode batch -nojournal -log build/xsim_la_loopback.log \
+	  -source tools/sim_la_serdes.tcl -tclargs loopback
+
 sim_la_sampler: | build
 	iverilog -g2012 -s tb_la_sampler -s glbl -o build/tb_la_sampler.vvp \
 	  profiles/la/la_sampler.sv sim/tb_la_sampler.sv $(UNISIM)/unisims/IDDR.v $(UNISIM)/glbl.v \
@@ -220,5 +231,5 @@ sim_osd: | build
 
 clean:
 	rm -rf build
-.PHONY: all clean sim sim_la sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_la_serdes sim_la_serdes_qspi sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
+.PHONY: all clean sim sim_la sim_la_loopback sim_la_loopback_serdes sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_la_serdes sim_la_serdes_qspi sim_osd sim_video sim_cdc sim_pad sim_shell sim_sdram sim_nes golden_vivado golden_top $(TARGETS)
 .PRECIOUS: build/%.json build/%.xdc build/%.fasm build/%.frames
