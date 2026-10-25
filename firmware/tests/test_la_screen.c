@@ -14,6 +14,7 @@ static int locks, arms, aborts, plane_writes, show_writes, data_reads, allocatio
 static int fail_alloc, fail_id, fail_read, fail_write, tear, wrong_profile, no_plane;
 static uint32_t keys;
 static int64_t clock_us;
+static unsigned grayscale_seen[16][4];
 
 void fl_lock(void) { locks++; }
 void fl_unlock(void) { assert(locks); locks--; }
@@ -80,13 +81,13 @@ esp_err_t fl_write(uint8_t cmd,uint32_t address,const void *data,size_t size)
     const uint8_t *p=data;
     unsigned x=address&4095, y=address>>12, w=p[0]*256u+p[1], h=p[2]*256u+p[3];
     assert(x%8==0 && w%8==0 && x+w<=640 && y+h<=480 && size==4+w/8*h);
-    static const uint8_t threshold[]={1,9,13,5};
     for (unsigned yy=0;yy<h;yy++)
         for (unsigned xx=0;xx<w;xx++) {
             unsigned px=x+xx, py=y+yy;
             uint8_t nibble=fb[py*UI_STRIDE+px/2];
             nibble=(px&1) ? nibble&15 : nibble>>4;
-            bool expected=nibble>threshold[(py&1)*2+(px&1)];
+            bool expected=nibble>=8;
+            grayscale_seen[nibble][(py&1)*2+(px&1)]++;
             assert(!!(p[4+yy*w/8+xx/8]&(0x80u>>(xx&7)))==expected);
         }
     plane_writes++;
@@ -128,6 +129,20 @@ int main(void)
     assert(la_screen_tick() && !show_writes);  // never expose uninitialized RAM on failed first draw
     fail_write=0;
     assert(la_screen_tick() && plane_writes && show_writes && !arms && !locks);
+    // Every gray level must map identically on both rows and both pixel parities.
+    // The 104-row region crosses the 102-row transfer band boundary at full width.
+    memset(grayscale_seen,0,sizeof grayscale_seen);
+    for (int level=0;level<16;level++) ui_fill(level*40,180,40,104,(uint8_t)level);
+    assert(ui_flush());
+    for (int level=0;level<16;level++)
+        for (int parity=0;parity<4;parity++) assert(grayscale_seen[level][parity]);
+    // Dirty rectangles expand to byte boundaries without changing neighboring pixels.
+    ui_fill(74,201,10,2,7);
+    assert(ui_flush());
+    ui_fill(74,201,10,2,8);
+    assert(ui_flush());
+    ui_fill(630,203,10,2,15);
+    assert(ui_flush());
     press(IN_DOWN);
     press(IN_F3);  // rising D1
     keys=1u<<IN_FN;

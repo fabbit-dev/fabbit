@@ -25,7 +25,7 @@ static bool same(const la_status_t *a, const la_status_t *b)
 
 static bool rect(int x, int y, int w, int h, const uint8_t *px, size_t stride)
 {
-    // UI uses 4-bit grayscale. Ordered threshold keeps text antialiasing readable in 1 bit.
+    // Use a fixed midpoint threshold: equal gray levels keep solid contours at any position.
     static uint8_t packed[FL_BUF_SIZE];
     int left = x & ~7, right = (x + w + 7) & ~7;
     int row = (right-left)/8;
@@ -51,8 +51,7 @@ static bool rect(int x, int y, int w, int h, const uint8_t *px, size_t stride)
             for (int xx = left; xx < right; xx++) {
                 uint8_t nibble = source[(xx-left)/2];
                 nibble = (xx & 1) ? nibble & 15 : nibble >> 4;
-                static const uint8_t threshold[4] = {1, 9, 13, 5};
-                if (nibble > threshold[((y+band+yy)&1)*2+(xx&1)])
+                if (nibble >= 8)
                     packed[4+yy*row+(xx-left)/8] |= 0x80u >> ((xx-left)&7);
             }
         }
