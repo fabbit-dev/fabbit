@@ -103,7 +103,7 @@ esp_err_t pm_slots(void)
 
 static void progress(size_t done, size_t total)
 {
-    if (done == total || done % (512 * 1024) == 0) printf("  запись %u/%u\n", done, total);
+    if (done == total || done % (512 * 1024) == 0) printf("  запись %zu/%zu\n", done, total);
 }
 
 esp_err_t pm_load(const char *file, bool force_write)

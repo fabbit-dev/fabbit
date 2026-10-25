@@ -75,7 +75,7 @@ static int cmd_pad(int argc, char **argv)
     while (esp_timer_get_time() < end) {
         uint16_t w = pad_word();
         if (w != last) {
-            printf("%8lld мс  ", esp_timer_get_time() / 1000);
+            printf("%8lld мс  ", (long long)(esp_timer_get_time() / 1000));
             print_word(w);
             printf("\n");
             last = w;

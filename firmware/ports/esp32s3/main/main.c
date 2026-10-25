@@ -129,7 +129,7 @@ static int cmd_rd(int argc, char **argv)
 
 static void prog_cb(size_t done, size_t total)
 {
-    if (done == total || (done % (256 * 1024)) == 0) printf("  %u/%u\n", done, total);
+    if (done == total || (done % (256 * 1024)) == 0) printf("  %zu/%zu\n", done, total);
 }
 
 // progtest <addr> [КБ]: записать случайные данные, сверить CRC ПЛИС с локальным
