@@ -36,7 +36,7 @@ static struct {
     int64_t clock;
 } m;
 enum { FAIL_NONE, FAIL_STREAM, FAIL_FREE, FAIL_READY, FAIL_DONE, FAIL_RX, FAIL_STATUS,
-       FAIL_READ, FAIL_BUSY, FAIL_WRITE, FAIL_ASSETS };
+       FAIL_READ, FAIL_BUSY, FAIL_WRITE, FAIL_ASSETS, FAIL_ACK, FAIL_ABORT_BUSY };
 static uint8_t expected[65536];
 static size_t expected_n;
 
@@ -67,6 +67,7 @@ esp_err_t fl_csr_read(uint8_t index, uint32_t *v, size_t n)
         if (m.busy) { *v |= RETRO_CMD_BUSY; m.busy--; }
         if (m.drain) { *v |= RETRO_DRAIN_BUSY; m.drain--; }
         if (m.fault == FAIL_BUSY && m.begins) *v |= RETRO_CMD_BUSY;
+        if (m.fault == FAIL_ABORT_BUSY && m.aborts) *v |= RETRO_CMD_BUSY;
         if (m.fault == FAIL_READY) *v &= ~RETRO_READY;
         if (m.fault == FAIL_DONE) *v &= ~RETRO_PAYLOAD_DONE;
         if (m.fault == FAIL_STATUS && m.streams) *v |= RETRO_FAILED;
@@ -108,6 +109,9 @@ esp_err_t fl_csr_write(uint8_t index, const uint32_t *v, size_t n)
             assert(m.config[1] == expected_n);
             if (m.config[0] == ROM_SNES) assert(m.assets == 3);
             m.rx = 0; m.begins++; m.st = RETRO_LOADING | RETRO_READY;
+            // A lost/delayed acknowledgement outlasts BEGIN's deadline, but clears
+            // during cleanup's separate pre-ABORT mailbox wait.
+            if (m.fault == FAIL_ACK) m.busy = 1250;
             break;
         case RETRO_COMMIT:
             assert((m.st & RETRO_PAYLOAD_DONE) && m.rx == expected_n);
@@ -194,6 +198,44 @@ static void remove_file(const char *name)
     char path[768]; snprintf(path, sizeof path, "%s/%s", directory, name); assert(!unlink(path));
 }
 
+static void test_command_acknowledgements(void)
+{
+    uint32_t ms, st;
+    reset_mock(); m.fault = FAIL_ACK;
+    assert(retro_load_file("/data/roms/cart.gen", progress_cb, &m, &ms) == ESP_ERR_TIMEOUT);
+    assert(ms >= 2000 && ms < 4000 && m.clock < 4000000);
+    assert(!m.locks && m.begins == 1 && m.aborts == 2);
+    assert(!m.streams && !m.commits && !m.progress && !m.st && !m.busy && !m.drain);
+    // Cleanup succeeded, not the load: a subsequent load needs no mock-state reset.
+    m.fault = FAIL_NONE;
+    assert(retro_load_file("/data/roms/cart.gen", NULL, NULL, &ms) == ESP_OK);
+    assert(!m.locks && m.commits == 1 && m.st == RETRO_RUNNING);
+
+    reset_mock(); m.fault = FAIL_BUSY;
+    assert(retro_load_file("/data/roms/cart.gen", progress_cb, &m, &ms) == ESP_ERR_TIMEOUT);
+    assert(ms >= 4000 && ms < 4100 && m.clock < 4100000);
+    assert(!m.locks && m.begins == 1 && m.aborts == 1);
+    assert(!m.streams && !m.commits && !m.progress && (m.st & RETRO_LOADING));
+    assert(fl_csr_read(RETRO_STAT, &st, 1) == ESP_OK && (st & RETRO_CMD_BUSY));
+    int writes = m.writes;
+    int64_t start = m.clock;
+    assert(retro_stop() == ESP_ERR_TIMEOUT);
+    assert(m.clock - start >= COMMAND_US && m.clock - start < COMMAND_US + 100000);
+    assert(!m.locks && m.writes == writes && m.aborts == 1);
+
+    // Even if ABORT clears all run/load/drain bits, its own unacknowledged
+    // command must prevent a successful drain result.
+    reset_mock(); m.st = RETRO_RUNNING; m.fault = FAIL_ABORT_BUSY;
+    start = m.clock;
+    assert(retro_stop() == ESP_ERR_TIMEOUT);
+    assert(m.clock - start >= COMMAND_US && m.clock - start < COMMAND_US + 100000);
+    assert(!m.locks && m.aborts == 1 && m.writes == 1 && !m.st && !m.drain);
+    assert(fl_csr_read(RETRO_STAT, &st, 1) == ESP_OK && (st & RETRO_CMD_BUSY));
+    m.fault = FAIL_NONE;
+    assert(retro_stop() == ESP_OK);
+    assert(!m.locks && m.aborts == 2 && !m.st && !m.busy && !m.drain);
+}
+
 int main(void)
 {
     const char *tmp = getenv("TMPDIR");
@@ -235,6 +277,7 @@ int main(void)
     assert(retro_stop() == ESP_ERR_INVALID_STATE && m.writes == before_writes && !m.locks);
     m.wrong_id = false;
     fixture_md();
+    test_command_acknowledgements();
     int failures[] = {FAIL_STREAM, FAIL_FREE, FAIL_READY, FAIL_DONE, FAIL_RX, FAIL_STATUS,
                       FAIL_READ, FAIL_BUSY, FAIL_WRITE};
     for (size_t i = 0; i < sizeof failures / sizeof *failures; i++) {
@@ -269,6 +312,6 @@ int main(void)
     const char *files[] = {"cart.gen", "cart.smc", "cart.nes", "snes.ipl", "snes.gauss"};
     for (size_t i = 0; i < sizeof files / sizeof *files; i++) remove_file(files[i]);
     assert(!rmdir(directory));
-    puts("ok RETRO actual ABI: assets/coverage, exact STREAM, hot systems, deadlines, abort/drain recovery, locks");
+    puts("ok RETRO actual ABI: assets/coverage, exact STREAM, hot systems, deadlines, late ACK/permanent busy, abort/drain recovery, locks");
     return 0;
 }
