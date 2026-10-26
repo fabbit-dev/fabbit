@@ -71,7 +71,8 @@ def main():
     ap.add_argument('--rate-from', type=lambda x: int(x, 0), default=0x02423FE5,
                     help='COR0 Vivado с нужным CONFIGRATE, берётся только поле OSCFSEL')
     a = ap.parse_args()
-    img = bytearray(bit_payload(open(a.inp, 'rb').read()))
+    with open(a.inp, 'rb') as source:
+        img = bytearray(bit_payload(source.read()))
     if img.find(struct.pack('>I', CRC_WRITE), img.find(SYNC)) >= 0:
         cor0 = read_cor0(img)
         print('битстрим с CRC (Vivado): COR0 не правится')
@@ -82,7 +83,8 @@ def main():
                       name.ljust(32, b'\0'), cor0)
     hdr += struct.pack('<I', zlib.crc32(hdr))
     assert len(hdr) == 64
-    open(a.out, 'wb').write(hdr + img)
+    with open(a.out, 'wb') as output:
+        output.write(hdr + img)
     print(f'{a.out}: id {a.id} "{a.name}" образ {len(img)} Б, CRC {zlib.crc32(img):08x}, COR0 {cor0:08x}')
 
 
