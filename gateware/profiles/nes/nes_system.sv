@@ -63,6 +63,10 @@ module nes_system #(
   // GameLoader снимает error только с первым байтом заголовка: после неудачной загрузки (мусор на
   // шине при перезапуске ESP) старый error оборвал бы новую загрузку на первом такте
   logic got_byte = 1'b0;
+  wire loader_error;
+  // Upstream GameLoader retains error through reset until its first header byte.
+  // Hide that previous cartridge's error while a managed retry is starting.
+  assign loader_fail=loader_error && (!Managed || got_byte);
   logic managed_run_old=0;
 
   always_ff @(posedge nclk) begin
@@ -133,7 +137,7 @@ module nes_system #(
       .indata(in_data), .indata_clk(in_clk),
       .mem_addr(loader_addr), .mem_data(loader_wdata), .mem_write(loader_write),
       .bios_download(), .mapper_flags(loader_flags), .busy(), .done(loader_done),
-      .error(loader_fail), .rom_loaded());
+      .error(loader_error), .rom_loaded());
 
   // ---- ядро ----
   wire [5:0] color;

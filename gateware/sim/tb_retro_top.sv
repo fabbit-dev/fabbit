@@ -164,6 +164,34 @@ module tb_retro_top;
     $display("ok system %0d real core audio CDC -> HDMI sample packets (%0d/%0d)",
              system_id,samples,packets);
   endtask
+  task automatic expect_load_error(input logic [7:0] expected_error);
+    logic [31:0] actual_error;
+    wait_status(32'h27,4);wait_status(32'h30,0);
+    read_csr(11,actual_error);
+    assert(actual_error==32'(expected_error) && !dut.dq_drive)
+      else $fatal(1,"load error got=%h expected=%h DQ=%b",
+                  actual_error,expected_error,dut.dq_drive);
+    command(32'h52540004);wait_status(32'h3f,0);
+    read_csr(11,actual_error);
+    assert(actual_error==0) else $fatal(1,"ABORT did not clear load error");
+  endtask
+  task automatic check_load_errors;
+    // No bytes accepted: COMMIT must fail, never boot an old cartridge.
+    write_csr(5,2);write_csr(6,1024);write_csr(8,1024);
+    command(32'h52540001);wait_status(32'h2c,8);
+    command(32'h52540002);expect_load_error(7);
+    // Invalid iNES magic must reach the native loader and fail closed.
+    write_csr(5,1);write_csr(6,16400);write_csr(8,16384);
+    command(32'h52540001);wait_status(32'h2c,8);
+    header(8'h32,0);repeat(16) begin nib(0);nib(0);end finish_qspi();
+    expect_load_error(5);
+    // A non-ROM STREAM channel is a transport fault, not ROM payload.
+    write_csr(5,2);write_csr(6,1024);write_csr(8,1024);
+    command(32'h52540001);wait_status(32'h2c,8);
+    header(8'h32,1);nib(4'ha);nib(4'h5);finish_qspi();
+    expect_load_error(3);
+    $display("ok early COMMIT, invalid iNES, wrong STREAM channel: errors and ABORT recovery");
+  endtask
   logic inject_interlace=0;
   int nes_writes=0;
   int md_writes=0;
@@ -283,6 +311,7 @@ module tb_retro_top;
     #10us;
     read_csr(0,value);assert(value==32'h46524554) else $fatal(1,"FRET %h",value);
     check_pads();
+    check_load_errors();
     if(nes_only!=0) begin
       command(32'h52540004);
       write_csr(5,1);write_csr(6,16400);write_csr(8,16384);

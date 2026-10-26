@@ -121,7 +121,7 @@ module retro_session (
                 state<=Running;command_complete<=1;pending_reply<=0;
               end
               else begin error<=ErrCommit;action<=0;state<=Stop;timer<=0;
-                         stopped_running<=state==Running;end
+                         writer_abort<=1;stopped_running<=state==Running;end
             end else begin error<=ErrCommand;state<=Reply;end
           end
         end

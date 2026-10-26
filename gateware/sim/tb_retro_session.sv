@@ -26,6 +26,8 @@ module tb_retro_session;
   logic asset_complete=0,asset_failed=0;
   retro_session dut (.*);
   always @(posedge clk) if(controllers_reset) owner<=owner_request;
+  // Model an active ROM collector: only an explicit abort releases its idle.
+  always @(negedge clk) if(writer_abort) writer_idle=1;
   task automatic cmd(input logic[31:0] v,input logic[1:0] sys);
     @(negedge clk);
     command={21'b0,18'b0,(sys==3 ? 24'd32768 : 24'd4),5'b0,
@@ -39,6 +41,12 @@ module tb_retro_session;
   initial begin
     repeat(4) @(negedge clk);rst=0;
     for(int sys=1;sys<=3;sys++) begin
+      cmd(32'h52540001,2'(sys));
+      writer_idle=0;
+      cmd(32'h52540002,2'(sys));
+      assert(!running && !switching && error==ErrCommit && writer_idle)
+        else $fatal(1,"early COMMIT must abort collector before waiting idle");
+      cmd(32'h52540004,2'(sys));
       cmd(32'h52540001,2'(sys));
       assert(ready && selected==2'(sys) && !running) else $fatal(1,"BEGIN");
       stream_valid=1;repeat(sys==3 ? 32768 : 4) @(negedge clk);stream_valid=0;
