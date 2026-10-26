@@ -204,6 +204,11 @@ always @(posedge clk) begin
     if (~resetn) begin
         cmd <= CMD_NOP;
         refresh_cnt <= 0;
+        oeA_d <= 0; oeB_d <= 0; weA_d <= 0; weB_d <= 0;
+        oe_latch <= 0; we_latch <= 0;
+        port[0] <= PORT_NONE; port[1] <= PORT_NONE;
+        rv_req_ack <= 0;
+        doutA <= 0; doutB <= 0; rv_dout <= 0;
         busy <= 1'b1;
         dq_oen <= 1;
         SDRAM_DQM <= {DQM_SIZE{1'b1}};

@@ -113,6 +113,12 @@ sim_retro_top: | build
 	  build/tb_retro_top/
 	cd build/tb_retro_top && ./Vtb_retro_top $(RETRO_TOP_ARGS)
 
+sim_retro_nes_render: | build
+	bash tools/test_retro_nes_render.sh $(RETRO_NES_RENDER_ARGS)
+
+sim_retro_nes_render_regression: | build
+	bash tools/test_retro_nes_render.sh --regression
+
 sim_retro_nes_reset: | build
 	iverilog -g2012 -s tb_retro_nes_reset -o build/tb_retro_nes_reset.vvp \
 	  profiles/nes/nes_config_pkg.sv profiles/retro/nes/retro_nes_sdram_core.sv \
@@ -379,6 +385,7 @@ sim_osd: | build
 clean:
 	rm -rf build
 .PHONY: all clean sim sim_osd sim_video sim_cdc sim_retro sim_retro_mem_lanes sim_retro_control \
+        sim_retro_nes_reset sim_retro_nes_render sim_retro_nes_render_regression \
         sim_retro_sdram sim_retro_mem_mux sim_retro_rom_writer sim_retro_load sim_retro_md \
         sim_retro_md_memory sim_retro_pixels sim_retro_framebuffer synth_retro_shared \
         sim_retro_framebuffer_444 sim_retro_pad \
