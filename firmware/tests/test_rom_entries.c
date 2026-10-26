@@ -352,6 +352,16 @@ int main(void)
     nes[6] = 4;
     fixture("trainer.nes", nes, 16912);
     for (size_t i = 4; i < 9; i++) fixture(invalid[i], bad, 16400);
+    const char *unsupported[] = {"mapper-extension.nes", "vs-system.nes",
+                                 "playchoice.nes", "extended-console.nes", "pal-only.nes"};
+    for (size_t i = 0; i < sizeof unsupported / sizeof *unsupported; i++) {
+        uint8_t header[16] = {'N', 'E', 'S', 0x1a, 1};
+        header[7] = 8;
+        if (i == 0) header[8] = 4;
+        else if (i < 4) header[7] |= (uint8_t)i;
+        else header[12] = 1;
+        fixture(unsupported[i], header, 16400);
+    }
 
     // Candidate suffixes are hints; actual content validation controls inclusion.
     lc_game_t games[16];
@@ -367,6 +377,8 @@ int main(void)
     no_effects();
 
     for (size_t i = 0; i < sizeof invalid / sizeof *invalid; i++) rejected_entries(invalid[i]);
+    for (size_t i = 0; i < sizeof unsupported / sizeof *unsupported; i++)
+        rejected_entries(unsupported[i]);
     // A bare console name must append .nes before the same preflight.
     rejected_entries("truncated");
     accepted_menu(&games[2]);
@@ -390,6 +402,10 @@ int main(void)
     }
     for (size_t i = 0; i + 1 < sizeof invalid / sizeof *invalid; i++) {
         snprintf(path, sizeof path, "%s/%s", temp_dir, invalid[i]);
+        assert(!unlink(path));
+    }
+    for (size_t i = 0; i < sizeof unsupported / sizeof *unsupported; i++) {
+        snprintf(path, sizeof path, "%s/%s", temp_dir, unsupported[i]);
         assert(!unlink(path));
     }
     assert(!rmdir(temp_dir));

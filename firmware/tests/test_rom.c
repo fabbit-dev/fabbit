@@ -69,6 +69,28 @@ int main(void)
     assert(rom_probe(h, 16, 16400, "cart.bin", &info) == ROM_OK);
     assert(info.system == ROM_NES && info.payload_offset == 0 && info.payload_size == 16400);
     assert(info.nes.need == 16400 && info.nes.prg_kb == 16 && !info.nes.chr_kb);
+    h[7] = 8;
+    h[8] = 4;
+    assert(rom_probe(h, 16, 16400, "mapper.nes", &info) == ROM_UNAVAILABLE);
+    assert(!info.payload_size);
+    h[8] = 0;
+    for (int console = 1; console <= 3; console++) {
+        h[7] = 8 | console;
+        assert(rom_probe(h, 16, 16400, "console.nes", &info) == ROM_UNAVAILABLE);
+    }
+    h[7] = 8; h[12] = 1;
+    assert(rom_probe(h, 16, 16400, "pal.nes", &info) == ROM_UNAVAILABLE);
+    h[12] = 0;
+    assert(rom_probe(h, 16, 16400, "ntsc.nes", &info) == ROM_OK);
+    h[12] = 2;
+    assert(rom_probe(h, 16, 16400, "multi-region.nes", &info) == ROM_OK);
+    h[12] = 3;
+    assert(rom_probe(h, 16, 16400, "dendy.nes", &info) == ROM_UNAVAILABLE);
+    h[12] = 0;
+    h[7] = 0;
+    h[9] = 1;
+    assert(rom_probe(h, 16, 16400, "ines-pal.nes", &info) == ROM_UNAVAILABLE);
+    h[9] = 0;
     assert(rom_probe(h, 16, UINT64_MAX, "cart.sfc", &info) == ROM_OK);
     assert(info.payload_size == 16400);  // хвост не входит в wire payload
     assert(rom_probe(h, 16, 16399, "cart.nes", &info) == ROM_INVALID);

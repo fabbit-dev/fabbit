@@ -44,6 +44,12 @@ rom_result_t rom_probe(const uint8_t *h, size_t n, uint64_t file_size,
         info->system = ROM_NES;
         rom_nes_info_t nes;
         if (!rom_parse_nes(h, n, &nes) || nes.need > file_size) return ROM_INVALID;
+        // The deployed boundary is a standard NTSC console. Keep the legacy
+        // header parser intact, but never dispatch incompatible configurations.
+        // Mapper metadata is eight bits: reject extensions rather than alias.
+        bool nes2 = (h[7] & 0x0c) == 8;
+        if ((h[7] & 3) || (nes2 && ((h[8] & 15) || (h[12] != 0 && h[12] != 2))) ||
+            (!nes2 && (h[9] & 1))) return ROM_UNAVAILABLE;
         info->nes = nes;
         info->payload_size = nes.need;
         return ROM_OK;
