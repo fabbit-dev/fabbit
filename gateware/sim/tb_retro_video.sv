@@ -40,10 +40,33 @@ module tb_retro_video;
     end
     snes_hde=0;snes_vde=0;repeat(50) @(negedge snes_clk);
   endtask
+  task automatic check_audio_switch;
+    audio_valid=1;audio_l=16'sh1234;audio_r=-16'sh2345;
+    #150us;
+    assert(dut.audio_pixel_valid && dut.audio_pixel_l==16'sh1234 &&
+           dut.audio_pixel_r==-16'sh2345)
+      else $fatal(1,"first owner's audio missing/swapped");
+    @(negedge bus_clk);running=0;audio_valid=0;
+    #5us;
+    assert(!dut.audio_pixel_valid && dut.audio_pixel_l==0 && dut.audio_pixel_r==0 &&
+           dut.transmitter.fill_count==0 && !dut.transmitter.pending_ready)
+      else $fatal(1,"stopped owner retained queued audio");
+    @(negedge bus_clk);selected=2;running=1;
+    #100us;
+    assert(!dut.audio_pixel_valid && dut.audio_pixel_l==0 && dut.audio_pixel_r==0)
+      else $fatal(1,"old owner's audio leaked into unqualified new owner");
+    @(negedge bus_clk);audio_valid=1;audio_l=-16'sh3456;audio_r=16'sh4567;
+    #150us;
+    assert(dut.audio_pixel_valid && dut.audio_pixel_l==-16'sh3456 &&
+           dut.audio_pixel_r==16'sh4567)
+      else $fatal(1,"new owner's audio missing/swapped");
+    $display("ok stereo audio owner switch flushes CDC and HDMI queue; no stale samples");
+  endtask
   initial begin
     repeat(8) @(negedge bus_clk);rst=0;rst_pix=0;running=1;
     repeat(10) @(negedge snes_clk);source_frame();source_frame();
     wait(red_seen!=0 && blue_seen!=0);
+    check_audio_switch();
     assert(!fault) else $fatal(1,"video fault");
     $display("ok SNES BGR15 -> RGB333 framebuffer red/blue readback with real CDC/decimation");
     $finish;
