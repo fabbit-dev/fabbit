@@ -4,7 +4,9 @@
 // Real managed NES, owned SDRAM controller and upstream-authored nes15 ROM.
 // +start_offset=N delays LOAD by N nclk edges to vary loader/slot alignment.
 // +buffer_test=1 substitutes an authored ROM exercising buffered CPU $2007 reads.
-// +negative_consumer=cpu|dma|ppu_bg|ppu_sprite|ppu_buffer corrupts only the checker sample.
+// +conflict_test=1 uses authored CNROM to select CHR through a PRG bus conflict.
+// +palette_test=1 checks immediate palette reads and their external buffer refill.
+// +negative_consumer=cpu|dma|conflict|ppu_bg|ppu_sprite|ppu_buffer corrupts only the sample.
 module tb_retro_nes_render;
   // realtime avoids rounding this 15.556ns period to 16ns in a time variable.
   localparam realtime Tf = 15.556ns;
@@ -25,7 +27,10 @@ module tb_retro_nes_render;
   logic [7:0] rom [1 << 20];
   int rom_len = 0, rom_pos = 0;
   bit buffer_test = 0;
+  bit conflict_test = 0, palette_test = 0;
   int buffer_cpu_reads = 0, buffer_marker_writes = 0;
+  int conflict_bank_checks = 0;
+  int palette_cpu_reads = 0, palette_marker_writes = 0;
   logic rst = 1, load_go = 0, run_enable = 0;
   wire rom_ready, loading, done, fail, reset_nes, memory_busy, fb_we;
   wire rom_valid = loading && rom_pos < rom_len;
@@ -81,11 +86,26 @@ module tb_retro_nes_render;
             min_trcd = $realtime - last_act[sd_ba];
           // Decode the physical WRITE pins independently of controller state.
           // NES CPU $0000 maps to physical word $0E0000, byte lane zero.
-          if (buffer_test && run_enable && !reset_nes && !we_n &&
+          if ((buffer_test || conflict_test) && run_enable && !reset_nes && !we_n &&
               {sd_ba, observed_row[sd_ba], sd_a[7:0]} == 21'h0e0000) begin
             if (sd_dq[7:0] !== 8'h5a)
               $fatal(1, "buffer WRAM physical marker expected=5a observed=%h", sd_dq[7:0]);
             buffer_marker_writes++;
+          end
+          if (palette_test && run_enable && !reset_nes && !we_n &&
+              {sd_ba, observed_row[sd_ba], sd_a[7:0]} >= 21'h0e0000 &&
+              {sd_ba, observed_row[sd_ba], sd_a[7:0]} <= 21'h0e0002) begin
+            logic [7:0] expected_marker;
+            case (sd_a[1:0])
+              0: expected_marker = 8'h2d;
+              1: expected_marker = 8'h96;
+              2: expected_marker = 8'h5a;
+              default: $fatal(1, "unexpected palette marker address");
+            endcase
+            if (sd_a[1:0] != 2'(palette_marker_writes) || sd_dq[7:0] !== expected_marker)
+              $fatal(1, "palette physical marker %0d address=%h expected=%h observed=%h",
+                     palette_marker_writes, sd_a, expected_marker, sd_dq[7:0]);
+            palette_marker_writes++;
           end
         end
         3'b001: begin
@@ -168,6 +188,12 @@ module tb_retro_nes_render;
       if (dut.ppu_rd && !ppu_read_old) snapshot(dut.ppu_addr, ppu_ticket);
       cpu_read_old = dut.cpu_rd;
       ppu_read_old = dut.ppu_rd;
+      if (conflict_test && conflict_checks == 1 && conflict_bank_checks == 0) begin
+        if (dut.u_nes.multi_mapper.map28.a53chr !== 2'd1)
+          $fatal(1, "CNROM conflicted CHR bank expected=1 observed=%h",
+                 dut.u_nes.multi_mapper.map28.a53chr);
+        conflict_bank_checks++;
+      end
     end
   end
 
@@ -205,13 +231,31 @@ module tb_retro_nes_render;
   // Pre-NBA sampling is intentional: these are the same input values used by
   // each consumer's sequential block, not values captured later by SDRAM.
   always @(posedge nclk) if (run_enable && !reset_nes) begin
-    if (buffer_test && dut.u_nes.cpu_ce && !dut.u_nes.pause_cpu &&
+    if ((buffer_test || conflict_test) && dut.u_nes.cpu_ce && !dut.u_nes.pause_cpu &&
         !dut.u_nes.dma_aout_enable && dut.u_nes.mr_int &&
         dut.u_nes.addr == 16'h2007) begin
       buffer_cpu_reads++;
       // The first read primes the buffer; T65 must consume its value on the second.
       if (buffer_cpu_reads == 2 && dut.u_nes.cpu.DI !== 8'h5a)
         $fatal(1, "buffer CPU $2007 expected=5a observed=%h", dut.u_nes.cpu.DI);
+    end
+    if (palette_test && dut.u_nes.cpu_ce && !dut.u_nes.pause_cpu &&
+        !dut.u_nes.dma_aout_enable && dut.u_nes.mr_int && dut.u_nes.addr == 16'h2007) begin
+      logic [7:0] expected_value, observed_value;
+      palette_cpu_reads++;
+      observed_value = dut.u_nes.cpu.DI;
+      case (palette_cpu_reads)
+        1: begin
+          expected_value = 8'h2d;
+          observed_value &= 8'h3f; // Bits 7:6 are CPU PPU-register open bus.
+        end
+        2: expected_value = 8'h96; // Under-palette $2F00, not old buffer or palette.
+        3: expected_value = 8'h5a; // Normal buffered $2000 data after that.
+        default: $fatal(1, "unexpected palette CPU $2007 read %0d", palette_cpu_reads);
+      endcase
+      if (observed_value !== expected_value)
+        $fatal(1, "palette CPU $2007 read=%0d expected=%h observed=%h",
+               palette_cpu_reads, expected_value, observed_value);
     end
     if (dut.u_nes.cpu_ce && dut.u_nes.mr_int && dut.u_nes.prg_allow &&
         !dut.u_nes.apu_cs && !dut.u_nes.ppu_cs) begin
@@ -233,8 +277,17 @@ module tb_retro_nes_render;
     if (dut.u_nes.cart_ce && dut.u_nes.prg_write && dut.u_nes.prg_conflict) begin
       read_ticket_t conflict_ticket;
       conflict_ticket = cpu_ticket;
+      if (conflict_ticket.address !== dut.cpu_addr)
+        $fatal(1, "conflict request address changed: snapshot=%h current=%h",
+               conflict_ticket.address, dut.cpu_addr);
       conflict_ticket.expected &= dut.u_nes.dbus;
-      consume(conflict_ticket, dut.u_nes.multi_mapper.prg_din, "conflict", 1);
+      if (conflict_test && (dut.u_nes.addr !== 16'h8100 ||
+          dut.u_nes.dbus !== 8'h03 || cpu_ticket.expected !== 8'h01 ||
+          conflict_ticket.expected !== 8'h01))
+        $fatal(1, "authored conflict must be CPU03 & ROM01 at $8100");
+      if (conflict_test)
+        consume(conflict_ticket, dut.u_nes.multi_mapper.map28.prg_din, "conflict", 1);
+      else consume(conflict_ticket, dut.u_nes.multi_mapper.prg_din, "conflict", 1);
     end
     if (dut.u_nes.ppu_ce) begin
       if (dut.u_nes.ppu.is_rendering && dut.u_nes.ppu.cycle[0]) begin
@@ -252,6 +305,25 @@ module tb_retro_nes_render;
         end
       end
       if (dut.u_nes.ppu.vram_read_delayed) begin
+        if (palette_test) begin
+          logic [20:0] expected_word;
+          logic [7:0] expected_refill;
+          // Palette reads still refill the external buffer from mirrored
+          // nametable RAM, not the immediate internal palette return. Horizontal
+          // mirroring maps $2F00 to CIRAM $700; $2000/$2001 map to $000/$001.
+          case (ppu_buffer_checks)
+            0: begin expected_word = 21'h0c0700; expected_refill = 8'h96; end
+            1: begin expected_word = 21'h0c0000; expected_refill = 8'h5a; end
+            2: begin expected_word = 21'h0c0001; expected_refill = 8'ha5; end
+            default: $fatal(1, "unexpected palette external buffer refill");
+          endcase
+          if (!ppu_ticket.valid || !ppu_ticket.initialized ||
+              physical_word(ppu_ticket.address) !== expected_word ||
+              ppu_ticket.expected !== expected_refill)
+            $fatal(1, "palette refill %0d NES=%h physical=%h expected_word=%h data=%h",
+                   ppu_buffer_checks, ppu_ticket.address, physical_word(ppu_ticket.address),
+                   expected_word, ppu_ticket.expected);
+        end
         if (dut.u_nes.has_chr_from_ppu_mapper) mapper_chr_skips++;
         else consume(ppu_ticket, dut.u_nes.ppu.vram_din, "ppu_buffer", 0);
       end
@@ -287,6 +359,63 @@ module tb_retro_nes_render;
     end
   endtask
 
+  task automatic make_conflict_rom;
+    logic [7:0] program_bytes [] = '{
+      8'h78, 8'hd8,
+      8'ha9, 8'h00, 8'h8d, 8'h00, 8'h20, 8'h8d, 8'h01, 8'h20,
+      8'ha9, 8'h03, 8'h8d, 8'h00, 8'h81, // CPU03 & ROM[$8100]=01 -> CHR bank1
+      8'had, 8'h02, 8'h20,
+      8'ha9, 8'h00, 8'h8d, 8'h06, 8'h20, 8'h8d, 8'h06, 8'h20,
+      8'had, 8'h07, 8'h20, 8'had, 8'h07, 8'h20, // prime then read CHR[$0000]
+      8'h85, 8'h00, 8'h4c, 8'h22, 8'h80 // JMP to itself
+    };
+    make_buffer_rom();
+    rom_len = 16 + 16384 + 4 * 8192;
+    rom[5] = 4;
+    rom[6] = 8'h30; // Mapper3, legacy iNES submapper0: bus conflicts enabled.
+    for (int i = 0; i < 16384 - 6; i++) rom[16 + i] = 8'hea;
+    foreach (program_bytes[i]) rom[16 + i] = program_bytes[i];
+    rom[16 + 256] = 8'h01;
+    for (int i = 0; i < 4 * 8192; i++)
+      case (i / 8192)
+        0: rom[16 + 16384 + i] = 8'h11;
+        1: rom[16 + 16384 + i] = 8'h5a;
+        2: rom[16 + 16384 + i] = 8'h22;
+        3: rom[16 + 16384 + i] = 8'ha5;
+        default: $fatal(1, "unexpected authored CHR bank");
+      endcase
+  endtask
+
+  task automatic make_palette_rom;
+    logic [7:0] program_bytes [] = '{
+      8'h78, 8'hd8,
+      8'ha9, 8'h00, 8'h8d, 8'h00, 8'h20, 8'h8d, 8'h01, 8'h20,
+      8'had, 8'h02, 8'h20,
+      8'ha9, 8'h2f, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h00, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h96, 8'h8d, 8'h07, 8'h20, // Under-palette refill sentinel $2F00
+      8'ha9, 8'h20, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h00, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h5a, 8'h8d, 8'h07, 8'h20,
+      8'ha9, 8'ha5, 8'h8d, 8'h07, 8'h20, // Define both subsequent normal refills
+      8'ha9, 8'h3f, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h00, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h2d, 8'h8d, 8'h07, 8'h20, // Palette[$3F00]=$2D
+      8'ha9, 8'h3f, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h00, 8'h8d, 8'h06, 8'h20,
+      8'had, 8'h07, 8'h20, 8'h29, 8'h3f, 8'h85, 8'h00, // Immediate palette, mask open bus
+      8'ha9, 8'h20, 8'h8d, 8'h06, 8'h20,
+      8'ha9, 8'h00, 8'h8d, 8'h06, 8'h20,
+      8'had, 8'h07, 8'h20, 8'h85, 8'h01, // Buffered under-palette sentinel $96
+      8'had, 8'h07, 8'h20, 8'h85, 8'h02, // Buffered normal VRAM $5A
+      8'h4c, 8'h00, 8'h80
+    };
+    make_buffer_rom();
+    for (int i = 0; i < 16384 - 6; i++) rom[16 + i] = 8'hea;
+    foreach (program_bytes[i]) rom[16 + i] = program_bytes[i];
+    rom[16 + $size(program_bytes) - 2] = 8'($size(program_bytes) - 3);
+  endtask
+
   initial begin
     string rom_file;
     int fd, colors, start_offset;
@@ -296,7 +425,17 @@ module tb_retro_nes_render;
     void'($value$plusargs("start_offset=%d", start_offset));
     if (start_offset < 0) $fatal(1, "start_offset must be nonnegative");
     void'($value$plusargs("buffer_test=%d", buffer_test));
-    if (buffer_test) begin
+    void'($value$plusargs("conflict_test=%d", conflict_test));
+    void'($value$plusargs("palette_test=%d", palette_test));
+    if (int'(buffer_test) + int'(conflict_test) + int'(palette_test) > 1)
+      $fatal(1, "select only one authored ROM mode");
+    if (conflict_test) begin
+      rom_file = "authored CNROM PRG conflict and CHR bank read";
+      make_conflict_rom();
+    end else if (palette_test) begin
+      rom_file = "authored immediate palette $2007 and underlying refill";
+      make_palette_rom();
+    end else if (buffer_test) begin
       rom_file = "authored buffered $2007 NROM-128";
       make_buffer_rom();
     end else begin
@@ -329,7 +468,31 @@ module tb_retro_nes_render;
     run_enable = 1;
     $display("ok COMMIT after 200 nclk drain edges");
     wait (!reset_nes);
-    if (buffer_test) begin
+    if (palette_test) begin
+      wait (palette_marker_writes == 3 && palette_cpu_reads == 3);
+      repeat (20) @(negedge nclk);
+      if (palette_cpu_reads != 3 || ppu_buffer_checks != 3 || palette_marker_writes != 3 ||
+          ppu_uninitialized != 0 || mapper_chr_skips != 0)
+        $fatal(1, "palette coverage CPU_reads=%0d refills=%0d markers=%0d uninit=%0d skips=%0d",
+               palette_cpu_reads, ppu_buffer_checks, palette_marker_writes,
+               ppu_uninitialized, mapper_chr_skips);
+      if (!model.mem.exists(21'h0e0000) || model.mem[21'h0e0000][7:0] !== 8'h2d ||
+          !model.mem.exists(21'h0e0001) || model.mem[21'h0e0001][7:0] !== 8'h96 ||
+          !model.mem.exists(21'h0e0002) || model.mem[21'h0e0002][7:0] !== 8'h5a)
+        $fatal(1, "palette WRAM markers not stored in physical SDRAM");
+      if (negative_consumer != "")
+        $fatal(1, "negative control did not reach consumer %s", negative_consumer);
+      if (model.errors != 0) $fatal(1, "SDRAM model errors: %0d", model.errors);
+      $display("palette consumers: CPU_reads=%0d ppu_buffer=%0d physical_markers=%0d",
+               palette_cpu_reads, ppu_buffer_checks, palette_marker_writes);
+      $display("palette PPU skips: uninitialized=%0d mapper_CHR=%0d",
+               ppu_uninitialized, mapper_chr_skips);
+      $display("SDRAM: model.errors=%0d min_tRFC=%0.3fns min_tRCD=%0.3fns",
+               model.errors, min_trfc / 1ns, min_trcd / 1ns);
+      $display("ok managed split-DQ NES palette immediate read, refill, physical markers 2d/96/5a");
+      $finish;
+    end
+    if (buffer_test || conflict_test) begin
       wait (buffer_marker_writes != 0 && buffer_cpu_reads >= 2);
       repeat (20) @(negedge nclk);
       if (buffer_cpu_reads != 2 || ppu_buffer_checks != 2 || buffer_marker_writes != 1)
@@ -340,6 +503,13 @@ module tb_retro_nes_render;
                ppu_uninitialized, mapper_chr_skips);
       if (!model.mem.exists(21'h0e0000) || model.mem[21'h0e0000][7:0] !== 8'h5a)
         $fatal(1, "buffer WRAM marker not stored in physical SDRAM");
+      if (conflict_test) begin
+        if (conflict_checks != 1 || conflict_bank_checks != 1)
+          $fatal(1, "conflict coverage inputs=%0d banks=%0d",
+                 conflict_checks, conflict_bank_checks);
+        $display("conflict consumers: mapper_input=%0d selected_bank=%0d physical_markers=%0d",
+                 conflict_checks, conflict_bank_checks, buffer_marker_writes);
+      end
       if (negative_consumer != "")
         $fatal(1, "negative control did not reach consumer %s", negative_consumer);
       if (model.errors != 0) $fatal(1, "SDRAM model errors: %0d", model.errors);
@@ -349,7 +519,9 @@ module tb_retro_nes_render;
                ppu_uninitialized, mapper_chr_skips);
       $display("SDRAM: model.errors=%0d min_tRFC=%0.3fns min_tRCD=%0.3fns",
                model.errors, min_trfc / 1ns, min_trcd / 1ns);
-      $display("ok managed split-DQ NES buffered $2007 CPU read and physical WRAM marker 5a");
+      if (conflict_test)
+        $display("ok managed split-DQ NES CNROM conflict 03&01=01, bank1 and physical marker 5a");
+      else $display("ok managed split-DQ NES buffered $2007 CPU read and physical WRAM marker 5a");
       $finish;
     end
     wait (frames == 4);

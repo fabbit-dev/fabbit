@@ -39,17 +39,24 @@ if [[ ${1:-} == --regression ]]; then
     grep -Fq "$consumer deadline/value:" "$log"
     echo "ok negative control $consumer detected at consumer boundary"
   done
-  "$build/Vtb_retro_nes_render" "$@" +buffer_test=1 > "$build/buffer.log" 2>&1
-  tail -n 7 "$build/buffer.log"
-  log="$build/negative_ppu_buffer.log"
-  if "$build/Vtb_retro_nes_render" "$@" +buffer_test=1 \
-      +negative_consumer=ppu_buffer > "$log" 2>&1; then
-    echo "FAIL: negative control ppu_buffer unexpectedly passed" >&2
-    exit 1
-  fi
-  grep -Fq "negative control: corrupting observed ppu_buffer return only" "$log"
-  grep -Fq "ppu_buffer deadline/value:" "$log"
-  echo "ok negative control ppu_buffer detected at consumer boundary"
+  for mode in buffer conflict palette; do
+    for offset in 0 1 2; do
+      "$build/Vtb_retro_nes_render" "$@" "+${mode}_test=1" "+start_offset=$offset" \
+        > "$build/${mode}_offset${offset}.log" 2>&1
+      tail -n 7 "$build/${mode}_offset${offset}.log"
+    done
+    consumer=ppu_buffer
+    if [[ $mode == conflict ]]; then consumer=conflict; fi
+    log="$build/negative_${mode}_${consumer}.log"
+    if "$build/Vtb_retro_nes_render" "$@" "+${mode}_test=1" \
+        "+negative_consumer=$consumer" > "$log" 2>&1; then
+      echo "FAIL: negative control $mode/$consumer unexpectedly passed" >&2
+      exit 1
+    fi
+    grep -Fq "negative control: corrupting observed $consumer return only" "$log"
+    grep -Fq "$consumer deadline/value:" "$log"
+    echo "ok negative control $mode/$consumer detected at consumer boundary"
+  done
 else
   "$build/Vtb_retro_nes_render" "$@" 2>&1 | tee "$build/run.log"
 fi
