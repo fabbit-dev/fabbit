@@ -5,7 +5,8 @@
 // Fabbit 2026-10-25: module namespaced, physical DQ split into input/output/OE;
 // main-port CAS moved slot1->2 and capture slot4->5: ACT->CAS two fclk edges
 // at64.286MHz covers conditional ESMT(2S)-7 tRCD21ns. RV port unused by wrapper;
-// slot2 refresh remains only when main and RV have no pending operation.
+// Refresh uses idle slot1: five edges before the next main-port ACT cover
+// tRFC63ns at64.286MHz; slot2 would leave only62.224ns. Both ports must be idle.
 // Byte replication and original notices retained. Not a fitted-part/board signoff.
 // Double-channel CL2 SDRAM controller for NES
 // nand2mario 2024.3
@@ -285,10 +286,16 @@ always @(posedge clk) begin
                 ds[1] <= next_ds[1];
                 if (next_port[1] != PORT_NONE) begin 
                     cmd <= CMD_BankActivate; 
-                end else if (!we_latch[0] && !oe_latch[0] && !we_latch[1] && !oe_latch[1] && need_refresh) begin
-                    refresh_cnt <= 0;
-                    cmd <= CMD_AutoRefresh;
                 end
+            end
+
+            // The preceding main-port slot0 must be idle. The previous frame's
+            // CAS in slot2 is five edges behind us, covering auto-precharge too.
+            if (cycle[1] && next_port[1] == PORT_NONE &&
+                !we_latch[0] && !oe_latch[0] &&
+                !we_latch[1] && !oe_latch[1] && need_refresh) begin
+                refresh_cnt <= 0;
+                cmd <= CMD_AutoRefresh;
             end
 
             // CAS

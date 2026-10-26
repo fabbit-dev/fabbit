@@ -107,6 +107,16 @@ module tb_retro_top;
   endtask
   logic inject_interlace=0;
   int nes_writes=0;
+  int md_writes=0;
+  int snes_writes=0;
+  always @(posedge sdram_clk)
+    if(dut.owner==3 && {sdram_ras_n,sdram_cas_n,sdram_we_n}==3'b100 &&
+       {sdram_ba,model.row[sdram_ba],sdram_a[7:0]}==21'h100000 &&
+       sdram_dq==32'ha5a5a5a5) snes_writes++;
+  always @(posedge sdram_clk)
+    if(dut.owner==2 && {sdram_ras_n,sdram_cas_n,sdram_we_n}==3'b100 &&
+       {sdram_ba,model.row[sdram_ba],sdram_a[7:0]}==21'h100000 &&
+       sdram_dq[15:0]==16'h5aa5) md_writes++;
   always @(posedge sdram_clk)
     if(dut.owner==1 && {sdram_ras_n,sdram_cas_n,sdram_we_n}==3'b100 &&
        {sdram_ba,model.row[sdram_ba],sdram_a[7:0]}==21'h0e0000 &&
@@ -208,6 +218,7 @@ module tb_retro_top;
   endtask
   initial begin
     logic[31:0] value;
+    int previous_writes;
     int nes_only=0;
     if (!$value$plusargs("nes_only=%d",nes_only)) nes_only=0;
     #10us;
@@ -225,6 +236,17 @@ module tb_retro_top;
         dut.nes.u_nes.cpu.PC,dut.nes.u_nes.cpu.ABC,dut.nes.cpu_addr,dut.nes.cpu_din,
         model.mem[21'h0e0000],nes_writes);
       assert(model.mem[21'h0e0000][7:0]==8'h5a) else $fatal(1,"NES marker");
+      previous_writes=nes_writes;
+      command(32'h52540008);wait_status(32'h26,2);#300us;
+      assert(nes_writes>previous_writes) else $fatal(1,"NES RESET did not rerun CPU");
+      command(32'h52540004);wait_status(32'h3b,0);
+      previous_writes=nes_writes;
+      command(32'h52540001);wait_status(32'h2c,8);stream_nes_rom();
+      wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);#300us;
+      assert(nes_writes>previous_writes) else $fatal(1,"NES reload did not rerun CPU");
+      command(32'h52540004);wait_status(32'h3b,0);
+      assert(model.errors==0) else $fatal(1,"NES physical model errors %0d",model.errors);
+      $display("ok strict NES QSPI load/COMMIT/RESET/ABORT/reload fresh CPU writes, errors=0");
       $finish;
     end
     for(int sys=1;sys<=3;sys++) begin
@@ -245,6 +267,10 @@ module tb_retro_top;
     command(32'h52540001);wait_status(32'h2c,8);stream_md_rom();
     wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);
     #150us;
+    assert(md_writes>0) else $fatal(1,"MD initial CPU marker write absent");
+    previous_writes=md_writes;
+    command(32'h52540008);wait_status(32'h26,2);#150us;
+    assert(md_writes>previous_writes) else $fatal(1,"MD RESET did not rerun CPU");
     command(32'h52540004);wait_status(32'h3b,0);
     assert(model.mem[21'h100000][15:0]==16'h5aa5)
         else $fatal(1,"real MD CPU through SDRAM marker absent %h",model.mem[21'h100000]);
@@ -259,9 +285,12 @@ module tb_retro_top;
     wait_status(32'h26,2);
     #500us;
     assert(dut.snes_active) else $fatal(1,"SNES not actually active");
+    assert(snes_writes>0) else $fatal(1,"SNES initial CPU marker write absent");
+    previous_writes=snes_writes;
     command(32'h52540008);wait_status(32'h26,2);
     #200us;
     assert(dut.snes_active) else $fatal(1,"running CONSOLE_RESET failed to resume");
+    assert(snes_writes>previous_writes) else $fatal(1,"SNES RESET did not rerun CPU");
     command(32'h52540004);wait_status(32'h3b,0);
     assert(model.mem[21'h100000]==32'ha5a5a5a5)
         else $fatal(1,"real SNES CPU through SDRAM marker absent");
@@ -288,6 +317,14 @@ module tb_retro_top;
     command(32'h52540008);
     wait_status(32'h24,4);
     command(32'h52540004);wait_status(32'h3b,0);
+    // Return to MD after both other systems: retained RAM cannot fake success.
+    previous_writes=md_writes;
+    write_csr(5,2);write_csr(6,1024);write_csr(8,1024);
+    command(32'h52540001);wait_status(32'h2c,8);stream_md_rom();
+    wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);#150us;
+    assert(md_writes>previous_writes) else $fatal(1,"MD hot return did not rerun CPU");
+    command(32'h52540004);wait_status(32'h3b,0);
+    $display("ok MD RESET and hot return after SNES/NES produced fresh physical CPU writes");
     assert(model.errors==0) else $fatal(1,"physical model errors %d",model.errors);
     $display("ok real retro_top QSPI FRET BEGIN READY stream ABORT physical NES/MD handover");
     $finish;

@@ -99,7 +99,9 @@ module nes_system #(
     end else if (loading && got_byte && (loader_done || loader_fail)) begin
       loading      <= 1'b0;
       reset_nes    <= loader_fail || Managed;
-      clkref_sync  <= 1'b1;  // ядро стартует в начале окна clkref, как в nestang_top
+      // Managed mode starts at COMMIT, after the loader's final SDRAM command
+      // has drained. Rephasing here can skip CAS after an already-issued ACT.
+      clkref_sync  <= !Managed;  // legacy starts immediately, as in nestang_top
       mapper_flags <= loader_flags;
     end else if (reset_go) begin
       reset_nes <= 1'b1;
