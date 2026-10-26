@@ -105,6 +105,65 @@ module tb_retro_top;
   task automatic command(input logic[31:0] value);
     wait_status(32'h20,0);write_csr(1,value);wait_status(32'h20,0);
   endtask
+  task automatic send_pad(input logic [31:0] value, input int bytes_count=4);
+    header(8'h33,0);
+    for(int i=0;i<bytes_count;i++) begin
+      nib(value[31-8*i-:4]);nib(value[27-8*i-:4]);
+    end
+    finish_qspi();#2us;
+  endtask
+  task automatic check_pads;
+    logic [31:0] buttons;
+    logic [11:0] first,second;
+    logic [7:0] nes_buttons;
+    for(int bit_index=0;bit_index<32;bit_index++) begin
+      buttons=32'd1<<bit_index;
+      send_pad(buttons);
+      // Independent per-button expectation: generic order is directions,
+      // A/B/X/Y/L/R, Select/Start; NES additionally filters turbo buttons.
+      first=0;second=0;nes_buttons=0;
+      if(bit_index<10) first[bit_index]=1;
+      if(bit_index==14) first[10]=1;
+      if(bit_index==15) first[11]=1;
+      if(bit_index>=16 && bit_index<26) second[bit_index-16]=1;
+      if(bit_index==30) second[10]=1;
+      if(bit_index==31) second[11]=1;
+      case(bit_index)
+        0:nes_buttons=8'h10;1:nes_buttons=8'h20;
+        2:nes_buttons=8'h40;3:nes_buttons=8'h80;
+        4:nes_buttons=8'h01;5:nes_buttons=8'h02;
+        6:nes_buttons=dut.n_pad.turbo ? 8'h01 : 0;
+        7:nes_buttons=dut.n_pad.turbo ? 8'h02 : 0;
+        14:nes_buttons=8'h04;15:nes_buttons=8'h08;
+        default: ;
+      endcase
+      assert(dut.md.pad1==first && dut.md.pad2==second &&
+             dut.snes.pad1==first && dut.snes.pad2==second && dut.njoy==nes_buttons)
+        else $fatal(1,"QSPI pad bit %0d mapping",bit_index);
+    end
+    send_pad(32'h0000000f);
+    assert(dut.njoy==0) else $fatal(1,"NES opposing directions not suppressed");
+    send_pad(32'hffffffff,3);
+    assert(dut.pad_bus==32'h0000000f) else $fatal(1,"partial PAD changed buttons");
+    send_pad(0);
+    assert(dut.md.pad1==0 && dut.md.pad2==0 && dut.snes.pad1==0 &&
+           dut.snes.pad2==0 && dut.njoy==0) else $fatal(1,"PAD release lost");
+    $display("ok QSPI PAD all32 bits, both MD/SNES ports, NES filter, partial frame, release");
+  endtask
+  task automatic check_audio(input int system_id);
+    int samples,packets;
+    samples=0;packets=0;
+    repeat(6000) begin
+      @(negedge dut.clk_pix);
+      if(dut.video.transmitter.sample_ce && dut.video.audio_pixel_valid) samples++;
+      if(dut.video.transmitter.take_audio) packets++;
+      assert(!dut.video.transmitter.overflow) else $fatal(1,"HDMI audio overflow");
+    end
+    assert(dut.selected_bus==2'(system_id) && dut.audio_valid_bus && samples>=8 && packets>0)
+      else $fatal(1,"system %0d audio path: samples=%0d packets=%0d",system_id,samples,packets);
+    $display("ok system %0d real core audio CDC -> HDMI sample packets (%0d/%0d)",
+             system_id,samples,packets);
+  endtask
   logic inject_interlace=0;
   int nes_writes=0;
   int md_writes=0;
@@ -223,6 +282,7 @@ module tb_retro_top;
     if (!$value$plusargs("nes_only=%d",nes_only)) nes_only=0;
     #10us;
     read_csr(0,value);assert(value==32'h46524554) else $fatal(1,"FRET %h",value);
+    check_pads();
     if(nes_only!=0) begin
       command(32'h52540004);
       write_csr(5,1);write_csr(6,16400);write_csr(8,16384);
@@ -236,6 +296,7 @@ module tb_retro_top;
         dut.nes.u_nes.cpu.PC,dut.nes.u_nes.cpu.ABC,dut.nes.cpu_addr,dut.nes.cpu_din,
         model.mem[21'h0e0000],nes_writes);
       assert(model.mem[21'h0e0000][7:0]==8'h5a) else $fatal(1,"NES marker");
+      check_audio(1);
       previous_writes=nes_writes;
       command(32'h52540008);wait_status(32'h26,2);#300us;
       assert(nes_writes>previous_writes) else $fatal(1,"NES RESET did not rerun CPU");
@@ -268,6 +329,7 @@ module tb_retro_top;
     wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);
     #150us;
     assert(md_writes>0) else $fatal(1,"MD initial CPU marker write absent");
+    check_audio(2);
     previous_writes=md_writes;
     command(32'h52540008);wait_status(32'h26,2);#150us;
     assert(md_writes>previous_writes) else $fatal(1,"MD RESET did not rerun CPU");
@@ -285,6 +347,7 @@ module tb_retro_top;
     wait_status(32'h26,2);
     #500us;
     assert(dut.snes_active) else $fatal(1,"SNES not actually active");
+    check_audio(3);
     assert(snes_writes>0) else $fatal(1,"SNES initial CPU marker write absent");
     previous_writes=snes_writes;
     command(32'h52540008);wait_status(32'h26,2);
@@ -309,6 +372,7 @@ module tb_retro_top;
     wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);
     #150us;
     assert(!dut.nes.machine_reset) else $fatal(1,"NES still reset after COMMIT");
+    check_audio(1);
     command(32'h52540004);wait_status(32'h3b,0);
     assert(model.mem[21'h0e0000][7:0]==8'h5a)
         else $fatal(1,"real NES CPU WRAM marker absent %h writes=%0d PC=%h",

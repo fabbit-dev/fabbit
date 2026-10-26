@@ -71,7 +71,6 @@ module nes_system #(
     clkref_sync <= 1'b0;
     managed_run_old<=run_enable;
     if (Managed && run_enable && !managed_run_old) begin
-      clkref_sync<=1'b1;
       reset_nes<=1'b0;
     end
     if (pace != 0) pace <= pace - 1'b1;
@@ -99,8 +98,8 @@ module nes_system #(
     end else if (loading && got_byte && (loader_done || loader_fail)) begin
       loading      <= 1'b0;
       reset_nes    <= loader_fail || Managed;
-      // Managed mode starts at COMMIT, after the loader's final SDRAM command
-      // has drained. Rephasing here can skip CAS after an already-issued ACT.
+      // Managed mode retains the memory schedule across load and COMMIT.
+      // Rephasing can skip CAS after an already-issued ACT.
       clkref_sync  <= !Managed;  // legacy starts immediately, as in nestang_top
       mapper_flags <= loader_flags;
     end else if (reset_go) begin
