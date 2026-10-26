@@ -190,7 +190,41 @@ module tb_retro_top;
     command(32'h52540001);wait_status(32'h2c,8);
     header(8'h32,1);nib(4'ha);nib(4'h5);finish_qspi();
     expect_load_error(3);
+    // Length is a hard boundary even when extra bytes share the same frame.
+    write_csr(5,2);write_csr(6,4);write_csr(8,4);
+    command(32'h52540001);wait_status(32'h2c,8);
+    header(8'h32,0);repeat(5) begin nib(4'ha);nib(4'h5);end finish_qspi();
+    expect_load_error(3);
+    // MD words cannot represent an odd canonical byte count.
+    write_csr(5,2);write_csr(6,3);write_csr(8,3);
+    command(32'h52540001);expect_load_error(2);
     $display("ok early COMMIT, invalid iNES, wrong STREAM channel: errors and ABORT recovery");
+    $display("ok excess ROM byte and odd MD length rejected, ABORT recovery");
+  endtask
+  task automatic check_config_snapshot;
+    logic [31:0] active_system;
+    write_csr(5,2);write_csr(6,1024);write_csr(8,1024);
+    command(32'h52540001);wait_status(32'h2c,8);
+    // Shadows may prepare the next cartridge, never mutate the current one.
+    write_csr(5,1);write_csr(6,16400);write_csr(7,17);
+    write_csr(8,16384);write_csr(9,2048);
+    read_csr(5,active_system);
+    assert(active_system==2 && dut.selected==2 && dut.length==1024 &&
+           dut.rom_size==1024 && dut.map_config==0 && dut.save_size==0)
+      else $fatal(1,"shadow writes changed active cartridge configuration");
+    stream_md_rom();wait_status(32'h6c,32'h40);
+    command(32'h52540002);wait_status(32'h26,2);#150us;
+    assert(md_writes>0) else $fatal(1,"snapshot MD cartridge did not execute");
+    command(32'h52540004);wait_status(32'h3f,0);
+    // The next BEGIN must apply those shadows as one complete snapshot.
+    command(32'h52540001);wait_status(32'h2c,8);
+    read_csr(5,active_system);
+    assert(active_system==1 && dut.length==16400 && dut.rom_size==16384 &&
+           dut.map_config==17 && dut.save_size==2048)
+      else $fatal(1,"next BEGIN lost shadow configuration");
+    command(32'h52540004);wait_status(32'h3f,0);
+    write_csr(7,0);write_csr(9,0);
+    $display("ok BEGIN snapshots configuration; shadow edits deferred to next cartridge");
   endtask
   logic inject_interlace=0;
   int nes_writes=0;
@@ -312,6 +346,7 @@ module tb_retro_top;
     read_csr(0,value);assert(value==32'h46524554) else $fatal(1,"FRET %h",value);
     check_pads();
     check_load_errors();
+    check_config_snapshot();
     if(nes_only!=0) begin
       command(32'h52540004);
       write_csr(5,1);write_csr(6,16400);write_csr(8,16384);

@@ -143,6 +143,9 @@ always @(posedge clk) clkref_r <= clkref;
 
 reg [8:0]  refresh_cnt;
 reg        need_refresh = 1'b0;
+// clkref realignment can shorten the nominal slot1->slot0 interval. Enforce
+// five full fclk edges after REF independently of that rotating schedule.
+reg [2:0] refresh_recovery;
 
 always @(posedge clk) begin
 	if (refresh_cnt == 0)
@@ -204,7 +207,9 @@ always @(posedge clk) begin
         SDRAM_DQM <= {DQM_SIZE{1'b1}};
         normal <= 0;
         setup <= 0;
+        refresh_recovery <= 0;
     end else begin
+        if (refresh_recovery != 0) refresh_recovery <= refresh_recovery - 1'b1;
         // defaults
         dq_oen <= 1'b1;
         SDRAM_DQM <= {DQM_SIZE{1'b1}};
@@ -256,7 +261,12 @@ always @(posedge clk) begin
             
             // RAS
             // CPU, PPU
-            if (cycle[0]) begin
+            if (cycle[0] && refresh_recovery != 0) begin
+                port[0] <= PORT_NONE;
+                we_latch[0] <= 0;
+                oe_latch[0] <= 0;
+            end
+            if (cycle[0] && refresh_recovery == 0) begin
     			port[0] <= next_port[0];
                 oeA_d <= oeA_d & oeA; weA_d <= weA_d & weA;
                 oeB_d <= oeB_d & oeB; weB_d <= weB_d & weB;
@@ -276,7 +286,12 @@ always @(posedge clk) begin
             end
 
             // bank 1 - RV
-            if (cycle[2]) begin
+            if (cycle[2] && refresh_recovery != 0) begin
+                port[1] <= PORT_NONE;
+                we_latch[1] <= 0;
+                oe_latch[1] <= 0;
+            end
+            if (cycle[2] && refresh_recovery == 0) begin
                 port[1] <= next_port[1];
                 { we_latch[1], oe_latch[1] } <= { next_we[1], next_oe[1] };
                 addr_latch[1] <= next_addr[1];
@@ -296,6 +311,7 @@ always @(posedge clk) begin
                 !we_latch[1] && !oe_latch[1] && need_refresh) begin
                 refresh_cnt <= 0;
                 cmd <= CMD_AutoRefresh;
+                refresh_recovery <= 3'd4;
             end
 
             // CAS
