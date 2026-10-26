@@ -175,6 +175,20 @@ module tb_retro_top;
     read_csr(11,actual_error);
     assert(actual_error==0) else $fatal(1,"ABORT did not clear load error");
   endtask
+  task automatic check_locked_assets(input int system_id);
+    logic [31:0] before_assets,after_assets,error_code,state_bits;
+    read_csr(10,before_assets);
+    command(32'h52540100);
+    read_csr(11,error_code);read_csr(2,state_bits);read_csr(10,after_assets);
+    assert(error_code==6 && (state_bits & 32'h26)==6 &&
+           after_assets==before_assets && dut.selected==2'(system_id) &&
+           !dut.controllers_reset)
+      else $fatal(1,"locked assets interrupted system %0d or changed coverage",system_id);
+    #20us;
+    assert(dut.running && dut.audio_valid_bus)
+      else $fatal(1,"locked asset rejection stopped running audio");
+    $display("ok system %0d rejects asset mutation without stopping core/audio",system_id);
+  endtask
   task automatic check_load_errors;
     // No bytes accepted: COMMIT must fail, never boot an old cartridge.
     write_csr(5,2);write_csr(6,1024);write_csr(8,1024);
@@ -397,6 +411,7 @@ module tb_retro_top;
     previous_writes=md_writes;
     command(32'h52540008);wait_status(32'h26,2);#150us;
     assert(md_writes>previous_writes) else $fatal(1,"MD RESET did not rerun CPU");
+    check_locked_assets(2);
     command(32'h52540004);wait_status(32'h3b,0);
     assert(model.mem[21'h100000][15:0]==16'h5aa5)
         else $fatal(1,"real MD CPU through SDRAM marker absent %h",model.mem[21'h100000]);
@@ -418,6 +433,7 @@ module tb_retro_top;
     #200us;
     assert(dut.snes_active) else $fatal(1,"running CONSOLE_RESET failed to resume");
     assert(snes_writes>previous_writes) else $fatal(1,"SNES RESET did not rerun CPU");
+    check_locked_assets(3);
     command(32'h52540004);wait_status(32'h3b,0);
     assert(model.mem[21'h100000]==32'ha5a5a5a5)
         else $fatal(1,"real SNES CPU through SDRAM marker absent");
