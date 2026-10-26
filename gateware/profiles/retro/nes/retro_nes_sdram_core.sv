@@ -148,7 +148,7 @@ reg        need_refresh = 1'b0;
 reg [2:0] refresh_recovery;
 
 always @(posedge clk) begin
-	if (refresh_cnt == 0)
+	if (!resetn || refresh_cnt == 0)
 		need_refresh <= 0;
 	else if (refresh_cnt == RFRSH_CYCLES)
 		need_refresh <= 1;
@@ -202,6 +202,8 @@ end
 //
 always @(posedge clk) begin
     if (~resetn) begin
+        cmd <= CMD_NOP;
+        refresh_cnt <= 0;
         busy <= 1'b1;
         dq_oen <= 1;
         SDRAM_DQM <= {DQM_SIZE{1'b1}};

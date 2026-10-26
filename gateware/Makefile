@@ -113,6 +113,12 @@ sim_retro_top: | build
 	  build/tb_retro_top/
 	cd build/tb_retro_top && ./Vtb_retro_top $(RETRO_TOP_ARGS)
 
+sim_retro_nes_reset: | build
+	iverilog -g2012 -s tb_retro_nes_reset -o build/tb_retro_nes_reset.vvp \
+	  profiles/nes/nes_config_pkg.sv profiles/retro/nes/retro_nes_sdram_core.sv \
+	  sim/tb_retro_nes_reset.sv
+	vvp build/tb_retro_nes_reset.vvp
+
 sim_retro_video: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_video \
 	  -Mdir build/tb_retro_video common/video/video_pkg.sv profiles/nes/nes_palette_pkg.sv \
