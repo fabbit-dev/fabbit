@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Real product top exercised through QSPI CSR/stream. Primitive clock models
-// are ideal; no board timing claim. No force/internal writes, only observation.
+// are ideal; no board timing claim. Normal QSPI tests only observe internals.
+// +audio_only uses explicit console-boundary fixtures, not replacement CDC logic.
 module tb_retro_top;
   logic clk=0;always #20 clk=~clk;
   wire led,uart_tx,esp_irq;
@@ -164,6 +165,125 @@ module tb_retro_top;
     $display("ok system %0d real core audio CDC -> HDMI sample packets (%0d/%0d)",
              system_id,samples,packets);
   endtask
+  // Focused source-boundary fixture: retain the actual top clocks, audio CDC,
+  // owner qualification and HDMI bridge, but independently vary native samples
+  // and suppress framebuffer writes for a complete NTSC vertical blank.
+  logic audio_fixture=0,audio_fixture_running=0,audio_fixture_nwe=0;
+  logic audio_fixture_nrun=0,audio_fixture_nreset=1;
+  logic [8:0] audio_fixture_line=0;
+  logic [15:0] audio_fixture_sample=0;
+  int audio_fixture_cycles=0;
+  always @(negedge dut.nclk) if(audio_fixture) begin
+    audio_fixture_cycles++;
+    audio_fixture_sample=16'(audio_fixture_cycles);
+    audio_fixture_nwe=audio_fixture_line<240 && audio_fixture_cycles%4==0;
+  end
+  task automatic check_nes_audio_blank;
+    int blank_updates,reset_launches;
+    logic [15:0] sample_age,pixel_sample_age;
+    force dut.naudio=audio_fixture_sample;
+    force dut.nwe=audio_fixture_nwe;
+    force dut.nline=audio_fixture_line;
+    force dut.nes_run_n=audio_fixture_nrun;
+    force dut.rst_nes=audio_fixture_nreset;
+    force dut.nes_rst_control=audio_fixture_nreset;
+    force dut.selected_bus=2'd1;
+    force dut.running_bus=audio_fixture_running;
+    audio_fixture=1;audio_fixture_nreset=0;
+    audio_fixture_nrun=1;audio_fixture_running=1;
+    #4us;
+    @(negedge dut.nclk);audio_fixture_line=240;
+    blank_updates=0;
+    // Sample age is measured against an independent native ramp, not against
+    // the implementation's divider. Bound allows 16 native cycles + CDC latency.
+    repeat(150000) begin
+      @(negedge dut.bus_clk);
+      sample_age=audio_fixture_sample-(dut.audio_n[15:0]^16'h8000);
+      assert(sample_age<=20 && dut.audio_n[31:16]==dut.audio_n[15:0])
+          else $fatal(1,"NES audio stale/torn THROUGH vblank: age=%0d sample=%h bus=%h",
+                      sample_age,audio_fixture_sample,dut.audio_n);
+      assert(!dut.nwe && dut.nline>=240) else $fatal(1,"NES vblank fixture wrote video");
+      if(dut.video.audio_pixel_valid) begin
+        pixel_sample_age=audio_fixture_sample-(16'(dut.video.audio_pixel_l)^16'h8000);
+        assert(pixel_sample_age<=520 && dut.video.audio_pixel_l==dut.video.audio_pixel_r)
+            else $fatal(1,"NES HDMI bridge stale/torn in vblank: age=%0d",pixel_sample_age);
+      end
+      if(dut.audio_strobes[0]) blank_updates++;
+    end
+    assert(blank_updates>1900 && dut.audio_valid_bus && dut.video.audio_pixel_valid)
+        else $fatal(1,"NES vblank audio updates=%0d valid=%b/%b",blank_updates,
+                    dut.audio_valid_bus,dut.video.audio_pixel_valid);
+    @(negedge dut.nclk);audio_fixture_line=0;
+    #4us;
+    audio_fixture_nreset=1;
+    reset_launches=nes_audio_launches;
+    repeat(40) @(negedge dut.nclk);
+    assert(nes_audio_launches==reset_launches) else $fatal(1,"reset NES launched audio");
+    audio_fixture_nreset=0;
+    #2us;
+    audio_fixture_nrun=0;audio_fixture_running=0;
+    #2us;
+    assert(!dut.nes_audio.stb) else $fatal(1,"stopped NES launched audio");
+    audio_fixture_nreset=1;
+    release dut.naudio;release dut.nwe;release dut.nline;
+    release dut.nes_run_n;release dut.rst_nes;release dut.nes_rst_control;
+    release dut.selected_bus;release dut.running_bus;
+    audio_fixture=0;
+    $display("ok NES audio freshness THROUGH 1.5ms vblank, mono coherence, %0d captures",
+             blank_updates);
+  endtask
+  logic audio_fixture_md_run=0;
+  task automatic check_md_audio_stop;
+    int held_cycles;
+    force dut.md_run=audio_fixture_md_run;
+    force dut.rst_md=1'b0;
+    force dut.controllers_reset=1'b0;
+    force dut.selected=2'd2;
+    // Let the real VDP generate CE_PIX. No pixel strobe or clock is forced.
+    repeat(40) @(negedge dut.md_clk);
+    audio_fixture_md_run=1;
+    repeat(128) @(negedge dut.md_clk);
+    assert(md_audio_launches>=8) else $fatal(1,"MD running audio spacing was not exercised");
+    // Request stop just before the VDP generates its next CE; the machine's
+    // following Drain gate must leave that registered CE high on a stopped core.
+    do @(negedge dut.md_clk);
+    while(dut.md.core.machine.vdp.HV_PIXDIV!=4 || dut.mpixel);
+    audio_fixture_md_run=0;
+    repeat(2) @(negedge dut.md_clk);
+    #1ps;
+    assert(dut.mpixel && dut.md.freeze) else $fatal(1,"MD stop missed high CE_PIX");
+    held_cycles=0;
+    repeat(8) begin
+      @(posedge dut.md_clk);
+      assert(!dut.md.core_clk && dut.mpixel) else $fatal(1,"MD core did not hold CE high");
+      held_cycles++;
+      assert(!dut.md_audio.stb) else $fatal(1,"stopped MD repeated audio launch at held CE_PIX");
+    end
+    release dut.md_run;release dut.rst_md;
+    release dut.controllers_reset;release dut.selected;
+    $display("ok MD real clock gate held CE_PIX high for %0d free edges; no audio launch",
+             held_cycles);
+  endtask
+  // Observe launches at actual source edges. CDC bundle updates must be at
+  // least four 100-MHz destination periods apart, including stop/restart.
+  realtime last_nes_audio_launch=0,last_md_audio_launch=0;
+  int nes_audio_launches=0,md_audio_launches=0;
+  always @(posedge dut.nclk) if(dut.nes_audio.stb) begin
+    if(last_nes_audio_launch!=0)
+      assert($realtime-last_nes_audio_launch>=40ns)
+          else $fatal(1,"NES audio CDC source spacing <4 bus cycles");
+    last_nes_audio_launch=$realtime;nes_audio_launches++;
+    assert(dut.nes_run_n && !dut.rst_nes && !dut.nes_rst_control)
+        else $fatal(1,"NES audio launch while stopped/reset");
+  end
+  always @(posedge dut.md_clk) if(dut.md_audio.stb) begin
+    if(last_md_audio_launch!=0)
+      assert($realtime-last_md_audio_launch>=40ns)
+          else $fatal(1,"MD audio CDC source spacing <4 bus cycles");
+    last_md_audio_launch=$realtime;md_audio_launches++;
+    assert(dut.md_run && !dut.rst_md && !dut.controllers_reset)
+        else $fatal(1,"MD audio launch while stopped/reset");
+  end
   task automatic expect_load_error(input logic [7:0] expected_error);
     logic [31:0] actual_error;
     wait_status(32'h27,4);wait_status(32'h30,0);
@@ -355,8 +475,15 @@ module tb_retro_top;
     logic[31:0] value;
     int previous_writes;
     int nes_only=0;
+    int audio_only=0;
     if (!$value$plusargs("nes_only=%d",nes_only)) nes_only=0;
+    if (!$value$plusargs("audio_only=%d",audio_only)) audio_only=0;
     #10us;
+    if(audio_only!=0) begin
+      if(audio_only!=2) check_nes_audio_blank();
+      if(audio_only!=1) check_md_audio_stop();
+      $finish;
+    end
     read_csr(0,value);assert(value==32'h46524554) else $fatal(1,"FRET %h",value);
     check_pads();
     check_load_errors();

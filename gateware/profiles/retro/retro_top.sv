@@ -30,19 +30,25 @@ module retro_top #(
       .clk_25m(clk),.esp_sck,.esp_cs_n,.esp_d,.esp_irq,.clk_bus(bus_clk),.rst_bus(bus_rst),
       .csr_we,.csr_waddr,.csr_wdata,.csr_raddr,.csr_rdata,.st_valid,.st_chan,.st_data,
       .pad(pad_bus),.pad_stb);
+  // Three MMCM references cannot all use the clock pin's dedicated local path.
+  // Distribute their reference globally; the bus PLL keeps its original input.
+  wire clk_25m_reference;
+  BUFG reference_buffer (.I(clk),.O(clk_25m_reference));
   wire md_clk,z80_clk,snes_source,md_sd_clock,md_locked;
-  retro_clocks u_retroclk (.clk_25m(clk),.reset(bus_rst),.clk_md(md_clk),.clk_z80(z80_clk),
+  retro_clocks #(.Compensation("BUF_IN")) u_retroclk (
+      .clk_25m(clk_25m_reference),.reset(bus_rst),.clk_md(md_clk),.clk_z80(z80_clk),
       .clk_snes(snes_source),.locked(md_locked),.clk_memory(md_sd_clock));
   wire nclk,nfclk,nes_sd_clock,nlocked;
-  nes_clocks #(.SdramPhase(NesSdramPhase)) u_nesclk (
-      .clk_25m(clk),.psclk(bus_clk),.psen(1'b0),.psincdec(1'b0),
+  nes_clocks #(.SdramPhase(NesSdramPhase),.Compensation("BUF_IN")) u_nesclk (
+      .clk_25m(clk_25m_reference),.psclk(bus_clk),.psen(1'b0),.psincdec(1'b0),
       .psdone(),.clk(nclk),.fclk(nfclk),.sdram_clk(nes_sd_clock),.locked(nlocked));
   wire service,snes_master,snes_sd_clock,slocked,snes_master_ce;
   retro_snes_clocks u_snesclk (.clk_source(snes_source),.reset(!md_locked),
       .service,.master(snes_master),.memory_clock(snes_sd_clock),.locked(slocked),
       .master_ce(snes_master_ce));
   wire clk_pix,clk_5x,rst_pix,vlocked;
-  video_clocks u_vclk (.clk_25m(clk),.clk_pix,.clk_5x,.locked(vlocked),.rst_pix);
+  video_clocks #(.BufferedReference(1'b1)) u_vclk (
+      .clk_25m(clk_25m_reference),.clk_pix,.clk_5x,.locked(vlocked),.rst_pix);
   wire rst_md,rst_nes,rst_service;
   reset_sync reset_md (.clk(md_clk),.rst_in(bus_rst || !md_locked),.rst_out(rst_md));
   reset_sync reset_nes (.clk(nclk),.rst_in(bus_rst || !nlocked),.rst_out(rst_nes));
@@ -348,9 +354,17 @@ module retro_top #(
     else qualified_audio<=qualified_audio | audio_strobes;
   wire audio_valid_bus=running_bus && selected_bus!=0 && qualified_audio[selected_bus-1'b1];
   wire [15:0] nes_signed_audio={~naudio[15],naudio[14:0]};
-  cdc_word #(.Width(32)) nes_audio (.sclk(nclk),.stb(nwe),
+  // Audio must keep advancing through PPU blanking. Use the ungated nclk,
+  // with >74 bus periods between launches, not framebuffer write enable.
+  logic [3:0] nes_audio_divider=0;
+  always_ff @(posedge nclk) nes_audio_divider<=nes_audio_divider+1'b1;
+  wire nes_audio_capture=nes_audio_divider==0 && nes_run_n && !rst_nes && !nes_rst_control;
+  cdc_word #(.Width(32)) nes_audio (.sclk(nclk),.stb(nes_audio_capture),
       .d({nes_signed_audio,nes_signed_audio}),.dclk(bus_clk),.q(audio_n),.q_stb(audio_strobes[0]));
-  cdc_word #(.Width(32)) md_audio (.sclk(md_clk),.stb(mpixel),.d({maudio_l,maudio_r}),
+  // Drain gates the core clock and can hold CE_PIX high; never recount that
+  // held pulse on the free MD clock after execution has been revoked.
+  cdc_word #(.Width(32)) md_audio (.sclk(md_clk),
+      .stb(md_run && mpixel && !rst_md && !controllers_reset),.d({maudio_l,maudio_r}),
       .dclk(bus_clk),.q(audio_m),.q_stb(audio_strobes[1]));
   cdc_word #(.Width(32)) snes_audio (.sclk(service),.stb(saudio_ready),.d({saudio_l,saudio_r}),
       .dclk(bus_clk),.q(audio_s),.q_stb(audio_strobes[2]));

@@ -87,6 +87,10 @@ retro_top_route: | build
 	vivado -mode batch -nojournal -log build/retro-top-route.log -source tools/build_retro.tcl -tclargs route
 
 sim_retro_integration_units: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_mailbox \
+	  -Mdir build/tb_retro_mailbox common/cdc/sync_bit.sv profiles/retro/retro_mailbox.sv \
+	  sim/tb_retro_mailbox.sv > build/tb_retro_mailbox.log 2>&1
+	build/tb_retro_mailbox/Vtb_retro_mailbox
 	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_memory_cdc \
 	  -Mdir build/tb_retro_memory_cdc common/cdc/sync_bit.sv profiles/retro/retro_mailbox.sv \
 	  profiles/retro/retro_memory_cdc.sv sim/tb_retro_memory_cdc.sv > build/tb_retro_memory_cdc.log 2>&1
@@ -113,6 +117,13 @@ sim_retro_top: | build
 	  build/tb_retro_top/
 	cd build/tb_retro_top && ./Vtb_retro_top $(RETRO_TOP_ARGS)
 
+sim_retro_sdram_owner: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps \
+	  --top-module tb_retro_sdram_owner -Mdir build/tb_retro_sdram_owner \
+	  common/cdc/sync_bit.sv sim/retro_clock_models.sv profiles/retro/retro_sdram_owner.sv \
+	  sim/tb_retro_sdram_owner.sv > build/tb_retro_sdram_owner.log 2>&1
+	build/tb_retro_sdram_owner/Vtb_retro_sdram_owner
+
 sim_retro_nes_render: | build
 	bash tools/test_retro_nes_render.sh $(RETRO_NES_RENDER_ARGS)
 
@@ -128,7 +139,8 @@ sim_retro_nes_reset: | build
 sim_retro_video: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_video \
 	  -Mdir build/tb_retro_video common/video/video_pkg.sv profiles/nes/nes_palette_pkg.sv \
-	  common/mem/ram_sdp.sv common/cdc/sync_bit.sv common/cdc/cdc_word.sv common/cdc/fifo_async.sv \
+	  common/mem/ram_sdp.sv common/cdc/reset_sync.sv common/cdc/sync_bit.sv \
+	  common/cdc/cdc_word.sv common/cdc/fifo_async.sv \
 	  common/video/video_timing.sv common/video/tmds_encoder.sv common/video/tmds_phy_se.sv \
 	  profiles/retro/retro_framebuffer.sv profiles/retro/retro_pixels.sv \
 	  profiles/retro/audio/retro_audio_cdc.sv profiles/retro/audio/retro_hdmi_packet.sv \
@@ -386,6 +398,7 @@ clean:
 	rm -rf build
 .PHONY: all clean sim sim_osd sim_video sim_cdc sim_retro sim_retro_mem_lanes sim_retro_control \
         sim_retro_nes_reset sim_retro_nes_render sim_retro_nes_render_regression \
+        sim_retro_sdram_owner \
         sim_retro_sdram sim_retro_mem_mux sim_retro_rom_writer sim_retro_load sim_retro_md \
         sim_retro_md_memory sim_retro_pixels sim_retro_framebuffer synth_retro_shared \
         sim_retro_framebuffer_444 sim_retro_pad \

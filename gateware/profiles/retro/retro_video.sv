@@ -26,6 +26,7 @@ module retro_video (
   import nes_palette_pkg::*;
   wire [23:0] nes_color=nes_rgb(nes_index);
   wire nes_active,md_active,snes_active;
+  wire [2:0] source_reset;
   sync_bit nes_active_sync (.clk(nes_clk),.d(running && selected==1),.q(nes_active));
   sync_bit md_active_sync (.clk(md_clk),.d(running && selected==2),.q(md_active));
   sync_bit snes_active_sync (.clk(snes_clk),.d(running && selected==3),.q(snes_active));
@@ -34,7 +35,7 @@ module retro_video (
   wire [7:0] md_y;
   wire [14:0] md_color;
   wire md_overflow;
-  retro_pixels md_positions (.clk(md_clk),.rst,.active(md_active),
+  retro_pixels md_positions (.clk(md_clk),.rst(source_reset[1]),.active(md_active),
       .pixel_ce(md_pixel),.hs_n(md_hs),.vs_n(md_vs),.hde(md_hde),.vde(md_vde),
       .unsupported(md_interlace),.rgb({md_r,1'b0,md_g,1'b0,md_b,1'b0}),
       .we(md_we),.x(md_x),.y(md_y),.data(md_color),.frame(),.overflow(md_overflow));
@@ -52,12 +53,16 @@ module retro_video (
   wire [2:0] overflow;
   for (genvar p=0;p<3;p++) begin : g_source
     logic source_overflow=0;
+    // Bus reset asserts asynchronously, but each native writer releases only
+    // on its own clock. Never distribute a bus-domain synchronous reset here.
+    reset_sync native_reset (.clk(source_clocks[p]),.rst_in(rst),.rst_out(source_reset[p]));
     assign overflow[p]=source_overflow;
     always_ff @(posedge source_clocks[p])
-      if (rst) source_overflow<=0;
+      if (source_reset[p]) source_overflow<=0;
       else if (writes[p] && !space[p]) source_overflow<=1;
     fifo_async #(.Width(29),.Depth(512)) fifo (
-        .wclk(source_clocks[p]),.wrst(rst),.in_valid(writes[p]),.in_ready(space[p]),
+        .wclk(source_clocks[p]),.wrst(source_reset[p]),
+        .in_valid(writes[p] && !source_reset[p]),.in_ready(space[p]),
         .in_data(inputs[p]),.wlevel(),.rclk(bus_clk),.rrst(rst),.out_valid(valid[p]),
         .out_ready(pop[p]),.out_data(pixels[p]));
   end
@@ -66,6 +71,17 @@ module retro_video (
   wire [1:0] idx=selected-1'b1;
   wire [28:0] pixel=pixels[idx];
   wire we=selected!=0 && running && valid[idx];
+  // Separate source selection from framebuffer address arithmetic/BRAM enable.
+  // Tag the staged write so a stopped or changed owner cannot commit stale data.
+  logic [28:0] write_pixel=0;
+  logic [1:0] write_owner=0;
+  logic write_valid=0;
+  always_ff @(posedge bus_clk) begin
+    write_valid<=!rst && we;
+    write_owner<=selected;
+    if (we) write_pixel<=pixel;
+  end
+  wire framebuffer_we=write_valid && running && !rst && selected==write_owner;
   logic seen_frame=0;
   logic first_frame=0;
   always_ff @(posedge bus_clk)
@@ -91,8 +107,9 @@ module retro_video (
   assign {tall,wide}=presentation_mode;
   vpx_t timing,display;
   video_timing timing_generator (.clk(clk_pix),.rst(rst_pix),.ce(1'b1),.px(timing));
-  retro_framebuffer framebuffer (.wclk(bus_clk),.we,.wx(pixel[28:20]),.wy(pixel[19:12]),
-      .wdata(pixel[11:0]),.clk(clk_pix),.clear(!visible),.visible,.wide,.tall,
+  retro_framebuffer framebuffer (.wclk(bus_clk),.we(framebuffer_we),
+      .wx(write_pixel[28:20]),.wy(write_pixel[19:12]),
+      .wdata(write_pixel[11:0]),.clk(clk_pix),.clear(!visible),.visible,.wide,.tall,
       .px_in(timing),.px_out(display));
   wire audio_pixel_valid;
   wire signed [15:0] audio_pixel_l,audio_pixel_r;
