@@ -80,6 +80,10 @@ static esp_err_t check_profile(rom_system_t system)
 }
 
 bool retro_present(void) { return check_profile(ROM_NONE) == ESP_OK; }
+bool retro_supports(rom_system_t system)
+{
+    return system != ROM_NONE && check_profile(system) == ESP_OK;
+}
 
 static esp_err_t wait_status(uint32_t mask, uint32_t value, bool error, int64_t deadline)
 {

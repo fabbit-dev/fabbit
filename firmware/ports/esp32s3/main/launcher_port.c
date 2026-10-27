@@ -29,7 +29,9 @@
 static const char *TAG = "menu";
 
 #define ROMS "/data/roms"
-#define CORE "retro"        // one multisystem profile: /data/retro.fbp, ID 4
+// RETRO profile ID 4: per-console images /data/retro-nes.fbp, retro-md.fbp,
+// retro-snes.fbp; the combined /data/retro.fbp is the fallback.
+#define CORE "retro"
 #define POLL_MS 300
 #define RUNS_MAX 64
 
@@ -252,6 +254,16 @@ static bool wait_golden(uint32_t timeout)
     return false;
 }
 
+// Per-console image if it is installed, else the combined core.
+static const char *core_for(rom_system_t system)
+{
+    static const char *const image[] = {[ROM_NES] = CORE "-nes", [ROM_MD] = CORE "-md",
+                                        [ROM_SNES] = CORE "-snes"};
+    if (system > ROM_NONE && system <= ROM_SNES && pm_available(image[system]))
+        return image[system];
+    return CORE;
+}
+
 static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n)
 {
     rom_info_t info;
@@ -261,8 +273,20 @@ static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *e
         return false;  // отказ до pm_load и любого recovery reboot
     }
     run_ctx_t r = {cb, ctx};
-    // A new cartridge does not need IPROG when the combined core is active.
-    if (!retro_present()) e = pm_load_cb(CORE, false, pm_stage, &r);
+    // A running image that has this console needs no IPROG. Another image is
+    // drained and left through golden before the right one is loaded.
+    if (!retro_supports(info.system)) {
+        if (retro_present()) {
+            e = retro_stop();
+            if (e == ESP_OK) e = fl_reboot_golden();
+            if (e == ESP_OK && !wait_golden(3000)) e = ESP_ERR_TIMEOUT;
+        }
+        const char *core = core_for(info.system);
+        ESP_LOGI(TAG, "%s: ядро %s", g->name, core);
+        if (e == ESP_OK) e = pm_load_cb(core, false, pm_stage, &r);
+        // The loaded image must really contain the console: never send its ROM blindly.
+        if (e == ESP_OK && !retro_supports(info.system)) e = ESP_ERR_NOT_SUPPORTED;
+    }
     if (e != ESP_OK) {
         snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
         fl_id_t id;

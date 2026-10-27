@@ -48,19 +48,35 @@ static DIR *entry_opendir(const char *path)
 #include "../ports/esp32s3/main/rom_port.c"
 #define retro_preflight actual_retro_preflight
 #define retro_present actual_retro_present
+#define retro_supports actual_retro_supports
+#define retro_stop actual_retro_stop
 #define retro_load_file actual_retro_load_file
 #define retro_reset actual_retro_reset
 #include "../ports/esp32s3/components/retro_rom/retro_rom.c"
 #undef retro_reset
 #undef retro_load_file
+#undef retro_stop
+#undef retro_supports
 #undef retro_present
 #undef retro_preflight
 #undef opendir
 #undef fopen
 
 static struct {
-    int pm, backend, present, boot, reboot, csr, id, tune, nvs, progress, locks;
+    int pm, backend, present, boot, reboot, csr, id, tune, nvs, progress, locks, stop;
 } calls;
+// Image model: caps of the RETRO image active after the last pm_load (0: golden).
+static unsigned active_caps, installed;  // installed: bit per system has retro-<sys>.fbp
+static unsigned loaded_caps(const char *file)
+{
+    if (!strcmp(file, "retro")) return 7;
+    if (!strcmp(file, "retro-nes")) return 1u << (ROM_NES - 1);
+    if (!strcmp(file, "retro-md")) return 1u << (ROM_MD - 1);
+    if (!strcmp(file, "retro-snes")) return 1u << (ROM_SNES - 1);
+    assert(!"unexpected profile");
+    return 0;
+}
+static const char *expected_core = "retro";
 static bool menu_entry;
 static const char *expected_path;
 static bool nvs_enabled;
@@ -69,12 +85,21 @@ static saved_v2_t stored_new;
 
 esp_err_t pm_load_cb(const char *file, bool force, pm_progress_cb cb, void *ctx)
 {
-    assert(menu_entry && !strcmp(file, "retro") && !force);
-    assert(!calls.pm && !calls.backend);
+    assert(menu_entry && !strcmp(file, expected_core) && !force);
+    assert(!calls.pm && !calls.backend && !active_caps);  // only from golden
     calls.pm++;
     assert(cb);
     cb(ctx, "core", 100);
+    active_caps = loaded_caps(file);
     return ESP_OK;
+}
+bool pm_available(const char *file)
+{
+    for (int s = ROM_NES; s <= ROM_SNES; s++)
+        if ((installed >> s) & 1 && !strcmp(file, (const char *[]){0, "retro-nes", "retro-md",
+                                                                     "retro-snes"}[s]))
+            return true;
+    return false;
 }
 
 esp_err_t nes_load_file(const char *path, void (*cb)(void *, int), void *ctx, uint32_t *ms)
@@ -91,13 +116,17 @@ esp_err_t nes_load_file(const char *path, void (*cb)(void *, int), void *ctx, ui
 }
 
 bool nes_present(void) { calls.present++; return true; }
-static bool active_retro;
-bool retro_present(void) { return active_retro; }
+bool retro_present(void) { return active_caps != 0; }
+bool retro_supports(rom_system_t system)
+{
+    return system != ROM_NONE && (active_caps >> (system - 1)) & 1;
+}
+esp_err_t retro_stop(void) { assert(active_caps); calls.stop++; return ESP_OK; }
 esp_err_t retro_preflight(const char *path, rom_info_t *info) { return actual_retro_preflight(path, info); }
 esp_err_t retro_load_file(const char *path, void (*cb)(void *, int), void *ctx, uint32_t *ms)
 {
     assert(menu_entry && expected_path && !strcmp(path, expected_path));
-    assert(!cb && !ctx && calls.pm == (active_retro ? 0 : 1));
+    assert(!cb && !ctx && retro_present());
     calls.backend++;
     *ms = 17;
     return ESP_OK;
@@ -105,7 +134,7 @@ esp_err_t retro_load_file(const char *path, void (*cb)(void *, int), void *ctx, 
 void fl_lock(void) { calls.locks++; }
 void fl_unlock(void) { assert(calls.locks > 0); calls.locks--; }
 esp_err_t fl_boot(uint32_t addr) { calls.boot++; return ESP_OK; }
-esp_err_t fl_reboot_golden(void) { calls.reboot++; return ESP_OK; }
+esp_err_t fl_reboot_golden(void) { calls.reboot++; active_caps = 0; return ESP_OK; }
 esp_err_t fl_csr_read(uint8_t idx, uint32_t *values, size_t n)
 {
     calls.csr++;
@@ -120,7 +149,7 @@ esp_err_t fl_csr_write(uint8_t idx, const uint32_t *values, size_t n)
 esp_err_t fl_id(fl_id_t *id)
 {
     calls.id++;
-    *id = (fl_id_t){.magic = "FBGL"};
+    *id = active_caps ? (fl_id_t){.magic = "FBPR", .profile = 4} : (fl_id_t){.magic = "FBGL", .version = 2};
     return ESP_OK;
 }
 esp_err_t fl_tune(uint8_t start, bool fall) { calls.tune++; return ESP_OK; }
@@ -320,6 +349,43 @@ static void accepted_menu(const lc_game_t *game)
     assert(!err[0] && calls.pm == 1 && calls.backend == 1 && calls.progress == 1);
     assert(!calls.present && calls.nvs == 1);
     no_hardware();
+    active_caps = 0;
+}
+
+// Per-console images: pick retro-<sys> when installed, keep a running image that
+// already has the console, leave another image through stop+golden first.
+static void per_console_images(const lc_game_t *nes_game)
+{
+    char err[128] = "";
+    installed = 1u << ROM_NES;
+    expected_core = "retro-nes";
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(calls.pm == 1 && calls.backend == 1 && !calls.stop && !calls.reboot);
+    assert(active_caps == 1);
+    // Same console again: hot image, no IPROG.
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(!calls.pm && calls.backend == 1 && !calls.stop && !calls.reboot);
+    // MD-only image active, NES requested: drain, golden, then the NES image.
+    active_caps = 1u << (ROM_MD - 1);
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(calls.stop == 1 && calls.reboot == 1 && calls.pm == 1 && calls.backend == 1);
+    assert(active_caps == 1);
+    // Combined image remains valid for every console.
+    active_caps = 7;
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(!calls.pm && !calls.stop && !calls.reboot && calls.backend == 1);
+    // Not installed: fall back to the combined profile.
+    active_caps = 0;
+    installed = 0;
+    expected_core = "retro";
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(calls.pm == 1 && active_caps == 7);
+    active_caps = 0;
 }
 
 static void accepted_console(const char *arg, const char *path)
@@ -382,12 +448,13 @@ int main(void)
     // A bare console name must append .nes before the same preflight.
     rejected_entries("truncated");
     accepted_menu(&games[2]);
-    active_retro = true;
+    active_caps = 7;
     reset_calls(true, games[2].path);
     char err[128] = "";
     assert(p_run(&games[2], progress, &calls, err, sizeof err));
     assert(!calls.pm && !calls.boot && !calls.reboot && calls.backend == 1 && !calls.locks);
-    active_retro = false;
+    active_caps = 0;
+    per_console_images(&games[2]);
     accepted_console("valid", "/data/roms/valid.nes");
     accepted_console("magic.bin", "/data/roms/magic.bin");
     accepted_console("/data/roms/magic.bin", "/data/roms/magic.bin");
@@ -410,5 +477,6 @@ int main(void)
     }
     assert(!rmdir(temp_dir));
     puts("ok ROM entries: mixed catalog/metadata/identities, preflight before effects/assets, hot core, legacy NVS");
+    puts("ok per-console images: retro-<sys> chosen, hot reuse, stop+golden switch, combined fallback");
     return 0;
 }

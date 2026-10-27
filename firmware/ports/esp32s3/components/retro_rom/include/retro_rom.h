@@ -28,6 +28,8 @@ enum {
 #define RETRO_SNES_GAUSS_PATH "/data/roms/snes.gauss"
 
 bool retro_present(void);
+// Active RETRO image reports this console in RETRO_CAPS (per-console images).
+bool retro_supports(rom_system_t system);
 // Local preflight only; safe BEFORE pm_load/programming/any FPGA access.
 esp_err_t retro_preflight(const char *path, rom_info_t *info);
 // Requires active RETRO. Bounded heap chunk, recursive bus lock, abort/drain on failure.
