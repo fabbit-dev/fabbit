@@ -6,7 +6,10 @@
 // SNES memory service needs a separate controller/PLL at 3x or 4x SNES master;
 // this module does NOT invent an asynchronous exception or an SDRAM clock.
 // Use reset_sync per domain on !locked; constrain generated clock relationships.
-module retro_clocks (
+module retro_clocks #(
+    // Standalone users retain the original direct clock-pin compensation.
+    parameter string Compensation = "ZHOLD"
+) (
     input  wire clk_25m,
     input  wire reset,
     output wire clk_md,
@@ -18,6 +21,7 @@ module retro_clocks (
   wire fb, fb_buf, md_raw, z80_raw, snes_raw, memory_raw;
   MMCME2_ADV #(
       .BANDWIDTH("OPTIMIZED"),
+      .COMPENSATION(Compensation),
       .CLKIN1_PERIOD(40.0),
       .DIVCLK_DIVIDE(1),
       .CLKFBOUT_MULT_F(47.25),
@@ -32,9 +36,11 @@ module retro_clocks (
       .PSCLK(1'b0), .PSEN(1'b0), .PSINCDEC(1'b0), .PSDONE(), .DADDR(7'd0),
       .DCLK(1'b0), .DEN(1'b0), .DI(16'd0), .DWE(1'b0), .DO(), .DRDY(),
       .CLKINSTOPPED(), .CLKFBSTOPPED());
-  // Direct internal feedback (as profile_bus PLL); no global feedback deskew
-  // assumption. Saves a global clock buffer for core gating/owner switching.
-  assign fb_buf=fb;
+  // BUF_IN requires buffered feedback. A regional buffer avoids consuming
+  // another global clock resource; the legacy compensation path stays direct.
+  if (Compensation == "BUF_IN") begin : g_buffered_feedback
+    BUFH feedback_buffer (.I(fb),.O(fb_buf));
+  end else assign fb_buf=fb;
   BUFG u_md (.I(md_raw), .O(clk_md));
   BUFG u_z80 (.I(z80_raw), .O(clk_z80));
   BUFG u_snes (.I(snes_raw), .O(clk_snes));

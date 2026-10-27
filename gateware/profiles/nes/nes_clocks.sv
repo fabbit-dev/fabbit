@@ -10,7 +10,9 @@
 // SdramPhase = середина окна, найденного diag/sdram_eye на стенде 2026-10-21: окно 13,3 нс из 15,56 нс
 // (180° + 215 шагов ≈ 279°), 154 прохода по 1M слов без ошибок.
 module nes_clocks #(
-    parameter real SdramPhase = 279.0
+    parameter real SdramPhase = 279.0,
+    // Preserve the direct clock-pin topology for standalone NES/diagnostics.
+    parameter string Compensation = "ZHOLD"
 ) (
     input  wire clk_25m,
     input  wire psclk,      // такт интерфейса сдвига фазы (шина ESP, 100 МГц)
@@ -26,6 +28,7 @@ module nes_clocks #(
 
   MMCME2_ADV #(
       .BANDWIDTH("OPTIMIZED"),
+      .COMPENSATION(Compensation),
       .CLKIN1_PERIOD(40.0),
       .DIVCLK_DIVIDE(1),
       .CLKFBOUT_MULT_F(36.0),

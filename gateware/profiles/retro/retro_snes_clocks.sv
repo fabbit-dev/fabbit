@@ -10,7 +10,9 @@ module retro_snes_clocks (
     output wire master_ce
 );
   wire fb,fb_buf,fast_raw,master_raw,phase_raw;
-  MMCME2_ADV #(.CLKIN1_PERIOD(46.56084656),.DIVCLK_DIVIDE(1),.CLKFBOUT_MULT_F(40.0),
+  // clk_source already traverses a BUFG; feedback is local to this MMCM.
+  MMCME2_ADV #(.COMPENSATION("BUF_IN"),
+      .CLKIN1_PERIOD(46.56084656),.DIVCLK_DIVIDE(1),.CLKFBOUT_MULT_F(40.0),
       .CLKOUT0_DIVIDE_F(10.0),.CLKOUT1_DIVIDE(40),.CLKOUT2_DIVIDE(10),
       .CLKOUT2_PHASE(63.0)) mmcm (
       .CLKIN1(clk_source),.CLKIN2(1'b0),.CLKINSEL(1'b1),.CLKFBIN(fb_buf),.CLKFBOUT(fb),
@@ -19,7 +21,8 @@ module retro_snes_clocks (
       .DADDR(7'b0),.DCLK(1'b0),.DEN(1'b0),.DI(16'b0),.DWE(1'b0),
       .CLKFBOUTB(),.CLKOUT0B(),.CLKOUT1B(),.CLKOUT2B(),.CLKOUT3(),.CLKOUT3B(),
       .CLKOUT4(),.CLKOUT5(),.CLKOUT6(),.PSDONE(),.DO(),.DRDY(),.CLKINSTOPPED(),.CLKFBSTOPPED());
-  assign fb_buf=fb;
+  // Match BUF_IN's required buffered feedback without another global BUFG.
+  BUFH feedback_buffer (.I(fb),.O(fb_buf));
   BUFG fast_buffer (.I(fast_raw),.O(service));
   BUFG master_buffer (.I(master_raw),.O(master));
   BUFG phase_buffer (.I(phase_raw),.O(memory_clock));

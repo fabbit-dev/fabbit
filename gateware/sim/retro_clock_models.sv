@@ -2,6 +2,7 @@
 // verilog_lint: waive-start module-filename
 // Simulation-only ideal primitives. Real product uses Xilinx primitives.
 module BUFG(input wire I,output wire O);assign O=I;endmodule
+module BUFH(input wire I,output wire O);assign O=I;endmodule
 module BUFGCE #(parameter string SIM_DEVICE="7SERIES")
     (input wire I,CE,output wire O);
   logic en=1;always @(negedge I) en<=CE;assign O=I && en;
@@ -34,7 +35,8 @@ module MMCME2_ADV #(
     parameter int DIVCLK_DIVIDE=1,parameter int CLKOUT1_DIVIDE=14,
     parameter int CLKOUT2_DIVIDE=14,parameter int CLKOUT3_DIVIDE=1,
     parameter real CLKOUT2_PHASE=0.0,parameter real CLKOUT3_PHASE=0.0,
-    parameter string BANDWIDTH="OPTIMIZED",parameter string CLKOUT2_USE_FINE_PS="FALSE"
+    parameter string BANDWIDTH="OPTIMIZED",parameter string CLKOUT2_USE_FINE_PS="FALSE",
+    parameter string COMPENSATION="ZHOLD"
 ) (input wire CLKIN1,CLKIN2,CLKINSEL,CLKFBIN,PWRDWN,RST,PSCLK,PSEN,PSINCDEC,
    input wire [6:0] DADDR,input wire DCLK,DEN,input wire [15:0] DI,input wire DWE,
    output wire CLKFBOUT,CLKFBOUTB,
