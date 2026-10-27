@@ -214,9 +214,12 @@ foreach {retro_instance retro_width retro_system} {
 }
 # These three instances have identical source clock/strobe/data. Rebuilt
 # synthesis merges their launch words into pads_md; captures remain separate.
+# Without MD there is no pads_md bank to merge into: each keeps its own launch.
+# retro_cdc_bundle still proves every capture bit is fed by the named launch.
 foreach {retro_instance retro_system} {pads_nes 0 pads_snes 2} {
     if {[retro_has $retro_system]} {
-        retro_cdc_bundle $retro_instance word_q q 32 pads_md
+        retro_cdc_bundle $retro_instance word_q q 32 \
+            [expr {[retro_has 1] ? "pads_md" : $retro_instance}]
     } else {retro_cdc_absent $retro_instance}
 }
 
@@ -254,9 +257,8 @@ proc retro_cdc_gray_launch {instance direction bits} {
     set cells [get_cells -quiet -hierarchical -regexp [format {^(%s)$} [join $patterns |]]]
     return [retro_cdc_count $cells $bits $bits "$instance $direction Gray launch"]
 }
-# Shared video FIFOs remain instantiated. In an absent console's slot the write
-# (console) clock is tied low: read-pointer captures there must be GND-clocked,
-# and every write-pointer capture a LUT1 fed only by GND, with no startpoint.
+# Shared video FIFOs remain instantiated. In an absent console's slot every
+# write-pointer capture is a LUT1 fed only by GND, with no timing startpoint.
 proc retro_constant_capture {capture} {
     set d [retro_cdc_pins $capture D]
     set net [get_nets -quiet -of_objects $d]
@@ -285,23 +287,39 @@ foreach {retro_slot retro_system} {0 0 1 1 2 2} {
         lappend retro_gray $retro_instance 10
         continue
     }
-    # The absent console's clock is tied low: read-pointer captures in that
-    # domain never clock, so there is no crossing. Prove the clock is GND.
-    foreach retro_capture [concat [retro_cdc_regs $retro_instance rgray_s1 10 10] \
-                                  [retro_cdc_regs $retro_instance rgray_s2 10 10]] {
+    # Read-pointer captures run on the slot's native clock. An absent NES/SNES
+    # clock is tied low: every capture must then be GND-clocked (no crossing).
+    # The MD clock always runs (management domain): then the read Gray crossing
+    # is real and keeps its full bound. Mixed clocking is fatal.
+    set retro_r_dst [retro_cdc_regs $retro_instance rgray_s1 10 10]
+    set retro_r_all [concat $retro_r_dst [retro_cdc_regs $retro_instance rgray_s2 10 10]]
+    set retro_gnd 0
+    foreach retro_capture $retro_r_all {
         set retro_clock_net [get_nets -quiet -of_objects [retro_cdc_pins $retro_capture C]]
         set retro_clock_driver [get_cells -quiet -of_objects \
             [get_pins -quiet -leaf -of_objects $retro_clock_net -filter {DIRECTION == OUT}]]
-        if {[llength $retro_clock_driver] != 1 ||
-            [get_property REF_NAME $retro_clock_driver] ne "GND"} {
-            error "retro CDC: $retro_capture of absent console is clocked"
-        }
+        if {[llength $retro_clock_driver] == 1 &&
+            [get_property REF_NAME $retro_clock_driver] eq "GND"} {incr retro_gnd}
+    }
+    if {$retro_gnd == [llength $retro_r_all]} {
+        set retro_read_kind unclocked
+    } elseif {$retro_gnd == 0 && $retro_slot == 1} {
+        set retro_r_src [retro_cdc_gray_launch $retro_instance r 10]
+        set retro_r_bound [expr {min([retro_cdc_period $retro_r_src "$retro_instance r launch"],
+            [retro_cdc_period $retro_r_dst "$retro_instance r capture"])}]
+        set retro_r_from [retro_cdc_pins $retro_r_src C]
+        set retro_r_to [retro_cdc_pins $retro_r_dst D]
+        set_max_delay -datapath_only $retro_r_bound -from $retro_r_from -to $retro_r_to
+        set_bus_skew $retro_r_bound -from $retro_r_from -to $retro_r_to
+        set retro_read_kind "timed $retro_r_bound ns"
+    } else {
+        error "retro CDC: $retro_instance read Gray captures unexpectedly clocked ($retro_gnd/[llength $retro_r_all] GND)"
     }
     retro_cdc_regs $retro_instance wgray_s2 10 10
     foreach retro_capture [retro_cdc_regs $retro_instance wgray_s1 10 10] {
         retro_constant_capture $retro_capture
     }
-    puts "retro CDC inactive $retro_instance: unclocked read Gray, constant write Gray"
+    puts "retro CDC inactive $retro_instance: $retro_read_kind read Gray, constant write Gray"
 }
 foreach {retro_instance retro_bits} $retro_gray {
     foreach retro_direction {w r} {
