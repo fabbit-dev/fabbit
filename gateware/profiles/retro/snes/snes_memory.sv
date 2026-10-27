@@ -24,7 +24,9 @@
 // the physical write completion. *_posted marks architectural write acceptance.
 // Reads missing the second master edge set deadline_fault (sticky per port):
 // bits 0 WRAM,1 ARAM,2 ROM,3 save. No fake completion on a deadline miss.
-// Auto refresh can make this bound IMPOSSIBLE for arbitrary arrivals: tRFC6 +
+// Even two idle-bank reads capture at +7/+8 with registered-queue arbitration;
+// +8 is too late for an unstalled second master edge. Auto refresh can also
+// make this bound IMPOSSIBLE for arbitrary arrivals: tRFC6 +
 // tRCD2 + CL2 > 8 fast clocks. Consumers MUST handle fault/reset; a direct
 // nonstallable SNES hookup is not safe until a refresh-safe schedule is proved.
 // snes_system instead gates the WHOLE console master with snes_clock_guard;
@@ -230,8 +232,9 @@ module snes_memory #(
             lane_next[4] = 0;
         end
 
-        // Two simultaneous read ACTs must precede their columns: ACT at +1,+3,
-        // READ at +4,+5, capture at +6,+7, before master edge +8.
+        // Only registered requests enter arbitration; admission still occurs at +1.
+        // Two idle-bank reads: ACT +2,+4, READ +5,+6, capture +7,+8.
+        // The clock guard must stall the +8 consumer edge for the second reply.
         // Writes are posted, so physical write work has lower priority.
         selected = -1;
         selected_bank = 0;
@@ -242,10 +245,10 @@ module snes_memory #(
         if (state == Running) begin
             if (!ref_pending && rr_wait == 0) begin
                 for (int p = Clients-1; p >= 0; p--) begin
-                    if (pending_next[p] && !write_next[p] &&
-                        bank_state[address_next[p][20:19]] == BankIdle) begin
+                    if (pending[p] && !queued_write[p] &&
+                        bank_state[address[p][20:19]] == BankIdle) begin
                         selected = p;
-                        selected_bank = address_next[p][20:19];
+                        selected_bank = address[p][20:19];
                         selected_cmd = Act;
                     end
                 end
@@ -262,10 +265,10 @@ module snes_memory #(
             end
             if (selected < 0 && !ref_pending && rr_wait == 0) begin
                 for (int p = Clients-1; p >= 0; p--) begin
-                    if (pending_next[p] && write_next[p] &&
-                        bank_state[address_next[p][20:19]] == BankIdle) begin
+                    if (pending[p] && queued_write[p] &&
+                        bank_state[address[p][20:19]] == BankIdle) begin
                         selected = p;
-                        selected_bank = address_next[p][20:19];
+                        selected_bank = address[p][20:19];
                         selected_cmd = Act;
                     end
                 end
@@ -437,7 +440,7 @@ module snes_memory #(
                         sd_ba <= 2'(selected_bank);
                         case (selected_cmd)
                             Act: begin
-                                sd_a <= address_next[selected][18:8];
+                                sd_a <= address[selected][18:8];
                                 owner[selected_bank] <= 3'(selected);
                                 bank_state[selected_bank] <= BankColumn;
                                 bank_wait[selected_bank] <= BankWaitBits'(Trcd-1);

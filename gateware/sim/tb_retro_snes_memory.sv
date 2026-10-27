@@ -150,7 +150,13 @@ module tb_retro_snes_memory;
     endtask
     task automatic cpu_aram_pair(input int kind,input int wi,input int ai,
                                  input byte wvalue,input byte avalue);
-        int start_cycle;
+        int start_cycle, cpu_cycle;
+        logic [3:0] expected_fault;
+        // Start each exact-schedule pair with closed banks and a fresh refresh
+        // interval. Prior sticky faults must not hide a newly missed deadline.
+        drain(); enable=0; reset=1; tick(); reset=0;
+        do tick(); while (!initialized);
+        enable=1;
         boundary();
         start_cycle=fast_cycle;
         aram_addr=16'(ai); aram_rd=1;
@@ -160,21 +166,34 @@ module tb_retro_snes_memory;
             2: begin save_addr=17'(wi); save_rd=1; end
             default: $fatal(1,"kind");
         endcase
-        masters(2);
-        assert (a_valid_cycle>start_cycle && a_valid_cycle<start_cycle+8 && aram_q==avalue)
-            else $fatal(1,"ARAM deadline/data latency=%0d data=%h want %h",
+        tick();
+        assert (request_inflight[1] && request_inflight[kind==0 ? 0 : kind==1 ? 2 : 3] &&
+                {sd_ras_n,sd_cas_n,sd_we_n}==3'b111)
+            else $fatal(1,"pair not captured at +1 or bypassed registered queue");
+        repeat (6) tick();  // +7: exactly the higher-priority reply is fresh.
+        cpu_cycle=kind==0 ? w_valid_cycle : kind==1 ? r_valid_cycle : s_valid_cycle;
+        assert (deadline_fault==0 &&
+                (kind==0 ? cpu_cycle==start_cycle+7 && a_valid_cycle<start_cycle :
+                           a_valid_cycle==start_cycle+7 && cpu_cycle<start_cycle))
+            else $fatal(1,"pair first reply not exactly +7 or premature second reply");
+        tick();  // +8: real data arrives, too late for a coincident consumer edge.
+        cpu_cycle=kind==0 ? w_valid_cycle : kind==1 ? r_valid_cycle : s_valid_cycle;
+        assert (a_valid_cycle==start_cycle+(kind==0 ? 8 : 7) && aram_q==avalue)
+            else $fatal(1,"ARAM exact latency/data=%0d/%h want %h",
                         a_valid_cycle-start_cycle,aram_q,avalue);
         case (kind)
-            0: assert (w_valid_cycle>start_cycle && w_valid_cycle<start_cycle+8 &&
-                       wram_q==wvalue) else $fatal(1,"WRAM pair deadline/data");
-            1: assert (r_valid_cycle>start_cycle && r_valid_cycle<start_cycle+8 &&
-                       rom_q==wvalue) else $fatal(1,"ROM pair deadline/data");
-            2: assert (s_valid_cycle>start_cycle && s_valid_cycle<start_cycle+8 &&
-                       save_q==wvalue) else $fatal(1,"save pair deadline/data");
+            0: assert (w_valid_cycle==start_cycle+7 &&
+                        wram_q==wvalue) else $fatal(1,"WRAM pair deadline/data");
+            1: assert (r_valid_cycle==start_cycle+8 &&
+                        rom_q==wvalue) else $fatal(1,"ROM pair deadline/data");
+            2: assert (s_valid_cycle==start_cycle+8 &&
+                        save_q==wvalue) else $fatal(1,"save pair deadline/data");
             default: ;
         endcase
-        assert (deadline_fault==0 && overrun_fault==0 && !protocol_fault)
-            else $fatal(1,"unexpected pair fault d=%h o=%h",deadline_fault,overrun_fault);
+        expected_fault=kind==0 ? 4'b0010 : kind==1 ? 4'b0100 : 4'b1000;
+        assert (deadline_fault==expected_fault && overrun_fault==0 && !protocol_fault)
+            else $fatal(1,"pair must flag only +8 reply d=%h want %h o=%h",
+                        deadline_fault,expected_fault,overrun_fault);
         $display("ok pair kind=%0d CPU=%0d ARAM=%0d fast edges",kind,
                  (kind==0 ? w_valid_cycle : kind==1 ? r_valid_cycle : s_valid_cycle)-start_cycle,
                  a_valid_cycle-start_cycle);
@@ -239,19 +258,29 @@ module tb_retro_snes_memory;
         boundary(); rom_addr=1; rom_rd=1; masters(2);
         assert (rom_q==8'h22) else $fatal(1,"DMA source read");
         wram_addr=20; wram_data=rom_q; wram_wr=1;
-        masters(1); wram_wr=0; wram_rd=1; masters(2);
-        assert (wram_q==8'h22) else $fatal(1,"DMA write/read forwarding");
+        masters(1); start_cycle=fast_cycle; wram_wr=0; wram_rd=1;
+        // WRITE may already have cleared pending: that read needs real SDRAM
+        // bank recovery, not forwarding. Never count held q as its completion.
+        repeat (9) tick();
+        assert (w_valid_cycle==start_cycle+9 && wram_q==8'h22 && overrun_fault==0)
+            else $fatal(1,"DMA destination read lost real completion/data");
         drain();
         // A write posted while refresh blocks SDRAM must forward a subsequent
         // read immediately, and still physically commit after refresh.
         boundary(); before_refs=refs; refresh_now=1; tick(); refresh_now=0;
         while (refs==before_refs) tick();
         boundary(); wram_addr=30; wram_data=8'h6b; wram_wr=1;
+        start_cycle=fast_cycle; before_refs=w_commit_count;
+        tick();
+        assert (wram_posted && w_post_cycle==start_cycle+1)
+            else $fatal(1,"write acceptance moved from +1");
         masters(1); start_cycle=fast_cycle; wram_wr=0; wram_rd=1;
-        masters(1);
-        assert (w_valid_cycle>start_cycle && w_valid_cycle<start_cycle+4 && wram_q==8'h6b)
+        tick();
+        assert (wram_valid && w_valid_cycle==start_cycle+1 && wram_q==8'h6b)
             else $fatal(1,"posted write forwarding through refresh");
-        drain(); enable=0; host(0,21'h10001e,32'h6b6b6b6b); drain(); enable=1;
+        drain();
+        assert (w_commit_count==before_refs+1) else $fatal(1,"forward lost/duplicated write");
+        enable=0; host(0,21'h10001e,32'h6b6b6b6b); drain(); enable=1;
         // Force REF first, issue new two-channel reads during tRFC. Completion
         // MUST be late and flagged; returning a held prior q as valid is forbidden.
         reset=1; tick(); reset=0;
@@ -277,9 +306,10 @@ module tb_retro_snes_memory;
         aram_addr=0; aram_rd=1;
         rom_addr=3; rom_rd=1;
         save_addr=131071; save_rd=1;
-        masters(2);
-        assert (w_valid_cycle>start_cycle && a_valid_cycle>start_cycle)
-            else $fatal(1,"primary channels starved");
+        repeat (9) tick();
+        // Three read ACTs outrank columns; the third ACT delays ARAM to +9.
+        assert (w_valid_cycle==start_cycle+7 && a_valid_cycle==start_cycle+9 &&
+                deadline_fault[1]) else $fatal(1,"four-client primary schedule/miss");
         do tick(); while (r_valid_cycle<=start_cycle || s_valid_cycle<=start_cycle);
         assert (wram_q==8'ha1 && aram_q==8'he5 && rom_q==8'h44 && save_q==8'hd4)
             else $fatal(1,"maximum concurrency lost response");
@@ -307,7 +337,7 @@ module tb_retro_snes_memory;
         masters(1);
         assert (protocol_fault) else $fatal(1,"simultaneous read/write not rejected");
         drain();
-        $display("PASS SNES memory: real DQM=0 model, two-channel normal <=2 masters,");
+        $display("PASS SNES memory: real DQM=0 model, exact pair +7/+8; +8 deadline flagged,");
         $display("posted writes/DMA/noalias/init/refresh; expected FAIL exposed, refs=%0d",refs);
         $finish;
     end

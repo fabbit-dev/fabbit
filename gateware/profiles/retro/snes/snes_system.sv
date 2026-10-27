@@ -13,6 +13,8 @@
 // Reset clears validity and restarts SDRAM; reload all synthetic/user assets.
 // Assert reset for >=4 free-master periods so the gated synchronous domain
 // receives reset edges regardless of a preceding memory hold/startup CE state.
+// Console reset is registered on ungated master; assertion can take one period.
+// Service reset still discards memory work immediately on its sampling edge.
 // run is a REQUEST, not immediate core reset. run=0 quiesces actual core clock,
 // preserves last-edge +1-service sampling, drains accepted operations, then
 // resets console and asserts stop_ack. Only after stop_ack may config/assets/
@@ -90,8 +92,25 @@ module snes_system #(
     stop_state_t stop_state;
     logic [1:0] sample_age, reset_edges;
     wire stop_requested = !run || console_reset || asset_error != 0 || asset_start;
-    wire console_run = stop_state == Running || stop_state == Draining;
-    wire guard_hold = memory_hold || (console_run && (stop_requested || stop_state == Draining));
+    wire execution_requested = stop_state == Running || stop_state == Draining;
+    logic console_run;
+    // Keep service reset out of the live console ENABLE/reset/datapath cone.
+    // Ungated master runs during holds; initialize asserted for fail-closed startup.
+    logic console_reset_master = 1'b1;
+    // The service FSM must not release CPU reset/ENABLE one service period
+    // before an execution edge. Launch run on the UNGATED master instead: that
+    // edge still resets the console, leaving a full master period to settle.
+    // This register also clears while the execution clock is stopped.
+    always_ff @(posedge free_master) begin
+        console_reset_master <= reset;
+        if (reset || console_reset_master) console_run <= 0;
+        else console_run <= execution_requested;
+    end
+    // Retain run through the last-edge sampling aperture and physical drain.
+    // After drain keep the guard closed until the ungated register clears;
+    // otherwise reopening reset clocks could execute one stale-running edge.
+    wire guard_hold = memory_hold || (console_run &&
+                      (stop_requested || stop_state != Running));
     wire loader_locked = run || stop_state != Stopped;
     wire host_ready_internal;
     assign stop_ack = !reset && !run && stop_state == Stopped && memory_drained;
@@ -143,7 +162,7 @@ module snes_system #(
         .permit(clock_permit), .core_step, .clk_core
     );
     snes_console console (
-        .clk(clk_core), .reset, .console_reset(1'b0), .run(console_run),
+        .clk(clk_core), .reset(console_reset_master), .console_reset(1'b0), .run(console_run),
         .cfg_map, .cfg_chip, .cfg_pal, .cfg_rom_mask, .cfg_save_enable, .cfg_save_mask,
         .pad1, .pad2, .ipl_clear, .ipl_we, .ipl_addr, .ipl_data, .ipl_ready,
         .coeff_clear, .coeff_we, .coeff_addr, .coeff_data, .coeff_ready,

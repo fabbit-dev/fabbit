@@ -255,16 +255,24 @@ module tb_retro_snes_core;
                 else $fatal(1,"pad bit %0d",i);
             serial_clk=0; tick(); serial_clk=1; tick();
         end
-        cfg_chip=1; run=1; tick();
+        cfg_chip=1; tick(); run=1; tick();
         assert (!active && unsupported[1]) else $fatal(1,"chip rejection");
-        cfg_chip=0; cfg_map=2; tick();
+        run=0; cfg_chip=0; cfg_map=2; tick(); run=1; tick();
         assert (!active && unsupported[0]) else $fatal(1,"map rejection");
-        cfg_map=0; cfg_pal=1; tick();
+        run=0; cfg_map=0; cfg_pal=1; tick(); run=1; tick();
         assert (!active && unsupported[2]) else $fatal(1,"PAL rejection");
-        cfg_pal=0;
+        run=0; cfg_pal=0;
         cfg_map=use_hirom != 0 ? 1 : 0;
-        tick();
+        tick(); run=1; tick();
         assert (active) else $fatal(1,"programmed core not enabled");
+        // Live raw configuration must not feed the running machine at all.
+        cfg_map=2; cfg_chip=1; cfg_pal=1; cfg_rom_mask=22'h123456;
+        cfg_save_enable=0; cfg_save_mask=17'h12345;
+        tick();
+        assert (active && !(|{unsupported[4],unsupported[2:0]}) &&
+                dut.hirom==1'(use_hirom!=0) && dut.rom_mask==22'h007fff &&
+                dut.save_enable && dut.save_mask==17'h01fff)
+            else $fatal(1,"running configuration was not frozen");
         repeat (100000) tick();
         assert (seen_wram && seen_save && seen_apu && seen_aram)
             else $fatal(1,"CPU/APU: WRAM=%b save=%b APU=%b ARAM=%b",

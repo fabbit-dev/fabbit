@@ -53,6 +53,9 @@ module tb_retro_snes;
     wire signed [15:0] audio_l,audio_r;
     wire audio_ready;
     snes_system #(.InitCycles(20),.RefreshCycles(RefreshInterval)) dut (.*);
+    wire pair_probe_done;
+    snes_pair_guard_probe pair_probe (.clk_service, .free_master, .free_master_ce,
+                                      .done(pair_probe_done));
     // Conditional ESMT M12L64322A(2S)-7 CL2 bounds, Rev1.0 pp6-7.
     // Ideal pins only: no PCB flight/skew or FPGA I/O timing signoff.
     sdram_model #(.TAc(8ns),.TOh(2ns),.TRcd(21ns)) model (
@@ -64,6 +67,32 @@ module tb_retro_snes;
     // logic. Product module instantiates BUFGCE, never a fabric clock AND.
     int use_hirom=0;
     int stop_probe=0;
+    int unsigned boot_count=0, startup_checks=0, reset_clock_checks=0;
+    realtime active_since=0;
+    logic sampled_reset=1;
+    int unsigned master_reset_checks=0;
+    always @(posedge free_master) begin
+        sampled_reset=reset;
+        #1ps;
+        assert (dut.console_reset_master==sampled_reset)
+            else $fatal(1,"console reset not launched on ungated master");
+        if (reset || dut.console_reset_master)
+            assert (!dut.console_run) else $fatal(1,"run escaped master reset");
+        master_reset_checks++;
+    end
+    always @(posedge active) active_since=$realtime;
+    always @(posedge clk_core) begin
+        if (!reset && active) begin
+            assert ($realtime-active_since>=46.559ns)
+                else $fatal(1,"execution before full master-period startup settle");
+            startup_checks++;
+        end
+        if (!reset && dut.stop_state==2'd3) begin // Resetting
+            assert (!active && !dut.console_run)
+                else $fatal(1,"stale executing edge while reopening reset clocks");
+            reset_clock_checks++;
+        end
+    end
     int unsigned master_edges=0,core_edges=0,stalls=0,frames=0,audios=0,pixels=0;
     int unsigned refreshes=0,commits=0,reads=0,core_edges_at_stop=0;
     int unsigned first_vs_master=0,first_vs_core=0,first_vs_audio=0;
@@ -263,6 +292,11 @@ module tb_retro_snes;
     task automatic master_tick;
         @(posedge free_master); #1ns;
     endtask
+    task automatic reset_minimum;
+        // Exactly four full free-master periods, even when assertion is off-phase.
+        #(4*46.560ns);
+        reset=0;
+    endtask
     task automatic load_asset(input int ch);
         asset_channel=2'(ch); asset_start=1; master_tick(); asset_start=0;
         master_tick();
@@ -288,7 +322,8 @@ module tb_retro_snes;
     endtask
     task automatic boot;
         reset=1; run=0; measuring=0;
-        repeat (5) master_tick(); reset=0;
+        // The public minimum is four periods, including a preceding gated hold.
+        reset_minimum();
         repeat (3) master_tick();
         assert (!ipl_ready && !coeff_ready && !active) else $fatal(1,"reset default assets");
         load_asset(0); load_asset(1);
@@ -312,6 +347,9 @@ module tb_retro_snes;
         master_edges=0; core_edges=0; stalls=0; frames=0; audios=0; pixels=0;
         refreshes=0; commits=0; reads=0; dma_seen=0;
         seen_wram=0; seen_save=0; seen_aram=0; seen_mailbox=0; previous_vs=0;
+        // Exercise all four service launch phases across repeated boots.
+        do @(negedge clk_service); while (phase!=2'(boot_count%4));
+        boot_count++;
         measuring=1; run=1;
     endtask
     task automatic stop_transaction_probe(input bit write_case,input int delay_edges,
@@ -374,7 +412,7 @@ module tb_retro_snes;
             do begin @(posedge clk_core); #1ps; end
             while (!(dut.wram_wr && dut.wram_addr==0 && dut.wram_data==8'ha5));
             measuring=0; reset=1; run=0;
-            repeat (5) master_tick(); reset=0;
+            reset_minimum();
             while (!stop_ack) tick();
             assert (!ipl_ready && !coeff_ready && !active && request_inflight==0)
                 else $fatal(1,"global reset did not discard/invalidate");
@@ -388,7 +426,7 @@ module tb_retro_snes;
                 tick();  // accepted at controller +1 aperture, column not issued yet
                 assert (request_inflight!=0) else $fatal(1,"reset probe not in flight");
                 measuring=0; reset=1; run=0;
-                repeat (5) master_tick(); reset=0;
+                reset_minimum();
                 while (!stop_ack) tick();
                 assert (request_inflight==0 && needs_data==0 && !memory_hold &&
                         !ipl_ready && !coeff_ready && !host_done)
@@ -396,6 +434,11 @@ module tb_retro_snes;
                 host_request(0,32'h100000,32'h96969696);
                 $display("PASS global reset cancels accepted pre-column write=%0d",kind);
             end
+            assert (startup_checks!=0 && reset_clock_checks!=0 && boot_count>=4 &&
+                    master_reset_checks!=0 && pair_probe_done)
+                else $fatal(1,"missing startup/reset-clock proof");
+            $display("PASS startup full-master settle, all four launch phases; %s",
+                     "reset-clock handover");
             $finish;
         end
         // Force extra refresh at different free-master phases in addition to
@@ -410,6 +453,8 @@ module tb_retro_snes;
         assert (audios>500 && pixels>100000 && highres && unsupported[3] && !interlace)
             else $fatal(1,"native PPU/APU progress");
         assert (commits==8) else $fatal(1,"held write strobe reissued %0d commits",commits);
+        assert (pair_probe_done && master_reset_checks!=0)
+            else $fatal(1,"missing registered scheduler/reset boundary proof");
         $display("clock-stretched hirom=%0d free=%0d core=%0d stalls=%0d ratio=%f",
                  use_hirom,master_edges,core_edges,stalls,real'(core_edges)/real'(master_edges));
         $display("frames=%0d audio=%0d pixels=%0d refs=%0d writes=%0d wall_deadline=%h",
@@ -441,6 +486,105 @@ module tb_retro_snes;
         $finish;
     end
     initial begin #200ms; $fatal(1,"timeout"); end
+endmodule
+
+// Directed producer -> production memory + guard -> actual SDRAM model.
+// No forced internals: prove that a reply captured AT +8 cannot authorize +8.
+module snes_pair_guard_probe (
+    input wire clk_service, free_master, free_master_ce,
+    output logic done=0
+);
+    logic reset=1, enable=0, wram_rd=0, aram_rd=0;
+    logic host_valid=0, host_write=1;
+    logic [20:0] host_addr=0;
+    logic [31:0] host_wdata=0;
+    wire host_ready, host_done, initialized, drained, core_hold;
+    wire core_step, clk_core, permit;
+    wire [7:0] wram_q, aram_q;
+    wire wram_valid, aram_valid;
+    wire [3:0] deadline_fault, overrun_fault;
+    wire protocol_fault;
+    wire [10:0] sd_a;
+    wire [1:0] sd_ba;
+    wire sd_ras_n, sd_cas_n, sd_we_n, sd_cs_n, sd_cke, sd_dq_oe;
+    wire [31:0] sd_dq_out;
+    tri [31:0] sd_dq;
+    wire sd_clk;
+    assign #2ns sd_clk=clk_service;
+    assign sd_dq=sd_dq_oe ? sd_dq_out : {32{1'bz}};
+    snes_clock_guard guard (.clk_service, .free_master, .free_master_ce, .reset,
+        .running(1'b1), .core_hold, .permit, .core_step, .clk_core);
+    snes_memory #(.InitCycles(20), .RefreshCycles(480)) memory (
+        .clk(clk_service), .reset, .enable, .master_ce(core_step), .refresh_now(1'b0),
+        .initialized, .drained, .core_hold, .request_inflight(), .needs_data(),
+        .refresh_busy(), .deadline_fault, .overrun_fault, .protocol_fault,
+        .wram_addr(17'h1234), .wram_data(8'h00), .wram_rd, .wram_wr(1'b0),
+        .wram_q, .wram_valid, .wram_posted(), .wram_committed(),
+        .aram_addr(16'h2345), .aram_data(8'h00), .aram_rd, .aram_wr(1'b0),
+        .aram_q, .aram_valid, .aram_posted(), .aram_committed(),
+        .rom_addr(22'h0), .rom_rd(1'b0), .rom_q(), .rom_valid(),
+        .save_addr(17'h0), .save_data(8'h00), .save_rd(1'b0), .save_wr(1'b0),
+        .save_q(), .save_valid(), .save_posted(), .save_committed(),
+        .host_valid, .host_write, .host_addr, .host_wdata, .host_ready, .host_done,
+        .host_rdata(), .sd_a, .sd_ba, .sd_ras_n, .sd_cas_n, .sd_we_n, .sd_cs_n,
+        .sd_cke, .sd_dq_in(sd_dq), .sd_dq_out, .sd_dq_oe);
+    sdram_model #(.TAc(8ns), .TOh(2ns), .TRcd(21ns)) model (
+        .clk(sd_clk), .cke(sd_cke), .cs_n(sd_cs_n), .ras_n(sd_ras_n),
+        .cas_n(sd_cas_n), .we_n(sd_we_n), .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(sd_dq));
+    int service_cycle=0, launch_cycle=0, observed_edges=0;
+    bit watching=0;
+    always @(posedge clk_service) begin
+        service_cycle++;
+        if (watching && service_cycle==launch_cycle+8)
+            assert (!core_step && !aram_valid)
+                else $fatal(1,"guard allowed +8 before second actual response");
+    end
+    always @(posedge clk_core) begin
+        if (watching) begin
+            assert (service_cycle==launch_cycle+4 || service_cycle==launch_cycle+12)
+                else $fatal(1,"unexpected conflict-pair consumer edge +%0d",
+                            service_cycle-launch_cycle);
+            if (service_cycle==launch_cycle+12)
+                assert (wram_q==8'ha6 && aram_q==8'h59)
+                    else $fatal(1,"resumed consumer did not see both real replies");
+            observed_edges++;
+        end
+    end
+    task automatic tick;
+        @(posedge clk_service); #1ns;
+    endtask
+    task automatic preload(input logic [20:0] address, input logic [31:0] value);
+        while (!host_ready) tick();
+        @(negedge clk_service);
+        host_addr=address; host_wdata=value; host_valid=1;
+        tick(); host_valid=0;
+        do tick(); while (!host_done);
+    endtask
+    initial begin
+        repeat (4) tick(); reset=0;
+        while (!initialized) tick();
+        preload(21'h101234,32'ha6a6a6a6);
+        preload(21'h182345,32'h59595959);
+        while (!drained) tick();
+        enable=1;
+        @(posedge clk_core); #1ns;
+        launch_cycle=service_cycle; watching=1; wram_rd=1; aram_rd=1;
+        tick();
+        assert (memory.request_inflight[1:0]==2'b11 &&
+                {sd_ras_n,sd_cas_n,sd_we_n}==3'b111)
+            else $fatal(1,"guarded pair lost +1 admission/registered boundary");
+        repeat (6) tick();
+        assert (wram_valid && wram_q==8'ha6 && !aram_valid && deadline_fault==0)
+            else $fatal(1,"guarded pair first real response not +7");
+        tick();
+        assert (aram_valid && aram_q==8'h59 && deadline_fault==4'b0010)
+            else $fatal(1,"guarded pair second real response/miss not +8");
+        repeat (4) tick();
+        assert (observed_edges==2 && overrun_fault==0 && !protocol_fault && model.errors==0)
+            else $fatal(1,"guarded pair edge count/data/model fault");
+        watching=0; wram_rd=0; aram_rd=0; done=1;
+        $display("PASS registered pair: admit +1, q +7/+8, core +4/+12; +8 blocked");
+    end
 endmodule
 
 // Ideal glitch-free simulation stand-in, not part of production source list.

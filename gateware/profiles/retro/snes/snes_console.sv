@@ -28,6 +28,8 @@
 // Host sets cfg_chip=0 ONLY for plain ROM/RAM/battery carts after header parsing.
 // cfg_map: 0 LoROM, 1 HiROM; others rejected. PAL/enhancement chips rejected.
 // Progressive enforced in PPU. Interlace writes reported in unsupported[3].
+// Configuration is decoded/captured only on stopped (run=0) clock edges;
+// allow one such edge after changing it before requesting execution.
 module snes_console (
     input logic clk,
     input logic reset,
@@ -80,15 +82,37 @@ module snes_console (
     logic signed [11:0] coeff_read_data;
     logic interlace_requested;
     logic core_reset;
-    assign unsupported[0] = cfg_map > 1;
-    assign unsupported[1] = cfg_chip != 0;
-    assign unsupported[2] = cfg_pal;
-    assign unsupported[3] = interlace_requested;
-    assign unsupported[4] = ((cfg_rom_mask & (cfg_rom_mask + 22'd1)) != 0) ||
+    logic hirom, save_enable;
+    logic [21:0] rom_mask;
+    logic [16:0] save_mask;
+    logic [3:0] config_bad;
+    // Keep mask arithmetic and raw configuration out of the live CPU/SDRAM
+    // request cone. These registers remain frozen through run and drain.
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            hirom <= 0;
+            save_enable <= 0;
+            rom_mask <= 0;
+            save_mask <= 0;
+            config_bad <= '1;
+        end else if (!run) begin
+            hirom <= cfg_map[0];
+            save_enable <= cfg_save_enable;
+            rom_mask <= cfg_rom_mask;
+            save_mask <= cfg_save_mask;
+            config_bad[0] <= cfg_map > 1;
+            config_bad[1] <= cfg_chip != 0;
+            config_bad[2] <= cfg_pal;
+            config_bad[3] <= ((cfg_rom_mask & (cfg_rom_mask + 22'd1)) != 0) ||
                             cfg_rom_mask[14:0] != 15'h7fff ||
                             (cfg_save_enable &&
                              (((cfg_save_mask & (cfg_save_mask + 17'd1)) != 0) ||
                               cfg_save_mask[10:0] != 11'h7ff));
+        end
+    end
+    assign unsupported[2:0] = config_bad[2:0];
+    assign unsupported[3] = interlace_requested;
+    assign unsupported[4] = config_bad[3];
     assign active = run && !reset && !console_reset && ipl_ready && coeff_ready &&
                     !(|{unsupported[4], unsupported[2:0]});
     assign core_reset = !active;
@@ -122,8 +146,8 @@ module snes_console (
     snes_vram vram (.clk, .enable(active), .addr_a(va), .addr_b(vb),
         .data_a(vda), .data_b(vdb), .we_a_n(vwa_n), .we_b_n(vwb_n),
         .q_a(vqa), .q_b(vqb));
-    snes_cart cart (.clk, .reset(core_reset), .enable(active), .hirom(cfg_map[0]),
-        .rom_mask(cfg_rom_mask), .save_enable(cfg_save_enable), .save_mask(cfg_save_mask),
+    snes_cart cart (.clk, .reset(core_reset), .enable(active), .hirom,
+        .rom_mask, .save_enable, .save_mask,
         .cpu_addr(ca), .cpu_data, .cpu_rd_cycle_n, .cpu_wr_n, .romsel_n,
         .sysclk_r_ce, .cart_data, .rom_addr, .rom_rd, .rom_q,
         .save_addr, .save_data, .save_rd, .save_wr, .save_q);

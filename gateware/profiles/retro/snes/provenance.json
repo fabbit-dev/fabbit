@@ -313,13 +313,13 @@
     {
       "path": "snes_console.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "14e21009ed4d2bfd9a7414d0dee7c521b689986cca32e28c3fb17dacaea21c55",
+      "sha256": "3914067ec5e4c03a1f1ea26b62c158a5cb56fdb0221084fdd88447797f0f893f",
       "license": "GPL-3.0-or-later"
     },
     {
       "path": "snes_memory.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "078c2d60423f277b95ccafda7da92ed1558f4a274cd3e779d2f30abf10454a58",
+      "sha256": "159a62a3676de7db1ec990935ba7375e33dc2d74ab534055a479709323324678",
       "license": "GPL-3.0-or-later"
     },
     {
@@ -337,24 +337,24 @@
     {
       "path": "snes_system.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "3f4ab75f9fe9e956aca94af5376307c152ea0c856ef2280c554373c35c9549a8",
+      "sha256": "31b622640dd89fbc443650dd060b870f85ba94c7c6d0d7d2c0bd9b8e5192dd9a",
       "license": "GPL-3.0-or-later"
     }
   ],
   "tests": [
     {
       "path": "gateware/sim/tb_retro_snes.sv",
-      "sha256": "da9cc867b2c28c2a60b50a39542b433fe3f8fafcf75cef01ae485ec9c4fed2db",
+      "sha256": "2787ce80094d8ced9262c446b72ffd4fb9907b98b7432c9add6d27fa09cfc09c",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     },
     {
       "path": "gateware/sim/tb_retro_snes_core.sv",
-      "sha256": "3aede610bfdb9c9450704dd8587b81126c5855253803e421babfbd6d3a31ca0d",
+      "sha256": "59786015f307bd3bf089be21b53c7af91d0b057c8dde6c62dcdc906227d25eab",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     },
     {
       "path": "gateware/sim/tb_retro_snes_memory.sv",
-      "sha256": "97332f836aacc5f23ad71fb26905bdfba921e6178049900312d30f7380af358a",
+      "sha256": "a4975a9ee9f6b15ed312147e1a9156fc76ef9f778682183ea7a2eb3eec6c7131",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     },
     {
