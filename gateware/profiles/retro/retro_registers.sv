@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 `default_nettype none
-module retro_registers (
+module retro_registers #(
+    // Systems present in THIS image: bits 0 NES, 1 MD, 2 SNES.
+    parameter logic [2:0] Caps = 3'b111
+) (
     input wire clk, rst, csr_we,
     input wire [7:0] csr_waddr, csr_raddr,
     input wire [31:0] csr_wdata,
@@ -83,7 +86,7 @@ module retro_registers (
       RegAssets: csr_rdata={30'b0,status[43:42]};
       RegError: csr_rdata=transport_fault ? 32'(ErrStream) : {24'b0,status[51:44]};
       RegAbi: csr_rdata=1;
-      RegCaps: csr_rdata=7;
+      RegCaps: csr_rdata={29'b0,Caps};
       default: ;
     endcase
   end

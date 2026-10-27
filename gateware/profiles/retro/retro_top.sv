@@ -4,6 +4,37 @@
 // backend. ABI in retro_regs_pkg. No game/BIOS defaults. Never flash without
 // passing implementation, board I/O timing and CDC gates.
 // Audio snapshots feed one 48kHz bridge and HDMI packet backend, also CSR17.
+// Per-console images: define RETRO_NO_NES / RETRO_NO_MD / RETRO_NO_SNES to omit
+// a console at compile time (macros keep instance names stable for XDC and
+// tests). RegCaps reports what remains. With exactly one console, its own
+// SDRAM clock drives the pins directly: no BUFGCTRL owner tree. The MD
+// management domain (session, writer, video bus) is always present.
+`ifdef RETRO_NO_NES
+`define RETRO_CAP_NES 1'b0
+`else
+`define RETRO_CAP_NES 1'b1
+`endif
+`ifdef RETRO_NO_MD
+`define RETRO_CAP_MD 1'b0
+`else
+`define RETRO_CAP_MD 1'b1
+`endif
+`ifdef RETRO_NO_SNES
+`define RETRO_CAP_SNES 1'b0
+`else
+`define RETRO_CAP_SNES 1'b1
+`endif
+`ifdef RETRO_NO_NES
+`ifdef RETRO_NO_MD
+`define RETRO_SINGLE
+`elsif RETRO_NO_SNES
+`define RETRO_SINGLE
+`endif
+`elsif RETRO_NO_MD
+`ifdef RETRO_NO_SNES
+`define RETRO_SINGLE
+`endif
+`endif
 module retro_top #(
     // Hardware baseline from nes_clocks; model-only fixtures may override to
     // match tb_nes's documented 14.5ns launch phase, not board calibration.
@@ -22,6 +53,11 @@ module retro_top #(
     inout wire [31:0] sdram_dq
 );
   import retro_regs_pkg::*;
+  localparam logic [2:0] Systems={`RETRO_CAP_SNES,`RETRO_CAP_MD,`RETRO_CAP_NES};
+  localparam bit Single=Systems==3'b001 || Systems==3'b010 || Systems==3'b100;
+  if (Systems==0) begin : g_no_console
+    $error("retro_top: at least one console must remain");
+  end
   wire bus_clk,bus_rst,csr_we,st_valid,pad_stb;
   wire [7:0] csr_waddr,csr_raddr,st_chan,st_data;
   wire [31:0] csr_wdata,pad_bus,csr_read;
@@ -38,28 +74,45 @@ module retro_top #(
   retro_clocks #(.Compensation("BUF_IN")) u_retroclk (
       .clk_25m(clk_25m_reference),.reset(bus_rst),.clk_md(md_clk),.clk_z80(z80_clk),
       .clk_snes(snes_source),.locked(md_locked),.clk_memory(md_sd_clock));
+`ifndef RETRO_NO_NES
   wire nclk,nfclk,nes_sd_clock,nlocked;
   nes_clocks #(.SdramPhase(NesSdramPhase),.Compensation("BUF_IN")) u_nesclk (
       .clk_25m(clk_25m_reference),.psclk(bus_clk),.psen(1'b0),.psincdec(1'b0),
       .psdone(),.clk(nclk),.fclk(nfclk),.sdram_clk(nes_sd_clock),.locked(nlocked));
+`else
+  wire nclk=0,nfclk=0,nes_sd_clock=0,nlocked=0;
+`endif
+`ifndef RETRO_NO_SNES
   wire service,snes_master,snes_sd_clock,slocked,snes_master_ce;
   retro_snes_clocks u_snesclk (.clk_source(snes_source),.reset(!md_locked),
       .service,.master(snes_master),.memory_clock(snes_sd_clock),.locked(slocked),
       .master_ce(snes_master_ce));
+`else
+  wire service=0,snes_master=0,snes_sd_clock=0,slocked=0,snes_master_ce=0;
+`endif
   wire clk_pix,clk_5x,rst_pix,vlocked;
   video_clocks #(.BufferedReference(1'b1)) u_vclk (
       .clk_25m(clk_25m_reference),.clk_pix,.clk_5x,.locked(vlocked),.rst_pix);
   wire rst_md,rst_nes,rst_service;
   reset_sync reset_md (.clk(md_clk),.rst_in(bus_rst || !md_locked),.rst_out(rst_md));
+`ifndef RETRO_NO_NES
   reset_sync reset_nes (.clk(nclk),.rst_in(bus_rst || !nlocked),.rst_out(rst_nes));
+`else
+  assign rst_nes=1;
+`endif
+`ifndef RETRO_NO_SNES
   reset_sync reset_service (.clk(service),.rst_in(bus_rst || !slocked),.rst_out(rst_service));
+`else
+  assign rst_service=1;
+`endif
 
   wire command_send,command_busy,command_valid,command_complete;
   wire [159:0] command_bus,command;
   wire [95:0] status,status_bus;
   wire [12:0] fifo_level;
   wire fifo_write,fifo_space,transport_bus,transport_md;
-  retro_registers registers (.clk(bus_clk),.rst(bus_rst),.csr_we,.csr_waddr,.csr_raddr,
+  retro_registers #(.Caps(Systems)) registers (
+      .clk(bus_clk),.rst(bus_rst),.csr_we,.csr_waddr,.csr_raddr,
       .csr_wdata,.csr_rdata(csr_read),.command_send,.command_data(command_bus),.command_busy,
       .status(status_bus),.fifo_level,.st_valid,.st_chan,.fifo_ready(fifo_space),
       .stream_write(fifo_write),.transport_fault(transport_bus));
@@ -73,12 +126,24 @@ module retro_top #(
   always_ff @(posedge md_clk) status_divider<=status_divider+1'b1;
   sync_bit fault_transfer (.clk(md_clk),.d(transport_bus),.q(transport_md));
   wire [31:0] pad_md,pad_nes,pad_snes;
+`ifndef RETRO_NO_MD
   cdc_word #(.Width(32)) pads_md (.sclk(bus_clk),.stb(pad_stb),.d(pad_bus),.dclk(md_clk),
       .q(pad_md),.q_stb());
+`else
+  assign pad_md=0;
+`endif
+`ifndef RETRO_NO_NES
   cdc_word #(.Width(32)) pads_nes (.sclk(bus_clk),.stb(pad_stb),.d(pad_bus),.dclk(nclk),
       .q(pad_nes),.q_stb());
+`else
+  assign pad_nes=0;
+`endif
+`ifndef RETRO_NO_SNES
   cdc_word #(.Width(32)) pads_snes (.sclk(bus_clk),.stb(pad_stb),.d(pad_bus),.dclk(snes_master),
       .q(pad_snes),.q_stb());
+`else
+  assign pad_snes=0;
+`endif
   function automatic logic [11:0] generic_pad(input logic [15:0] p);
     return {p[15],p[14],p[9:8],p[7:4],p[3:0]};
   endfunction
@@ -96,7 +161,8 @@ module retro_top #(
   wire [1:0] assets_md;
   wire asset_command,asset_complete,asset_failed;
   wire nes_done_md,nes_fail_md,nes_ready_md,md_memory_ready,snes_ready_md;
-  retro_session session (.clk(md_clk),.rst(rst_md),.command_valid,.command,.command_complete,
+  retro_session #(.Caps(Systems)) session (
+      .clk(md_clk),.rst(rst_md),.command_valid,.command,.command_complete,
       .transport_fault(transport_md),.selected,.owner_request,.owner,.owner_busy,
       .controllers_reset,.running,.loading,.ready,.payload_done,.switching,
       .nes_freeze,.nes_run,.md_run,.snes_run,.md_stopped,.snes_stopped,
@@ -107,8 +173,16 @@ module retro_top #(
       .backend_fail,.received,.error,.status,.asset_command,.asset_complete,.asset_failed);
   wire flush_bus,flush_nes,flush_service;
   sync_bit flush_bus_sync (.clk(bus_clk),.d(flush_hold!=0),.q(flush_bus));
+`ifndef RETRO_NO_NES
   sync_bit flush_nes_sync (.clk(nclk),.d(flush_hold!=0),.q(flush_nes));
+`else
+  assign flush_nes=0;
+`endif
+`ifndef RETRO_NO_SNES
   sync_bit flush_service_sync (.clk(service),.d(flush_hold!=0),.q(flush_service));
+`else
+  assign flush_service=0;
+`endif
   logic [5:0] flush_hold=0;
   always_ff @(posedge md_clk)
     if (flush) flush_hold<=63;else if (flush_hold!=0) flush_hold<=flush_hold-1'b1;
@@ -118,22 +192,11 @@ module retro_top #(
       .rclk(md_clk),.rrst(rst_md || flush_hold!=0),.out_valid(stream_valid),
       .out_ready(stream_ready),.out_data(stream_data));
 
+  // Console boundary nets; an omitted console ties its side idle below.
   wire nes_rst_control,nes_freeze_n,nes_run_n;
-  sync_bit nreset_sync (.clk(nclk),.d(controllers_reset),.q(nes_rst_control));
-  sync_bit nfreeze_sync (.clk(nclk),.d(nes_freeze),.q(nes_freeze_n));
-  sync_bit nrun_sync (.clk(nclk),.d(nes_run),.q(nes_run_n));
-  wire nload;
-  cdc_word #(.Width(1)) load_nes (.sclk(md_clk),.stb(nes_load),.d(1'b1),.dclk(nclk),
-      .q(),.q_stb(nload));
-  wire byte_busy,nbyte_valid;
-  wire [7:0] nbyte;
-  wire nbyte_ready;
-  retro_mailbox #(.Width(8)) nes_stream (.sclk(md_clk),.srst(rst_md),
-      .send(selected==1 && stream_valid && stream_ready),.data(stream_data),.busy(byte_busy),
-      .dclk(nclk),.drst(rst_nes),.valid(nbyte_valid),.received(nbyte),
-      .complete(nbyte_ready || !nloading));
+  wire byte_busy;
   wire nloading,ndone,nfail,nreset,nmemory_busy,nwe;
-  wire [7:0] nx,ny;
+  wire [7:0] nx,ny,njoy;
   wire [8:0] nindex,nline;
   wire [15:0] naudio;
   wire [31:0] dq_in,n_dq_out,m_dq_out,s_dq_out;
@@ -141,8 +204,21 @@ module retro_top #(
   wire [10:0] n_a,m_a,s_a;
   wire [1:0] n_ba,m_ba,s_ba;
   wire [2:0] n_cmd,m_cmd,s_cmd;
+`ifndef RETRO_NO_NES
+  sync_bit nreset_sync (.clk(nclk),.d(controllers_reset),.q(nes_rst_control));
+  sync_bit nfreeze_sync (.clk(nclk),.d(nes_freeze),.q(nes_freeze_n));
+  sync_bit nrun_sync (.clk(nclk),.d(nes_run),.q(nes_run_n));
+  wire nload;
+  cdc_word #(.Width(1)) load_nes (.sclk(md_clk),.stb(nes_load),.d(1'b1),.dclk(nclk),
+      .q(),.q_stb(nload));
+  wire nbyte_valid;
+  wire [7:0] nbyte;
+  wire nbyte_ready;
+  retro_mailbox #(.Width(8)) nes_stream (.sclk(md_clk),.srst(rst_md),
+      .send(selected==1 && stream_valid && stream_ready),.data(stream_data),.busy(byte_busy),
+      .dclk(nclk),.drst(rst_nes),.valid(nbyte_valid),.received(nbyte),
+      .complete(nbyte_ready || !nloading));
   wire unused_nclock;
-  wire [7:0] njoy;
   nes_pad n_pad (.clk(nclk),.frame(nwe && nx==0 && ny==0),.pad(pad_nes[15:0]),.joy(njoy));
   nes_system #(.Managed(1'b1),.SplitDq(1'b1)) nes (
       .nclk,.fclk(nfclk),.sdram_clk_in(nes_sd_clock),.rst(rst_nes || nes_rst_control),
@@ -156,6 +232,14 @@ module retro_top #(
   sync_bit ndone_sync (.clk(md_clk),.d(ndone),.q(nes_done_md));
   sync_bit nfail_sync (.clk(md_clk),.d(nfail),.q(nes_fail_md));
   sync_bit nready_sync (.clk(md_clk),.d(!nmemory_busy && !nes_rst_control),.q(nes_ready_md));
+`else
+  assign nes_rst_control=1;assign nes_freeze_n=0;assign nes_run_n=0;assign byte_busy=0;
+  assign nloading=0;assign ndone=0;assign nfail=0;assign nreset=0;assign nmemory_busy=0;
+  assign nwe=0;assign nx=0;assign ny=0;assign njoy=0;assign nindex=0;assign nline=0;
+  assign naudio=0;assign n_dq_out=0;assign n_dq_oe=0;assign n_a=0;assign n_ba=0;
+  assign n_cmd=3'b111;
+  assign nes_done_md=0;assign nes_fail_md=0;assign nes_ready_md=0;
+`endif
 
   wire md_req,md_write,md_req_ready,md_rsp,md_rsp_ready,md_fault;
   wire [20:0] md_addr;
@@ -164,6 +248,7 @@ module retro_top #(
   wire mpixel,mhs,mvs,mhde,mvde,minterlace;
   wire [1:0] mresolution;
   wire [15:0] maudio_l,maudio_r;
+`ifndef RETRO_NO_MD
   retro_md_machine md (.clk(md_clk),.z80_clk,.rst(rst_md || controllers_reset),.run(md_run),
       .loading(!controllers_reset && selected==2 && md_stopped && !md_run),
       .pad1(generic_pad(pad_md[15:0])),.pad2(generic_pad(pad_md[31:16])),
@@ -173,6 +258,12 @@ module retro_top #(
       .fault(md_fault),.red(mr),.green(mg),.blue(mb),.pixel_ce(mpixel),.hs_n(mhs),.vs_n(mvs),
       .hde(mhde),.vde(mvde),.interlace(minterlace),.resolution(mresolution),
       .audio_l(maudio_l),.audio_r(maudio_r));
+`else
+  assign md_req=0;assign md_write=0;assign md_addr=0;assign md_data=0;assign md_mask=0;
+  assign md_rsp_ready=0;assign md_fault=0;assign mr=0;assign mg=0;assign mb=0;
+  assign mpixel=0;assign mhs=1;assign mvs=1;assign mhde=0;assign mvde=0;assign minterlace=0;
+  assign mresolution=0;assign maudio_l=0;assign maudio_r=0;assign md_stopped=1;
+`endif
 
   wire writer_ready,writer_in_ready,writer_done,writer_fail,w_valid,w_ready,w_rsp,w_rsp_ready;
   wire [20:0] w_addr;
@@ -189,6 +280,7 @@ module retro_top #(
                       ((loading && writer_fail) || (selected==2 && md_fault)) ||
                       (selected==3 && snes_failure_md && running);
 
+`ifndef RETRO_NO_MD
   wire [1:0] fabric_ready,fabric_rsp;
   wire [31:0] fabric_rdata;
   wire fabric_valid,fabric_mem_ready,fabric_write,fabric_response,fabric_response_ready;
@@ -227,8 +319,15 @@ module retro_top #(
       .rsp_valid(physical_rsp),.rsp_ready(physical_rsp_ready),.rsp_rdata(memory_read),
       .sd_a(m_a),.sd_ba(m_ba),.sd_ras_n(m_cmd[2]),.sd_cas_n(m_cmd[1]),.sd_we_n(m_cmd[0]),
       .sd_dq_in(dq_in),.sd_dq_out(m_dq_out),.sd_dq_oe(m_dq_oe));
+`else
+  wire [1:0] fabric_ready=0,fabric_rsp=0;
+  wire fabric_idle=1;
+  assign md_req_ready=0;assign md_rsp=0;assign md_rdata=0;assign md_memory_ready=0;
+  assign m_a=0;assign m_ba=0;assign m_cmd=3'b111;assign m_dq_out=0;assign m_dq_oe=0;
+`endif
   assign md_cdc_idle=fabric_idle && host_bridge_idle && !byte_busy;
 
+`ifndef RETRO_NO_SNES
   wire snes_run_s,controller_reset_s;
   sync_bit srun_sync (.clk(service),.d(snes_run),.q(snes_run_s));
   sync_bit sreset_sync (.clk(service),.d(controllers_reset || selected!=3),.q(controller_reset_s));
@@ -316,10 +415,23 @@ module retro_top #(
   sync_bit sready_sync (.clk(md_clk),.d(snes_initialized_s),.q(snes_ready_md));
   sync_bit ipl_sync (.clk(md_clk),.d(snes_ipl),.q(assets_md[0]));
   sync_bit coeff_sync (.clk(md_clk),.d(snes_coeff),.q(assets_md[1]));
+`else
+  wire host_bridge_ready=0,host_bridge_rsp=0,host_bridge_idle=1,snes_failure_md=0;
+  wire [14:0] srgb=0;
+  wire spixel=0,shde=0,svde=0,sinterlace=0,sv224=0;
+  wire [8:0] sx=0,sy=0;
+  wire [15:0] saudio_l=0,saudio_r=0;
+  wire saudio_ready=0;
+  assign s_a=0;assign s_ba=0;assign s_cmd=3'b111;assign s_dq_out=0;assign s_dq_oe=0;
+  assign snes_stopped=1;assign snes_ready_md=0;assign assets_md=0;
+  assign asset_complete=0;assign asset_failed=0;
+  assign w_ready=fabric_ready[1];assign w_rsp=fabric_rsp[1];
+`endif
 
   wire physical_clock;
   wire [31:0] dq_out;
   wire dq_drive;
+`ifndef RETRO_SINGLE
   retro_sdram_owner owner_switch (.clk(md_clk),.rst(rst_md),.requested(owner_request),
       .safe(controllers_reset),.owner,.busy(owner_busy),.nes_clock(nes_sd_clock),
       .md_clock(md_sd_clock),.snes_clock(snes_sd_clock),.memory_clock(physical_clock),
@@ -329,6 +441,29 @@ module retro_top #(
       .sd_we_n(sdram_we_n),.dq_out,.dq_oe(dq_drive));
   ODDR #(.DDR_CLK_EDGE("SAME_EDGE")) memory_clock_forward (
       .C(physical_clock),.CE(1'b1),.D1(1'b1),.D2(1'b0),.R(1'b0),.S(1'b0),.Q(sdram_clk));
+`else
+  // One console: its controller and its own SDRAM clock, no clock multiplexer.
+  wire [10:0] single_a=Systems[0] ? n_a : Systems[1] ? m_a : s_a;
+  wire [1:0] single_ba=Systems[0] ? n_ba : Systems[1] ? m_ba : s_ba;
+  wire [2:0] single_cmd=Systems[0] ? n_cmd : Systems[1] ? m_cmd : s_cmd;
+  wire [31:0] single_data=Systems[0] ? n_dq_out : Systems[1] ? m_dq_out : s_dq_out;
+  wire single_drive=Systems[0] ? n_dq_oe : Systems[1] ? m_dq_oe : s_dq_oe;
+  retro_sdram_single #(.System(Systems[0] ? 2'd1 : Systems[1] ? 2'd2 : 2'd3)) owner_switch (
+      .clk(md_clk),.rst(rst_md),.requested(owner_request),.safe(controllers_reset),
+      .owner,.busy(owner_busy),.a(single_a),.ba(single_ba),.command(single_cmd),
+      .data(single_data),.drive(single_drive),.sd_a(sdram_a),.sd_ba(sdram_ba),
+      .sd_ras_n(sdram_ras_n),.sd_cas_n(sdram_cas_n),.sd_we_n(sdram_we_n),
+      .dq_out,.dq_oe(dq_drive));
+`ifndef RETRO_NO_NES
+  assign physical_clock=nes_sd_clock;
+`elsif RETRO_NO_MD
+  assign physical_clock=snes_sd_clock;
+`else
+  assign physical_clock=md_sd_clock;
+`endif
+  ODDR #(.DDR_CLK_EDGE("SAME_EDGE")) memory_clock_forward (
+      .C(physical_clock),.CE(1'b1),.D1(1'b1),.D2(1'b0),.R(1'b0),.S(1'b0),.Q(sdram_clk));
+`endif
   retro_sdram_io physical_io (.dq_in,.dq_out,.dq_oe(dq_drive),.sd_dq(sdram_dq));
   wire video_fault;
   wire [1:0] selected_bus=status_bus[41:40];
@@ -359,16 +494,34 @@ module retro_top #(
   logic [3:0] nes_audio_divider=0;
   always_ff @(posedge nclk) nes_audio_divider<=nes_audio_divider+1'b1;
   wire nes_audio_capture=nes_audio_divider==0 && nes_run_n && !rst_nes && !nes_rst_control;
+`ifndef RETRO_NO_NES
   cdc_word #(.Width(32)) nes_audio (.sclk(nclk),.stb(nes_audio_capture),
       .d({nes_signed_audio,nes_signed_audio}),.dclk(bus_clk),.q(audio_n),.q_stb(audio_strobes[0]));
+`else
+  assign audio_n=0;assign audio_strobes[0]=0;
+`endif
   // Drain gates the core clock and can hold CE_PIX high; never recount that
   // held pulse on the free MD clock after execution has been revoked.
+`ifndef RETRO_NO_MD
   cdc_word #(.Width(32)) md_audio (.sclk(md_clk),
       .stb(md_run && mpixel && !rst_md && !controllers_reset),.d({maudio_l,maudio_r}),
       .dclk(bus_clk),.q(audio_m),.q_stb(audio_strobes[1]));
+`else
+  assign audio_m=0;assign audio_strobes[1]=0;
+`endif
+`ifndef RETRO_NO_SNES
   cdc_word #(.Width(32)) snes_audio (.sclk(service),.stb(saudio_ready),.d({saudio_l,saudio_r}),
       .dclk(bus_clk),.q(audio_s),.q_stb(audio_strobes[2]));
+`else
+  assign audio_s=0;assign audio_strobes[2]=0;
+`endif
   assign led=running && !video_fault;
   assign uart_tx=1'b1;
 endmodule
+`undef RETRO_CAP_NES
+`undef RETRO_CAP_MD
+`undef RETRO_CAP_SNES
+`ifdef RETRO_SINGLE
+`undef RETRO_SINGLE
+`endif
 `default_nettype wire

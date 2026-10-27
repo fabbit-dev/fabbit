@@ -1,7 +1,21 @@
 # Static profile 4; synthesis first, implementation only on explicit -tclargs route.
+# -tclargs <synth|route> [all|nes|md|snes]: second argument selects the image.
+# Each per-console image has its own output directory and RETRO_NO_* defines.
 set root [file normalize [file join [file dirname [info script]] ../..]]
 set gate [file join $root gateware]
-set out [file join $gate build retro top]
+set retro_image [expr {[llength $argv] > 1 ? [lindex $argv 1] : "all"}]
+array set retro_image_systems {all 7 nes 1 md 2 snes 4}
+if {![info exists retro_image_systems($retro_image)]} {
+    error "Unknown retro image '$retro_image': expected all, nes, md or snes"
+}
+# Every image keeps the management domain (session/writer/video bus) on the MD
+# clock; single-console images drive SDRAM through retro_sdram_single.
+set retro_systems $retro_image_systems($retro_image)
+set retro_defines {}
+if {!($retro_systems & 1)} {lappend retro_defines RETRO_NO_NES}
+if {!($retro_systems & 2)} {lappend retro_defines RETRO_NO_MD}
+if {!($retro_systems & 4)} {lappend retro_defines RETRO_NO_SNES}
+set out [file join $gate build retro [expr {$retro_image eq "all" ? "top" : $retro_image}]]
 file mkdir $out
 proc retro_build_status {out state} {
     set fp [open [file join $out build-status.txt] w]
@@ -100,7 +114,8 @@ foreach name {profiles/retro/retro_regs_pkg.sv common/video/video_pkg.sv
     profiles/retro/retro_asset_atoms.sv profiles/retro/retro_md_machine.sv
     profiles/retro/md/retro_md_memory.sv profiles/retro/retro_mem_mux.sv
     profiles/retro/retro_mem_lanes.sv profiles/retro/retro_sdram.sv
-    profiles/retro/retro_sdram_owner.sv profiles/retro/retro_sdram_io.sv
+    profiles/retro/retro_sdram_owner.sv profiles/retro/retro_sdram_single.sv
+    profiles/retro/retro_sdram_io.sv
     profiles/retro/retro_pixels.sv profiles/retro/retro_framebuffer.sv
     profiles/retro/retro_rom_writer.sv profiles/retro/retro_video.sv
     profiles/retro/retro_top.sv} {lappend src [file join $gate $name]}
@@ -129,7 +144,12 @@ set_property include_dirs [list [file join $gate profiles retro md rtl vdp] \
     [current_fileset]
 cd $out
 read_verilog -sv $src
-synth_design -top retro_top -part xc7a50tfgg484-1 -flatten_hierarchy rebuilt
+set retro_define_args {}
+foreach retro_define $retro_defines {lappend retro_define_args -verilog_define $retro_define}
+synth_design -top retro_top -part xc7a50tfgg484-1 -flatten_hierarchy rebuilt {*}$retro_define_args
+set fp [open [file join $out image.txt] w]
+puts $fp "image $retro_image systems $retro_systems defines {$retro_defines}"
+close $fp
 report_utilization -file [file join $out synthesis.util.rpt]
 report_utilization -hierarchical -file [file join $out synthesis.hierarchy.rpt]
 report_drc -file [file join $out synthesis.drc.rpt]
@@ -141,6 +161,7 @@ report_clocks -file [file join $out synthesis.clocks.rpt]
 write_checkpoint -force [file join $out synthesis.dcp]
 retro_build_status $out synthesized
 if {[lindex $argv 0] ne "route"} {exit}
+# retro_top.xdc reads retro_systems to select the present consoles' crossings.
 foreach xdc {base.xdc clk25.xdc esp_bus.xdc hdmi.xdc sdram.xdc vivado_profile.xdc} {
     read_xdc [file join $gate constraints $xdc]
 }

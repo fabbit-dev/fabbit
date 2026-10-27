@@ -2,7 +2,11 @@
 `default_nettype none
 // Management in free MD-master domain. Bundled command/config stable through
 // mailbox ack. BEGIN/ABORT do not reset a live memory operation.
-module retro_session (
+module retro_session #(
+    // Systems present in THIS image: bits 0 NES, 1 MD, 2 SNES. BEGIN for an
+    // absent system fails ErrConfig before any owner/controller change.
+    parameter logic [2:0] Caps = 3'b111
+) (
     input wire clk,rst,command_valid,
     input wire [159:0] command,
     output logic command_complete=0,
@@ -92,7 +96,7 @@ module retro_session (
             command_seen<=1;
             pending_reply<=1;
             if (index==RegIpl || index==RegCoeff || clear_asset) begin
-              if (state!=Idle || owner_busy ||
+              if (!Caps[2] || state!=Idle || owner_busy ||
                   (clear_asset && value[ClearIplBit] && value[ClearCoeffBit])) begin
                 error<=ErrAssets;command_complete<=1;pending_reply<=0;
               end
@@ -131,7 +135,8 @@ module retro_session (
         end
         ResetOld: if (timer>=64) begin
           if (action==0) state<=Reply;
-          else if (next_system==0 || next_length==0 || next_length>24'd4194320 ||
+          else if (next_system==0 || !Caps[next_system-1'b1] ||
+                   next_length==0 || next_length>24'd4194320 ||
                    (next_system!=1 && (next_length>24'd4194304 || next_rom!=next_length)) ||
                    (next_system==2 && next_length[0]) ||
                    (next_system==3 && (assets_ready!=3 || next_map[3:1]!=0 || next_save>131072 ||

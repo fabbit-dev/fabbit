@@ -1,6 +1,21 @@
 # Reuse existing verified board pin XDCs; this file adds only timing relationships.
+# retro_systems (bits 0 NES, 1 MD, 2 SNES) must match retro_top's RETRO_NO_*
+# defines; the build sets it. Constraints of an absent console are not applied,
+# and that console's crossings must then be absent from the netlist.
+# The management domain (session, writer, video bus) runs on the MD clock in
+# every image; system "shared" below means always present.
+if {![info exists retro_systems]} {set retro_systems 7}
+if {$retro_systems < 1 || $retro_systems > 7} {
+    error "retro CDC: unsupported retro_systems $retro_systems"
+}
+proc retro_has {system} {
+    upvar #0 retro_systems systems
+    if {$system eq "shared"} {return 1}
+    return [expr {($systems >> $system) & 1}]
+}
 # Legacy sdram.xdc assumes ONE controller's output flop directly at the pin.
 # The shared owner mux invalidates that IOB packing request; not an I/O waiver.
+# Single-console images also gate their command bus at the owner; keep FALSE.
 # Timing remains reported/unconstrained until shared physical path signoff.
 set_property IOB FALSE [get_ports {sdram_a[*] sdram_ba[*] sdram_ras_n sdram_cas_n sdram_we_n}]
 # CDC constraints are deliberately endpoint-scoped. Never false-path all
@@ -72,13 +87,21 @@ set retro_bit_syncs [get_cells -quiet -hierarchical -filter \
 retro_cdc_count $retro_bit_syncs 1 256 {sync_bit instances}
 set retro_owner_syncs [get_cells -quiet -hierarchical -regexp \
     {^owner_switch/g_select\[[0-3]\][/.](command_sync|ack_sync)$}]
-retro_cdc_count $retro_owner_syncs 8 8 {owner command/ack sync_bit instances}
+set retro_single [expr {$retro_systems == 1 || $retro_systems == 2 || $retro_systems == 4}]
+if {$retro_single} {
+    # Single console: retro_sdram_single has no clock mux and no synchronizers.
+    retro_cdc_count $retro_owner_syncs 0 0 {single-console owner sync_bit instances}
+    retro_cdc_count [get_cells -quiet -hierarchical -filter {REF_NAME == BUFGCTRL && NAME =~ owner_switch/*}] \
+        0 0 {single-console owner BUFGCTRL}
+} else {
+    retro_cdc_count $retro_owner_syncs 8 8 {owner command/ack sync_bit instances}
+}
 foreach retro_sync $retro_owner_syncs {
     if {$retro_sync ni $retro_bit_syncs} {
         error "retro CDC: $retro_sync is not a discovered sync_bit instance"
     }
 }
-puts "retro CDC sync_bit: [llength $retro_bit_syncs] first-stage D pins, including eight owner command/ack crossings"
+puts "retro CDC sync_bit: [llength $retro_bit_syncs] first-stage D pins, [llength $retro_owner_syncs] owner command/ack crossings"
 foreach retro_sync $retro_bit_syncs {
     set retro_name [get_property NAME $retro_sync]
     set retro_stages [retro_cdc_regs $retro_name s 2 2]
@@ -124,13 +147,21 @@ foreach retro_sync $retro_reset_syncs {
 
 # retro_mailbox.sv holds payload until acknowledgement; received_q is the
 # destination-domain capture (NOT its downstream consumer or pending flag).
-foreach {retro_instance retro_width} {
-    commands 160
-    nes_stream 8
-    host_bridge/transaction 58
-    atom_transfer 40
+# Absent consoles: their named crossings must not exist at all.
+proc retro_cdc_absent {instance} {
+    set pattern [format {^%s/.*_reg(\[[0-9]+\])?$} [retro_cdc_escape $instance]]
+    set left [get_cells -quiet -hierarchical -regexp $pattern]
+    if {[llength $left]} {error "retro CDC: absent console crossing $instance remains"}
+}
+foreach {retro_instance retro_width retro_system} {
+    commands 160 shared
+    nes_stream 8 0
+    host_bridge/transaction 58 2
+    atom_transfer 40 2
 } {
-    retro_cdc_bundle $retro_instance payload received_q $retro_width
+    if {[retro_has $retro_system]} {
+        retro_cdc_bundle $retro_instance payload received_q $retro_width
+    } else {retro_cdc_absent $retro_instance}
 }
 
 # cdc_word.sv: bound the held word_q -> q capture by ONE destination period.
@@ -139,25 +170,55 @@ foreach {retro_instance retro_width} {
 # >=4 destination-cycle strobe spacing, reset/owner transitions and coherent
 # consumer use. Functional proof PENDING; no CDC/report waiver is applied here.
 # load_nes has constant data and an unused q: only its toggle synchronizer exists.
-foreach {retro_instance retro_width} {
-    status_transfer 96
-    pads_md 32
-    snes_config_map 5
-    snes_config_memory 42
-    nes_audio 32
-    md_audio 32
-    snes_audio 32
-    video/md_mode_sync 2
-    video/snes_mode_sync 1
-    video/presentation_config 2
-    video/audio_transfer/u_sample 33
+foreach {retro_instance retro_width retro_system} {
+    status_transfer 96 shared
+    pads_md 32 1
+    snes_config_map 5 2
+    snes_config_memory 42 2
+    nes_audio 32 0
+    md_audio 32 1
+    snes_audio 32 2
+    video/presentation_config 2 shared
+    video/audio_transfer/u_sample 33 shared
 } {
-    retro_cdc_bundle $retro_instance word_q q $retro_width
+    if {[retro_has $retro_system]} {
+        retro_cdc_bundle $retro_instance word_q q $retro_width
+    } else {retro_cdc_absent $retro_instance}
+}
+# The shared video block keeps each console's mode word; for an absent console
+# its launch is constant, so synthesis may leave only the change-detect sync
+# with a GND input.
+proc retro_cdc_constant_sync {instance} {
+    set regs [get_cells -quiet -hierarchical -regexp \
+        [format {^%s/.*_reg(\[[0-9]+\])?$} [retro_cdc_escape $instance]]]
+    if {![llength $regs]} {return}
+    set expected [get_cells -quiet -hierarchical -regexp \
+        [format {^%s/u_s/s_reg\[[01]\]$} [retro_cdc_escape $instance]]]
+    if {[llength $regs] != 2 || [llength $expected] != 2} {
+        error "retro CDC: unexpected constant-source registers $regs"
+    }
+    set net [get_nets -quiet -of_objects [get_pins -quiet $instance/u_s/s_reg[0]/D]]
+    set driver [get_cells -quiet -of_objects \
+        [get_pins -quiet -leaf -of_objects $net -filter {DIRECTION == OUT}]]
+    if {[llength $driver] != 1 || [get_property REF_NAME $driver] ne "GND"} {
+        error "retro CDC: $instance source is not constant"
+    }
+}
+foreach {retro_instance retro_width retro_system} {
+    video/md_mode_sync 2 1
+    video/snes_mode_sync 1 2
+} {
+    if {[retro_has $retro_system]} {
+        retro_cdc_bundle $retro_instance word_q q $retro_width
+    } else {retro_cdc_constant_sync $retro_instance}
 }
 # These three instances have identical source clock/strobe/data. Rebuilt
 # synthesis merges their launch words into pads_md; captures remain separate.
-retro_cdc_bundle pads_nes word_q q 32 pads_md
-retro_cdc_bundle pads_snes word_q q 32 pads_md
+foreach {retro_instance retro_system} {pads_nes 0 pads_snes 2} {
+    if {[retro_has $retro_system]} {
+        retro_cdc_bundle $retro_instance word_q q 32 pads_md
+    } else {retro_cdc_absent $retro_instance}
+}
 
 # fifo_async.sv: Aw+1 Gray bits must reach stage 1 within the SHORTER of
 # launch/capture clock periods. Neither Gray stage is false-pathed; stage 1 ->
@@ -193,12 +254,56 @@ proc retro_cdc_gray_launch {instance direction bits} {
     set cells [get_cells -quiet -hierarchical -regexp [format {^(%s)$} [join $patterns |]]]
     return [retro_cdc_count $cells $bits $bits "$instance $direction Gray launch"]
 }
-foreach {retro_instance retro_bits} {
-    rom_fifo 13
-    video/g_source[0].fifo 10
-    video/g_source[1].fifo 10
-    video/g_source[2].fifo 10
-} {
+# Shared video FIFOs remain instantiated. In an absent console's slot the write
+# (console) clock is tied low: read-pointer captures there must be GND-clocked,
+# and every write-pointer capture a LUT1 fed only by GND, with no startpoint.
+proc retro_constant_capture {capture} {
+    set d [retro_cdc_pins $capture D]
+    set net [get_nets -quiet -of_objects $d]
+    retro_cdc_count $net 1 1 "$capture D net"
+    set driver [get_cells -quiet -of_objects \
+        [get_pins -quiet -leaf -of_objects $net -filter {DIRECTION == OUT}]]
+    retro_cdc_count $driver 1 1 "$capture D driver"
+    if {[llength [all_fanin -quiet -flat -startpoints_only -to $d]]} {
+        error "retro CDC: $capture constant capture has timing startpoint"
+    }
+    if {[get_property REF_NAME $driver] ne "LUT1"} {
+        error "retro CDC: $capture constant capture is not LUT1"
+    }
+    set input [get_pins -quiet -of_objects $driver -filter {REF_PIN_NAME == I0}]
+    set source [get_cells -quiet -of_objects \
+        [get_pins -quiet -leaf -of_objects [get_nets -quiet -of_objects $input] \
+         -filter {DIRECTION == OUT}]]
+    if {[llength $source] != 1 || [get_property REF_NAME $source] ne "GND"} {
+        error "retro CDC: $capture constant capture is not GND driven"
+    }
+}
+set retro_gray {rom_fifo 13}
+foreach {retro_slot retro_system} {0 0 1 1 2 2} {
+    set retro_instance "video/g_source\[$retro_slot\].fifo"
+    if {[retro_has $retro_system]} {
+        lappend retro_gray $retro_instance 10
+        continue
+    }
+    # The absent console's clock is tied low: read-pointer captures in that
+    # domain never clock, so there is no crossing. Prove the clock is GND.
+    foreach retro_capture [concat [retro_cdc_regs $retro_instance rgray_s1 10 10] \
+                                  [retro_cdc_regs $retro_instance rgray_s2 10 10]] {
+        set retro_clock_net [get_nets -quiet -of_objects [retro_cdc_pins $retro_capture C]]
+        set retro_clock_driver [get_cells -quiet -of_objects \
+            [get_pins -quiet -leaf -of_objects $retro_clock_net -filter {DIRECTION == OUT}]]
+        if {[llength $retro_clock_driver] != 1 ||
+            [get_property REF_NAME $retro_clock_driver] ne "GND"} {
+            error "retro CDC: $retro_capture of absent console is clocked"
+        }
+    }
+    retro_cdc_regs $retro_instance wgray_s2 10 10
+    foreach retro_capture [retro_cdc_regs $retro_instance wgray_s1 10 10] {
+        retro_constant_capture $retro_capture
+    }
+    puts "retro CDC inactive $retro_instance: unclocked read Gray, constant write Gray"
+}
+foreach {retro_instance retro_bits} $retro_gray {
     foreach retro_direction {w r} {
         set retro_src [retro_cdc_gray_launch $retro_instance $retro_direction $retro_bits]
         set retro_dst [retro_cdc_regs $retro_instance ${retro_direction}gray_s1 \
@@ -220,14 +325,28 @@ foreach {retro_instance retro_bits} {
 # BUFH input bridges preserve these source clocks; they add no timing exception.
 # The buffered-reference video MMCM is u_vclk/g_buffered_reference/u_mmcm;
 # its generated clocks are inferred normally, with no clock-group waiver.
-set_clock_groups -physically_exclusive \
-    -group [get_clocks -of_objects [get_pins u_nesclk/u_mmcm/CLKOUT2]] \
-    -group [get_clocks -of_objects [get_pins u_retroclk/u_mmcm/CLKOUT3]] \
-    -group [get_clocks -of_objects [get_pins u_snesclk/mmcm/CLKOUT2]]
-# Existing NES controller 1:3 schedule, preserved from nes_clocks.xdc.
-set nes_clk [get_clocks -of_objects [get_pins u_nesclk/u_mmcm/CLKOUT0]]
-set nes_fclk [get_clocks -of_objects [get_pins u_nesclk/u_mmcm/CLKOUT1]]
-set_multicycle_path 3 -setup -end -from $nes_clk -to $nes_fclk
-set_multicycle_path 2 -hold -end -from $nes_clk -to $nes_fclk
-set_multicycle_path 2 -setup -start -from $nes_fclk -to $nes_clk
-set_multicycle_path 1 -hold -start -from $nes_fclk -to $nes_clk
+# Only images with the owner mux have alternative memory clocks to group.
+if {!$retro_single} {
+    set retro_memory_groups {}
+    if {[retro_has 0]} {lappend retro_memory_groups [get_clocks -of_objects [get_pins u_nesclk/u_mmcm/CLKOUT2]]}
+    lappend retro_memory_groups [get_clocks -of_objects [get_pins u_retroclk/u_mmcm/CLKOUT3]]
+    if {[retro_has 2]} {lappend retro_memory_groups [get_clocks -of_objects [get_pins u_snesclk/mmcm/CLKOUT2]]}
+    set retro_group_args {}
+    foreach retro_group $retro_memory_groups {lappend retro_group_args -group $retro_group}
+    set_clock_groups -physically_exclusive {*}$retro_group_args
+}
+foreach {retro_clock_cell retro_system} {u_nesclk 0 u_snesclk 2} {
+    if {![retro_has $retro_system] &&
+        [llength [get_cells -quiet -hierarchical -regexp "^${retro_clock_cell}/.*"]]} {
+        error "retro CDC: absent console clock module $retro_clock_cell remains"
+    }
+}
+if {[retro_has 0]} {
+    # Existing NES controller 1:3 schedule, preserved from nes_clocks.xdc.
+    set nes_clk [get_clocks -of_objects [get_pins u_nesclk/u_mmcm/CLKOUT0]]
+    set nes_fclk [get_clocks -of_objects [get_pins u_nesclk/u_mmcm/CLKOUT1]]
+    set_multicycle_path 3 -setup -end -from $nes_clk -to $nes_fclk
+    set_multicycle_path 2 -hold -end -from $nes_clk -to $nes_fclk
+    set_multicycle_path 2 -setup -start -from $nes_fclk -to $nes_clk
+    set_multicycle_path 1 -hold -start -from $nes_fclk -to $nes_clk
+}

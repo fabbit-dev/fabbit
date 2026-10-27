@@ -25,6 +25,63 @@ module tb_retro_session;
   wire asset_command;
   logic asset_complete=0,asset_failed=0;
   retro_session dut (.*);
+  // MD-only image: same management FSM, NES/SNES absent at compile time.
+  wire md_command_complete;
+  wire [1:0] md_selected,md_owner_request;
+  wire md_controllers_reset,md_running,md_loading,md_ready,md_payload_done,md_switching;
+  wire md_nes_freeze,md_nes_run,md_md_run,md_snes_run;
+  wire [23:0] md_length,md_rom_size,md_received;
+  wire [17:0] md_save_size;
+  wire [4:0] md_map_config;
+  wire md_flush,md_nes_load,md_writer_start,md_writer_abort,md_stream_ready;
+  wire [7:0] md_error;
+  wire [95:0] md_status;
+  wire md_asset_command;
+  logic [159:0] md_command=0;
+  logic md_command_valid=0;
+  logic [1:0] md_owner=0;
+  always @(posedge clk) if(md_controllers_reset) md_owner<=md_owner_request;
+  retro_session #(.Caps(3'b010)) md_only (.clk,.rst,.command_valid(md_command_valid),
+      .command(md_command),.command_complete(md_command_complete),.transport_fault,
+      .selected(md_selected),.owner_request(md_owner_request),.owner(md_owner),.owner_busy,
+      .controllers_reset(md_controllers_reset),.running(md_running),.loading(md_loading),
+      .ready(md_ready),.payload_done(md_payload_done),.switching(md_switching),
+      .nes_freeze(md_nes_freeze),.nes_run(md_nes_run),.md_run(md_md_run),
+      .snes_run(md_snes_run),.md_stopped,.snes_stopped,.writer_idle(1'b1),.md_memory_idle,
+      .nes_done,.nes_fail,.nes_memory_ready,.md_memory_ready,.snes_memory_ready,
+      .assets_ready,.length(md_length),.rom_size(md_rom_size),.save_size(md_save_size),
+      .map_config(md_map_config),.flush(md_flush),.nes_load(md_nes_load),
+      .writer_start(md_writer_start),.writer_abort(md_writer_abort),.stream_valid(1'b0),
+      .stream_ready(md_stream_ready),.backend_ready,.backend_done(1'b0),.backend_fail(1'b0),
+      .received(md_received),.error(md_error),.status(md_status),
+      .asset_command(md_asset_command),.asset_complete(1'b0),.asset_failed(1'b0));
+  task automatic md_cmd(input logic[31:0] v,input logic[1:0] sys,input logic[7:0] reg_index);
+    @(negedge clk);
+    md_command={21'b0,18'b0,(sys==3 ? 24'd32768 : 24'd4),5'b0,
+                (sys==3 ? 24'd32768 : 24'd4),sys,26'b0,v,reg_index};
+    md_command_valid=1;
+    do @(negedge clk);while(!md_command_complete);
+    repeat(5) @(negedge clk);
+    md_command_valid=0;repeat(5) @(negedge clk);
+  endtask
+  task automatic check_md_only;
+    // Absent systems fail closed at BEGIN: no owner change, controllers stay reset.
+    for(int sys=1;sys<=3;sys+=2) begin
+      md_cmd(32'h52540001,2'(sys),RegControl);
+      assert(md_error==ErrConfig && md_selected==0 && md_owner_request==0 &&
+             md_controllers_reset && !md_ready && !md_running)
+        else $fatal(1,"MD-only image accepted absent system %0d",sys);
+      md_cmd(32'h52540004,2'(sys),RegControl);
+    end
+    // Asset programming belongs to SNES only.
+    md_cmd(32'h52540100,2'd2,RegControl);
+    assert(md_error==ErrAssets && !md_asset_command) else $fatal(1,"MD-only accepted SNES asset");
+    md_cmd(32'h52540004,2'd2,RegControl);
+    md_cmd(32'h52540001,2'd2,RegControl);
+    assert(md_ready && md_selected==2 && md_error==0) else $fatal(1,"MD-only rejected MD BEGIN");
+    md_cmd(32'h52540004,2'd2,RegControl);
+    $display("ok MD-only session: NES/SNES BEGIN ErrConfig, SNES assets ErrAssets, MD BEGIN");
+  endtask
   always @(posedge clk) if(controllers_reset) owner<=owner_request;
   // Model an active ROM collector: only an explicit abort releases its idle.
   always @(negedge clk) if(writer_abort) writer_idle=1;
@@ -65,7 +122,9 @@ module tb_retro_session;
           else $fatal(1,"RESET after ABORT must reject without stuck command");
       cmd(32'h52540004,2'(sys));
     end
-    $display("ok session BEGIN exact payload COMMIT unsafe-assets ABORT NES/MD/SNES");$finish;
+    $display("ok session BEGIN exact payload COMMIT unsafe-assets ABORT NES/MD/SNES");
+    check_md_only();
+    $finish;
   end
   initial begin #5ms;$fatal(1,"timeout");end
 endmodule
