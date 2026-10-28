@@ -1,6 +1,6 @@
 // Порт лаунчера на стенд: плоскость golden по шине, кнопки, игры из хранилища, NVS.
-// Задача menu владеет экраном: пока в ПЛИС golden, ведёт лаунчер; пока игра, раз в 300 мс читает
-// ID и после выхода (Fn+Назад, сбой) возвращает список игр.
+// Задача menu владеет экраном: golden ведёт лаунчер, ЛА показывает замороженный захват;
+// игра оставляет видео своему ядру. После выхода (Fn+Назад, сбой) восстанавливает меню.
 #include "launcher_port.h"
 
 #include <ctype.h>
@@ -18,6 +18,9 @@
 #include "freertos/task.h"
 #include "input.h"
 #include "lc_app.h"
+#include "la_screen.h"
+#include "la_capture.h"
+#include "la_demo.h"
 #include "nes_rom.h"
 #include "nvs.h"
 #include "nvs_flash.h"
@@ -55,6 +58,7 @@ typedef struct {
     uint32_t n;
 } run_t;
 static run_t s_runs[RUNS_MAX];
+static bool demo_requested;
 
 static uint32_t name_hash(const char *s) { return fl_crc32(0, (const uint8_t *)s, strlen(s)); }
 
@@ -236,10 +240,48 @@ static bool p_run(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, s
     return ok;
 }
 
+static bool p_run_logic(lc_progress_cb cb, void *ctx, char *err, size_t n)
+{
+    demo_requested = false;
+    la_demo_stop();
+    run_ctx_t r = {cb, ctx};
+    fl_lock();
+    esp_err_t e = pm_load_cb("la", false, pm_stage, &r);
+    if (e == ESP_OK) {
+        uint32_t magic;
+        e = fl_csr_read(64, &magic, 1);
+        if (e == ESP_OK && magic != 0x46424d56) e = ESP_ERR_NOT_SUPPORTED;
+    }
+    if (e != ESP_OK) {
+        snprintf(err, n, "%s", esp_err_to_name(e));
+        fl_id_t id;
+        if (fl_id(&id) == ESP_OK && !strcmp(id.magic, "FBPR")) fl_reboot_golden();
+        wait_golden(2000);
+    }
+    fl_unlock();
+    return e == ESP_OK;
+}
+
+static bool p_run_demo(lc_progress_cb cb, void *ctx, char *err, size_t n)
+{
+    if (!p_run_logic(cb, ctx, err, n)) return false;
+    esp_err_t e = la_demo_start();
+    if (e != ESP_OK) {
+        snprintf(err, n, "%s", esp_err_to_name(e));
+        fl_reboot_golden();
+        wait_golden(2000);
+        return false;
+    }
+    demo_requested = true;
+    return true;
+}
+
 static const lc_port_t s_port = {
     .now_ms = p_now, .sleep_ms = p_sleep, .palette = p_palette, .show = p_show,
     .games = p_games, .thumb = p_thumb, .run = p_run,
     .load = p_load, .save = p_save,
+    .run_logic = p_run_logic,
+    .run_demo = p_run_demo,
 };
 
 // ---------------- задача ----------------
@@ -262,7 +304,7 @@ static bool map_key(const in_event_t *e, lc_key_t *k, bool *rep)
     }
 }
 
-typedef enum { M_WAIT, M_MENU, M_GAME } menu_mode_t;
+typedef enum { M_WAIT, M_MENU, M_GAME, M_LOGIC } menu_mode_t;
 
 static int golden_kind(void)  // 2: golden с плоскостью, 1: старый golden, 3: профиль, 0: нет ответа
 {
@@ -286,17 +328,41 @@ static void task(void *arg)
     menu_mode_t m = M_WAIT;
     bool started = false, warned = false;
     for (;;) {
+        if (m == M_LOGIC) {
+            la_demo_poll();
+            if (!la_screen_tick()) { la_demo_stop(); m = M_WAIT; continue; }
+            in_event_t event;
+            if (in_get(&event, pdMS_TO_TICKS(20))) la_screen_key(&event);
+            continue;
+        }
         if (m != M_MENU) {
             vTaskDelay(pdMS_TO_TICKS(POLL_MS));
             fl_lock();
             int k = golden_kind();
+            if (k == 3) {
+                fl_id_t id;
+                if (fl_id(&id) == ESP_OK && id.profile == LA_PROFILE_ID) {
+                    // UI framebuffer exists even if the ESP started with LA already running.
+                    if (!started) ui_init(fb, &s_ui);
+                    if (la_screen_attach()) {
+                        if (demo_requested) la_screen_demo();
+                        demo_requested = false;
+                        in_flush(); m = M_LOGIC; fl_unlock(); continue;
+                    }
+                    demo_requested = false;
+                    la_demo_stop();
+                }
+            }
+            // Only the successful LA-screen attach above may retain demo ownership.
+            demo_requested = false;
+            la_demo_stop();
             if (k == 3 && m == M_WAIT) {
                 if (!started) lc_app_attach_running();
                 m = M_GAME;
             } else if (k == 2) {
                 in_flush();
                 if (!started) lc_app_start(&s_port, fb, &s_ui), started = true;
-                else lc_app_back();
+                else { ui_init(fb, &s_ui); lc_app_back(); }
                 m = M_MENU;
             } else if (k == 1 && !warned) {
                 ESP_LOGW(TAG, "golden без плоскости меню (версия 1): меню не показываю");

@@ -36,6 +36,8 @@ typedef struct {
     bool (*run)(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n);
     void (*load)(lc_saved_t *s);
     void (*save)(const lc_saved_t *s);
+    bool (*run_logic)(lc_progress_cb cb, void *ctx, char *err, size_t n);
+    bool (*run_demo)(lc_progress_cb cb, void *ctx, char *err, size_t n);
 } lc_port_t;
 
 // в ПЛИС golden с плоскостью: заставка с бегущим кроликом (кнопка пропускает), главный экран
@@ -43,9 +45,9 @@ void lc_app_start(const lc_port_t *port, uint8_t *fb, const ui_port_t *ui);
 void lc_app_key(lc_key_t k, bool repeat);
 // анимации и сон; звать каждые 10–30 мс. Возвращает мс до следующего нужного вызова
 uint32_t lc_app_tick(void);
-// игра идёт (ПЛИС в профиле)
+// ПЛИС в профиле или идёт его загрузка.
 bool lc_app_running(void);
-// ПЛИС снова в golden (выход из игры или сбой): заставка → список игр на той же игре
+// ПЛИС снова в golden: игра возвращает список игр, ЛА возвращает карточки профилей.
 void lc_app_back(void);
 // при старте супервизора ПЛИС уже в профиле: ждать возврата, как после запуска игры
 void lc_app_attach_running(void);
