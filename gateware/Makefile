@@ -81,6 +81,10 @@ retro_sdram_eye_snes_XDC := $(RETRO_EYE_XDC)
 retro_sdram_eye_md_iob_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_md_iob_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc \
                               constraints/sdram.xdc constraints/retro_sdram_eye_iob.xdc
+retro_sdram_eye_snes_iob_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_snes_iob_XDC := $(retro_sdram_eye_md_iob_XDC)
+retro_sdram_eye_snes_iob_cl3_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_snes_iob_cl3_XDC := $(retro_sdram_eye_md_iob_XDC)
 retro_sdram_eye_md_iob_dq_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_md_iob_dq_XDC := $(retro_sdram_eye_md_iob_XDC) constraints/retro_sdram_eye_iob_dq.xdc
 

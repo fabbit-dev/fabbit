@@ -11,8 +11,11 @@
 //   3 ошибок; 4 [31:24] первые прочитанные биты 7:0, [23:16] ждали; 5 слово первой ошибки
 //   6 фаза: запись сдвиг на N шагов, чтение [15:0] положение, бит 31 сдвиг идёт
 //   7 шагов на период; 8 log2 слов в проходе (запись, 4..21, по умолчанию 16); 9 шаг, фс
+//   10 диагностика состояния тестера, 11 текущий адрес (только для отладки, без CDC)
 module retro_sdram_eye #(
-    parameter bit Mode = 1'b0
+    parameter bit Mode = 1'b0,
+    // CAS latency override for diagnosis; 0 = profile value (MD 3, SNES 2).
+    parameter int CasOverride = 0
 ) (
     input  wire        clk,
     output wire        led,
@@ -95,7 +98,10 @@ module retro_sdram_eye #(
   always_ff @(posedge clk_bus) begin
     psen <= 1'b0;
     if (rst_bus) begin
+      // До захвата PLL такт шины нестабилен: без сброса ps_pos набирает мусор, а 0 должен
+      // означать фазу профиля (сдвиг MMCM гейтится rst_bus и locked, реальная фаза не уходит).
       ps_left <= '0;
+      ps_pos <= '0;
       ps_busy <= 1'b0;
     end else begin
       if (csr_we && csr_waddr == 8'd6) ps_left <= ps_left + signed'(csr_wdata[15:0]);
@@ -137,7 +143,7 @@ module retro_sdram_eye #(
   retro_sdram #(
       .InitCycles(Mode ? 18000 : 10740), .RefreshCycles(Mode ? 480 : 375),
       .Trcd(2), .Trp(2), .Trfc(Mode ? 6 : 4), .Tras(Mode ? 4 : 3), .Twr(2), .Tmrd(2),
-      .Cas(Mode ? 2 : 3)
+      .Cas(CasOverride != 0 ? CasOverride : Mode ? 2 : 3)
   ) u_mem (
       .clk(mclk), .rst(rst_mem), .initialized(init), .req_valid, .req_ready, .req_write,
       .req_addr, .req_wdata, .rsp_valid, .rsp_ready(1'b1), .rsp_rdata,
@@ -156,6 +162,7 @@ module retro_sdram_eye #(
   logic [15:0] passes = '0;
   logic [31:0] errors = '0, err_word = '0;
   logic [7:0] err_got = '0, err_want = '0;
+  logic [31:0] err_got_word = '0, err_want_word = '0;
   logic [20:0] last_addr = '0;
   logic waiting = 1'b0;
   wire [20:0] top = 21'((32'd1 << bits) - 1);
@@ -198,6 +205,8 @@ module retro_sdram_eye #(
             if (errors == 0) begin
               err_word <= {11'd0, req_addr};
               err_got <= rsp_rdata[7:0];
+              err_got_word <= rsp_rdata;
+              err_want_word <= pattern(req_addr, passes);
               err_want <= 8'(pattern(req_addr, passes));
             end
             if (errors != '1) errors <= errors + 1'b1;
@@ -229,6 +238,13 @@ module retro_sdram_eye #(
       8'd7: csr_rdata = Period;
       8'd8: csr_rdata = {27'd0, bits_bus};
       8'd9: csr_rdata = StepFs;
+      // Диагностика зависания (снимок домена памяти, читать при стоящем тестере):
+      // [1:0] phase, 2 waiting, 3 req_valid, 4 req_ready, 5 rsp_valid, 6 init, [12:8] bits.
+      8'd10: csr_rdata = {19'd0, bits, 1'b0, init, rsp_valid, req_ready, req_valid, waiting,
+                          phase};
+      8'd11: csr_rdata = {11'd0, req_addr};
+      8'd12: csr_rdata = err_got_word;
+      8'd13: csr_rdata = err_want_word;
       default: csr_rdata = '0;
     endcase
 
@@ -267,6 +283,26 @@ module retro_sdram_eye_md_iob (
   retro_sdram_eye #(.Mode(1'b0)) u (.*);
 endmodule
 `default_nettype wire
+`default_nettype none
+// A/B: SNES-частота с командами/адресом в IOB.
+module retro_sdram_eye_snes_iob (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b1)) u (.*);
+endmodule
+`default_nettype none
+// Диагностика: SNES-частота, CL3 вместо CL2 профиля.
+module retro_sdram_eye_snes_iob_cl3 (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b1),.CasOverride(3)) u (.*);
+endmodule
 `default_nettype none
 module retro_sdram_eye_md_iob_dq (
     input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
