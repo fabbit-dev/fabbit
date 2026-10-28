@@ -16,6 +16,19 @@ module tb_retro_sdram_single;
   wire sd_ras_n,sd_cas_n,sd_we_n,dq_oe;
   wire [31:0] dq_out;
   retro_sdram_single #(.System(2'd2)) dut (.*);
+  // Ungated variant: command/address pass through (controller resets them); DQ stays gated.
+  wire [10:0] u_sd_a;
+  wire [1:0] u_sd_ba,u_owner;
+  wire u_ras,u_cas,u_we,u_oe,u_busy;
+  wire [31:0] u_dq;
+  retro_sdram_single #(.System(2'd2),.GateCommand(1'b0)) ungated (.clk,.rst,.requested,.safe,
+      .owner(u_owner),.busy(u_busy),.a,.ba,.command,.data,.drive,.sd_a(u_sd_a),.sd_ba(u_sd_ba),
+      .sd_ras_n(u_ras),.sd_cas_n(u_cas),.sd_we_n(u_we),.dq_out(u_dq),.dq_oe(u_oe));
+  always @(negedge clk) begin
+    assert (u_sd_a==a && u_sd_ba==ba && {u_ras,u_cas,u_we}==command)
+      else $fatal(1,"ungated command path not direct");
+    assert (u_oe==dq_oe && u_dq==dq_out) else $fatal(1,"ungated owner changed DQ gating");
+  end
   always @(negedge clk) begin
     if (rst || safe || busy || owner!=2)
       assert ({sd_ras_n,sd_cas_n,sd_we_n}==3'b111 && !dq_oe && sd_a==0 && sd_ba==0 &&

@@ -15,9 +15,17 @@ proc retro_has {system} {
 }
 # Legacy sdram.xdc assumes ONE controller's output flop directly at the pin.
 # The shared owner mux invalidates that IOB packing request; not an I/O waiver.
-# Single-console images also gate their command bus at the owner; keep FALSE.
+# Other single-console images gate their command bus at the owner; keep FALSE.
 # Timing remains reported/unconstrained until shared physical path signoff.
-set_property IOB FALSE [get_ports {sdram_a[*] sdram_ba[*] sdram_ras_n sdram_cas_n sdram_we_n}]
+set retro_command_ports [get_ports {sdram_a[*] sdram_ba[*] sdram_ras_n sdram_cas_n sdram_we_n}]
+# MD-only image: retro_sdram registers drive these pins directly (retro_sdram_single
+# GateCommand=0). Measured on the bench (diag/retro_sdram_eye_md vs _md_iob, 53.69 MHz):
+# IOB packing widens the error-free capture window from ~0.4-2.2 ns to ~4.4-5.3 ns.
+if {$retro_systems == 2} {
+    set_property IOB TRUE $retro_command_ports
+} else {
+    set_property IOB FALSE $retro_command_ports
+}
 # CDC constraints are deliberately endpoint-scoped. Never false-path all
 # ASYNC_REG cells: that also hides stage-1 -> stage-2 timing and FIFO Gray buses.
 # Read after synthesis and clock creation. Unexpected/empty selections are fatal;

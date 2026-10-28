@@ -5,7 +5,11 @@
 // Only the image's own system (or idle 0) can become owner; any other request
 // stays blanked and busy, so no stale command reaches the chip.
 module retro_sdram_single #(
-    parameter logic [1:0] System = 2'd2
+    parameter logic [1:0] System = 2'd2,
+    // 0: command/address go straight from the controller's own registers to the
+    // pins, so they can pack into IOB output flops. Only for a controller that
+    // itself drives NOP/zero address in reset (retro_sdram). DQ is always gated.
+    parameter bit GateCommand = 1'b1
 ) (
     input wire clk, rst,
     input wire [1:0] requested,
@@ -34,9 +38,9 @@ module retro_sdram_single #(
   // During controller reset the controller may retain its last registered
   // command. Never forward that stale WRITE/MRS to the chip.
   wire selected=owner==System && !busy && !safe;
-  assign sd_a=selected ? a : 0;
-  assign sd_ba=selected ? ba : 0;
-  assign {sd_ras_n,sd_cas_n,sd_we_n}=selected ? command : 3'b111;
+  assign sd_a=selected || !GateCommand ? a : 0;
+  assign sd_ba=selected || !GateCommand ? ba : 0;
+  assign {sd_ras_n,sd_cas_n,sd_we_n}=selected || !GateCommand ? command : 3'b111;
   assign dq_out=selected ? data : 0;
   assign dq_oe=selected && drive;
 endmodule

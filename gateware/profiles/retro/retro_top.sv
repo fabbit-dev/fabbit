@@ -448,7 +448,10 @@ module retro_top #(
   wire [2:0] single_cmd=Systems[0] ? n_cmd : Systems[1] ? m_cmd : s_cmd;
   wire [31:0] single_data=Systems[0] ? n_dq_out : Systems[1] ? m_dq_out : s_dq_out;
   wire single_drive=Systems[0] ? n_dq_oe : Systems[1] ? m_dq_oe : s_dq_oe;
-  retro_sdram_single #(.System(Systems[0] ? 2'd1 : Systems[1] ? 2'd2 : 2'd3)) owner_switch (
+  // retro_sdram (MD) resets its command/address registers itself: no gate, IOB-packable.
+  // The NES controller may keep a stale command through reset: keep it gated.
+  retro_sdram_single #(.System(Systems[0] ? 2'd1 : Systems[1] ? 2'd2 : 2'd3),
+      .GateCommand(Systems!=3'b010)) owner_switch (
       .clk(md_clk),.rst(rst_md),.requested(owner_request),.safe(controllers_reset),
       .owner,.busy(owner_busy),.a(single_a),.ba(single_ba),.command(single_cmd),
       .data(single_data),.drive(single_drive),.sd_a(sdram_a),.sd_ba(sdram_ba),
