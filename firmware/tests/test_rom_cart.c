@@ -58,7 +58,30 @@ int main(void)
     put_be32(md + 4, 0x200);
     md[0x1F0] = 'E';
     assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED);
+    // Hex region flags (UMK3 "4"): Americas bit accepted, Japan/Europe-only rejected.
+    md[0x1F0] = '4';
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK);
+    md[0x1F0] = '5';
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK);
+    md[0x1F0] = '9';
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED);
+    md[0x1F0] = '1';
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED);
     md[0x1F0] = 'U';
+    // SP at the 24-bit wrap (top of work RAM, UMK3) is valid; beyond it is not.
+    put_be32(md, 0x1000000);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK);
+    put_be32(md, 0);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK);
+    put_be32(md, 0xFFFFFE00);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_OK);
+    put_be32(md, 0x1000002);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_INVALID);
+    put_be32(md, 0xFFFFFE01);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_INVALID);
+    put_be32(md, 0xFEFFFE);
+    assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_INVALID);
+    put_be32(md, 0xFFFF00);
     memcpy(md + 0x100, "SEGA 32X", 8);
     assert(rom_parse_md(md, 512, 65536, &mi) == ROM_CART_UNSUPPORTED);
     uint8_t lo[64], hi[64] = {0};

@@ -21,12 +21,20 @@ rom_cart_result_t rom_parse_md(const uint8_t *h, size_t n, uint64_t size, rom_md
         return ROM_CART_UNSUPPORTED;
     uint32_t sp = be32(h), pc = be32(h + 4);
     uint32_t start = be32(h + 0x1A0), end = be32(h + 0x1A4);
-    if ((sp & 1) || (sp & 0xFF000000u) || sp < 0xFF0000 ||
+    // 24-bit bus: A31-A24 are not connected, so only SP[23:0] matters. 0 is the top of
+    // work RAM (first push lands at 0xFFFFFE): UMK3 0x01000000, Sonic 3 0, Sonic 2 0xFFFFFE00.
+    uint32_t sp24 = sp & 0xFFFFFFu;
+    if ((sp & 1) || (sp24 != 0 && sp24 < 0xFF0000) ||
         (pc & 1) || pc < 0x200 || pc >= size || start != 0 ||
         end != size - 1) return ROM_CART_INVALID;
     // Initial wrapper runs NTSC Americas; do not infer region from file suffix.
+    // Region field: letters (J/U/E) or, in later carts, one flag digit (1 Japan,
+    // 4 Americas, 8 Europe). Hex digits A-F are not read as flags: 'E' is Europe.
     bool americas = false;
     for (size_t i = 0x1F0; i < 0x200; i++) americas |= h[i] == 'U';
+    uint8_t flags = h[0x1F0];
+    if (flags >= '0' && flags <= '9' && (h[0x1F1] == ' ' || h[0x1F1] == 0))
+        americas |= ((flags - '0') & 4) != 0;
     if (!americas) return ROM_CART_UNSUPPORTED;
     bool sram = h[0x1B0] == 'R' && h[0x1B1] == 'A';
     uint32_t ram = 0;
