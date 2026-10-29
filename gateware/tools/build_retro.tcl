@@ -200,4 +200,28 @@ if {[llength $min_bad]} {error "Negative hold timing; no bitstream"}
 # A routed checkpoint is not electrical signoff: this port reuses legacy pin
 # locations but has no measured three-owner SDRAM input/output timing yet.
 # Do not publish a bitstream merely because internal STA happens to be green.
-error "Physical shared-SDRAM I/O timing not signed off; routed reports only, no bitstream"
+# MD-only image: conditional signoff. DQ registers are in the pad, the SDRAM pins are timed
+# against the datasheet (-7 class assumed, board flight 0.2-0.8 ns assumed) and must pass;
+# the window is then confirmed on the board. Opt-in: RETRO_IO_CONDITIONAL=1.
+if {$retro_image ne "md" || ![info exists ::env(RETRO_IO_CONDITIONAL)] ||
+    $::env(RETRO_IO_CONDITIONAL) ne "1"} {
+    error "Physical shared-SDRAM I/O timing not signed off; routed reports only, no bitstream"
+}
+set retro_sdram_fwd [get_cells memory_clock_forward]
+set retro_sdram_cas 3
+source [file join $gate constraints retro_sdram_io_timing.xdc]
+# IDDR Q2 (falling-edge capture) is unconnected; only the rising-edge capture is used.
+set retro_md_capture [get_clocks -of_objects [get_pins g_pad_dq.physical_io/g_bit[0].u_i/C]]
+set_false_path -from [get_ports {sdram_dq[*]}] -fall_to $retro_md_capture
+report_timing_summary -file [file join $out routed-io.timing.rpt]
+report_timing -delay_type min_max -max_paths 4 -to [get_ports {sdram_a[*] sdram_ba[*]
+    sdram_ras_n sdram_cas_n sdram_we_n sdram_dq[*]}] -file [file join $out routed-io.out.rpt]
+report_timing -delay_type min_max -max_paths 4 -from [get_ports {sdram_dq[*]}] \
+    -file [file join $out routed-io.in.rpt]
+if {[llength [get_timing_paths -quiet -slack_lesser_than 0]] ||
+    [llength [get_timing_paths -quiet -delay_type min -slack_lesser_than 0]]} {
+    error "MD SDRAM I/O (datasheet, conditional) fails; no bitstream"
+}
+write_bitstream -force [file join $out retro_md.bit]
+retro_build_status $out bitstream
+puts "retro MD bitstream: conditional SDRAM I/O signoff (datasheet -7, board 0.2-0.8 ns)"

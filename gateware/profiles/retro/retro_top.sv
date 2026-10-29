@@ -71,7 +71,8 @@ module retro_top #(
   wire clk_25m_reference;
   BUFG reference_buffer (.I(clk),.O(clk_25m_reference));
   wire md_clk,z80_clk,snes_source,md_sd_clock,md_locked;
-  retro_clocks #(.Compensation("BUF_IN")) u_retroclk (
+  retro_clocks #(.Compensation("BUF_IN"),
+      .MemoryPhase(Systems==3'b010 ? 77.727273 : 38.863636)) u_retroclk (
       .clk_25m(clk_25m_reference),.reset(bus_rst),.clk_md(md_clk),.clk_z80(z80_clk),
       .clk_snes(snes_source),.locked(md_locked),.clk_memory(md_sd_clock));
 `ifndef RETRO_NO_NES

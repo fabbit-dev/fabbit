@@ -8,7 +8,11 @@
 // Use reset_sync per domain on !locked; constrain generated clock relationships.
 module retro_clocks #(
     // Standalone users retain the original direct clock-pin compensation.
-    parameter string Compensation = "ZHOLD"
+    parameter string Compensation = "ZHOLD",
+    // clk_memory (SDRAM pin clock) phase, degrees of clk_md, step 45/22 deg. The MD-only
+    // image registers DQ in the pad and uses 77.727273 (+2.01 ns): datasheet I/O STA closes
+    // outputs and reads there, and it sits inside the measured 18.1-18.4 ns read window.
+    parameter real MemoryPhase = 38.863636
 ) (
     input  wire clk_25m,
     input  wire reset,
@@ -27,7 +31,7 @@ module retro_clocks #(
       .CLKFBOUT_MULT_F(47.25),
       .CLKOUT0_DIVIDE_F(22.0),
       .CLKOUT1_DIVIDE(44),
-      .CLKOUT2_DIVIDE(55), .CLKOUT3_DIVIDE(22), .CLKOUT3_PHASE(38.863636)
+      .CLKOUT2_DIVIDE(55), .CLKOUT3_DIVIDE(22), .CLKOUT3_PHASE(MemoryPhase)
   ) u_mmcm (
       .CLKIN1(clk_25m), .CLKIN2(1'b0), .CLKINSEL(1'b1), .CLKFBIN(fb_buf), .CLKFBOUT(fb),
       .CLKFBOUTB(), .CLKOUT0(md_raw), .CLKOUT0B(), .CLKOUT1(z80_raw), .CLKOUT1B(),
