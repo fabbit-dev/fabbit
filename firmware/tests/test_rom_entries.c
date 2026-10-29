@@ -67,6 +67,8 @@ static struct {
 } calls;
 // Image model: caps of the RETRO image active after the last pm_load (0: golden).
 static unsigned active_caps, installed;  // installed: bit per system has retro-<sys>.fbp
+// Standalone NES profile model: installed nes.fbp, running after pm_load("nes").
+static bool nes_installed, retro_installed = true, nes_active;
 static unsigned loaded_caps(const char *file)
 {
     if (!strcmp(file, "retro")) return 7;
@@ -86,15 +88,18 @@ static saved_v2_t stored_new;
 esp_err_t pm_load_cb(const char *file, bool force, pm_progress_cb cb, void *ctx)
 {
     assert(menu_entry && !strcmp(file, expected_core) && !force);
-    assert(!calls.pm && !calls.backend && !active_caps);  // only from golden
+    assert(!calls.pm && !calls.backend && !active_caps && !nes_active);  // only from golden
     calls.pm++;
     assert(cb);
     cb(ctx, "core", 100);
-    active_caps = loaded_caps(file);
+    if (!strcmp(file, "nes")) nes_active = true;
+    else active_caps = loaded_caps(file);
     return ESP_OK;
 }
 bool pm_available(const char *file)
 {
+    if (!strcmp(file, "nes")) return nes_installed;
+    if (!strcmp(file, "retro")) return retro_installed;
     for (int s = ROM_NES; s <= ROM_SNES; s++)
         if ((installed >> s) & 1 && !strcmp(file, (const char *[]){0, "retro-nes", "retro-md",
                                                                      "retro-snes"}[s]))
@@ -106,16 +111,21 @@ esp_err_t nes_load_file(const char *path, void (*cb)(void *, int), void *ctx, ui
 {
     assert(expected_path && !strcmp(path, expected_path));
     assert(!calls.backend && !cb && !ctx);
-    // Menu must load exactly one core before the backend; console checks the running core.
-    assert(calls.pm == (menu_entry ? 1 : 0));
-    assert(calls.present == (menu_entry ? 0 : 1));
+    // Console checks the running core. The menu reaches nes_load_file only on the
+    // standalone path, with nes.fbp running (loaded now or already hot).
+    if (menu_entry) assert(!retro_installed && nes_active);
+    else assert(calls.pm == 0 && calls.present == 1);
     calls.backend++;
     assert(ms);
     *ms = 17;
     return ESP_OK;
 }
 
-bool nes_present(void) { calls.present++; return true; }
+bool nes_present(void)
+{
+    calls.present++;
+    return menu_entry && !retro_installed ? nes_active : true;
+}
 bool retro_present(void) { return active_caps != 0; }
 bool retro_supports(rom_system_t system)
 {
@@ -134,7 +144,13 @@ esp_err_t retro_load_file(const char *path, void (*cb)(void *, int), void *ctx, 
 void fl_lock(void) { calls.locks++; }
 void fl_unlock(void) { assert(calls.locks > 0); calls.locks--; }
 esp_err_t fl_boot(uint32_t addr) { calls.boot++; return ESP_OK; }
-esp_err_t fl_reboot_golden(void) { calls.reboot++; active_caps = 0; return ESP_OK; }
+esp_err_t fl_reboot_golden(void)
+{
+    calls.reboot++;
+    active_caps = 0;
+    nes_active = false;
+    return ESP_OK;
+}
 esp_err_t fl_csr_read(uint8_t idx, uint32_t *values, size_t n)
 {
     calls.csr++;
@@ -388,6 +404,43 @@ static void per_console_images(const lc_game_t *nes_game)
     active_caps = 0;
 }
 
+// No RETRO image installed: NES games use the standalone nes.fbp; a running MD-only
+// image is drained and left first.
+static void standalone_nes(const lc_game_t *nes_game)
+{
+    char err[128] = "";
+    retro_installed = false;
+    nes_installed = true;
+    installed = 0;
+    expected_core = "nes";
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(calls.pm == 1 && calls.backend == 1 && !calls.stop && !calls.reboot && nes_active);
+    // Hot: NES profile running, no reload.
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(!calls.pm && calls.backend == 1);
+    // MD-only image active (retro-md installed): stop, golden, then nes.fbp.
+    nes_active = false;
+    installed = 1u << ROM_MD;
+    active_caps = 1u << (ROM_MD - 1);
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(calls.stop == 1 && calls.reboot == 1 && calls.pm == 1 && calls.backend == 1);
+    assert(nes_active && !active_caps);
+    // Neither RETRO nor NES installed: still the combined fallback request.
+    nes_active = false;
+    nes_installed = false;
+    installed = 0;
+    expected_core = "retro";
+    retro_installed = true;
+    reset_calls(true, nes_game->path);
+    assert(run_locked(nes_game, progress, &calls, err, sizeof err));
+    assert(calls.pm == 1 && active_caps == 7);
+    active_caps = 0;
+    puts("ok standalone NES: nes.fbp without RETRO image, MD image left via golden");
+}
+
 static void accepted_console(const char *arg, const char *path)
 {
     char *argv[] = {"rom", (char *)arg};
@@ -455,6 +508,7 @@ int main(void)
     assert(!calls.pm && !calls.boot && !calls.reboot && calls.backend == 1 && !calls.locks);
     active_caps = 0;
     per_console_images(&games[2]);
+    standalone_nes(&games[2]);
     accepted_console("valid", "/data/roms/valid.nes");
     accepted_console("magic.bin", "/data/roms/magic.bin");
     accepted_console("/data/roms/magic.bin", "/data/roms/magic.bin");

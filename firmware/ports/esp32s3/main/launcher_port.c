@@ -30,8 +30,10 @@ static const char *TAG = "menu";
 
 #define ROMS "/data/roms"
 // RETRO profile ID 4: per-console images /data/retro-nes.fbp, retro-md.fbp,
-// retro-snes.fbp; the combined /data/retro.fbp is the fallback.
+// retro-snes.fbp; the combined /data/retro.fbp is the fallback. Without either, NES
+// games run on the standalone NES profile /data/nes.fbp.
 #define CORE "retro"
+#define NES_CORE "nes"
 #define POLL_MS 300
 #define RUNS_MAX 64
 
@@ -254,6 +256,16 @@ static bool wait_golden(uint32_t timeout)
     return false;
 }
 
+static void count_run(const lc_game_t *g, const rom_info_t *info)
+{
+    char identity[100];
+    const char *relative = !strncmp(g->path, ROMS "/", sizeof ROMS) ? g->path + sizeof ROMS : g->path;
+    snprintf(identity, sizeof identity, "%u:%s", (unsigned)info->system, relative);
+    uint32_t *runs = runs_of(identity, true);
+    if (*runs < UINT32_MAX) (*runs)++;
+    nvs_put("runs_v2", s_runs, sizeof s_runs);
+}
+
 // Per-console image if it is installed, else the combined core.
 static const char *core_for(rom_system_t system)
 {
@@ -262,6 +274,38 @@ static const char *core_for(rom_system_t system)
     if (system > ROM_NONE && system <= ROM_SNES && pm_available(image[system]))
         return image[system];
     return CORE;
+}
+
+// NES game with no RETRO image installed: the standalone NES profile.
+static bool nes_standalone(rom_system_t system)
+{
+    return system == ROM_NES && !pm_available(CORE "-nes") && !pm_available(CORE) &&
+           pm_available(NES_CORE);
+}
+
+static bool run_nes_locked(const lc_game_t *g, run_ctx_t *r, char *err, size_t n)
+{
+    esp_err_t e = ESP_OK;
+    if (!nes_present()) {
+        if (retro_present()) {
+            e = retro_stop();
+            if (e == ESP_OK) e = fl_reboot_golden();
+            if (e == ESP_OK && !wait_golden(3000)) e = ESP_ERR_TIMEOUT;
+        }
+        ESP_LOGI(TAG, "%s: ядро %s", g->name, NES_CORE);
+        if (e == ESP_OK) e = pm_load_cb(NES_CORE, false, pm_stage, r);
+        if (e == ESP_OK && !nes_present()) e = ESP_ERR_NOT_SUPPORTED;
+    }
+    uint32_t ms = 0;
+    if (e == ESP_OK) e = nes_load_file(g->path, NULL, NULL, &ms);
+    if (e != ESP_OK) {
+        snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
+        fl_reboot_golden();
+        wait_golden(3000);
+        return false;
+    }
+    ESP_LOGI(TAG, "%s: ROM %u мс", g->name, (unsigned)ms);
+    return true;
 }
 
 static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n)
@@ -273,6 +317,11 @@ static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *e
         return false;  // отказ до pm_load и любого recovery reboot
     }
     run_ctx_t r = {cb, ctx};
+    if (nes_standalone(info.system)) {
+        if (!run_nes_locked(g, &r, err, n)) return false;
+        count_run(g, &info);
+        return true;
+    }
     // A running image that has this console needs no IPROG. Another image is
     // drained and left through golden before the right one is loaded.
     if (!retro_supports(info.system)) {
@@ -303,12 +352,7 @@ static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *e
         wait_golden(3000);
         return false;
     }
-    char identity[100];
-    const char *relative = !strncmp(g->path, ROMS "/", sizeof ROMS) ? g->path + sizeof ROMS : g->path;
-    snprintf(identity, sizeof identity, "%u:%s", (unsigned)info.system, relative);
-    uint32_t *runs = runs_of(identity, true);
-    if (*runs < UINT32_MAX) (*runs)++;
-    nvs_put("runs_v2", s_runs, sizeof s_runs);
+    count_run(g, &info);
     ESP_LOGI(TAG, "%s: ROM %u мс", g->name, (unsigned)ms);
     return true;
 }
