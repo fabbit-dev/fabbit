@@ -1,5 +1,7 @@
 # Name,   Type, SubType, Offset,   Size
+# 0x10000-0x6FFFF is left unused: on the bench ESP32-S3 module sectors 0x60000-0x6CFFF do not
+# erase or program. factory starts at 0x70000; storage stays at 0x210000 (profiles, ROMs).
 nvs,      data, nvs,     0x9000,   0x6000
 phy_init, data, phy,     0xf000,   0x1000
-factory,  app,  factory, 0x10000,  0x200000
+factory,  app,  factory, 0x70000,  0x1A0000
 storage,  data, fat,     0x210000, 0xDF0000
