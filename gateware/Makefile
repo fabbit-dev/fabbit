@@ -139,7 +139,7 @@ sim_retro_top: | build
 	  -Mdir $(CURDIR)/build/tb_retro_top -Iprofiles/retro/md/rtl/vdp \
 	  -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700 \
 	  -f build/retro/top/sim_sources.f sim/xilinx_stubs.sv sim/retro_clock_models.sv \
-	  profiles/retro/retro_sdram_single.sv \
+	  profiles/retro/retro_sdram_single.sv profiles/retro/retro_sdram_phy.sv \
 	  sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top.log 2>&1
 	cp profiles/retro/md/rtl/fx68k/microrom.mem profiles/retro/md/rtl/fx68k/nanorom.mem \
 	  build/tb_retro_top/
@@ -154,7 +154,7 @@ sim_retro_top_md: | build
 	  -Mdir $(CURDIR)/build/tb_retro_top_md -Iprofiles/retro/md/rtl/vdp \
 	  -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700 \
 	  -f build/retro/top/sim_sources.f sim/xilinx_stubs.sv sim/retro_clock_models.sv \
-	  profiles/retro/retro_sdram_single.sv \
+	  profiles/retro/retro_sdram_single.sv profiles/retro/retro_sdram_phy.sv \
 	  sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top_md.log 2>&1
 	cp profiles/retro/md/rtl/fx68k/microrom.mem profiles/retro/md/rtl/fx68k/nanorom.mem \
 	  build/tb_retro_top_md/

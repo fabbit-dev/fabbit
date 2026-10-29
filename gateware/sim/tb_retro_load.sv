@@ -79,7 +79,7 @@ module tb_retro_load;
       .req_ready(phys_ready), .req_write(phys_write), .req_addr(phys_addr), .req_wdata(phys_data),
       .rsp_valid(phys_rsp_valid), .rsp_ready(phys_rsp_ready), .rsp_rdata(phys_rdata),
       .sd_a(sd_a), .sd_ba(sd_ba), .sd_ras_n(sd_ras_n), .sd_cas_n(sd_cas_n),
-      .sd_we_n(sd_we_n), .sd_dq_in(sd_dq_in), .sd_dq_out(sd_dq_out), .sd_dq_oe(sd_dq_oe));
+      .sd_we_n(sd_we_n), .sd_dq_in(sd_dq_in), .sd_dq_out(sd_dq_out), .sd_dq_oe(sd_dq_oe), .sd_dq_oe_next());
   sdram_model model (.clk(sd_clk), .cke(1'b1), .cs_n(1'b0), .ras_n(sd_ras_n),
       .cas_n(sd_cas_n), .we_n(sd_we_n), .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(sd_dq));
 

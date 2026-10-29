@@ -18,7 +18,11 @@ module retro_sdram #(
     parameter int Tras = 5,
     parameter int Twr = 2,
     parameter int Tmrd = 2,
-    parameter int Cas = 3
+    parameter int Cas = 3,
+    // 1: DQ registers live in retro_sdram_phy (pad ODDR/IDDR). sd_dq_in is then the pin
+    // sampled one edge earlier, so the capture state waits one more clock: the pin is still
+    // sampled at edge c+Cas after READ at c, the response is one clock later.
+    parameter bit PadPhy = 1'b0
 ) (
     input  wire        clk,
     input  wire        rst,
@@ -38,7 +42,10 @@ module retro_sdram #(
     output wire        sd_we_n,
     input  wire [31:0] sd_dq_in,
     output wire [31:0] sd_dq_out,
-    output wire        sd_dq_oe
+    output wire        sd_dq_oe,
+    // D input of the drive-enable register: high in the cycle whose next edge starts the
+    // WRITE data. retro_sdram_phy registers it in the pad tristate flop.
+    output wire        sd_dq_oe_next
 );
   typedef enum logic [3:0] {
     PowerWait, InitRefOne, InitRefTwo, InitMode, InitDone,
@@ -55,10 +62,12 @@ module retro_sdram #(
   localparam logic [2:0] Nop = 3'b111, Pre = 3'b010, Ref = 3'b001;
   localparam logic [2:0] Mode = 3'b000, Act = 3'b011, Rd = 3'b101, Wr = 3'b100;
   localparam int WriteWait = Twr > Tras - Trcd ? Twr : Tras - Trcd;
-  localparam int ReadPreWait = Tras > Trcd + Cas + 1 ? Tras - Trcd - Cas - 1 : 0;
+  localparam int ReadWait = Cas - 1 + (PadPhy ? 1 : 0);
+  localparam int ReadPreWait = Tras > Trcd + ReadWait + 2 ? Tras - Trcd - ReadWait - 2 : 0;
   assign {sd_ras_n, sd_cas_n, sd_we_n} = cmd;
   assign sd_dq_out = dq_out;
   assign sd_dq_oe = dq_oe && !rst;
+  assign sd_dq_oe_next = !rst && wait_left == 0 && state == Column && write_req;
   assign initialized = configured && !rst;
   assign req_ready = !rst && state == Idle && !response && refresh_left != 0;
   assign rsp_valid = !rst && response;
@@ -131,7 +140,7 @@ module retro_sdram #(
         sd_ba <= address[20:19];
         sd_a <= {3'b000, address[7:0]};  // explicit PRE, no auto-precharge
         dq_oe <= write_req;
-        wait_left <= write_req ? WriteWait : Cas - 1;
+        wait_left <= write_req ? WriteWait : ReadWait;
         state <= write_req ? WriteEnd : Capture;
       end
       Capture: begin

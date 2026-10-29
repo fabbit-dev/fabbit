@@ -66,7 +66,7 @@ module tb_retro_md;
       .req_ready(mem_ready), .req_write(mem_write), .req_addr(mem_addr), .req_wdata(mem_wdata),
       .rsp_valid(mem_rsp_valid), .rsp_ready(mem_rsp_ready), .rsp_rdata(mem_rdata),
       .sd_a(sd_a), .sd_ba(sd_ba), .sd_ras_n(sd_ras_n), .sd_cas_n(sd_cas_n),
-      .sd_we_n(sd_we_n), .sd_dq_in(sd_dq_in), .sd_dq_out(sd_dq_out), .sd_dq_oe(sd_dq_oe));
+      .sd_we_n(sd_we_n), .sd_dq_in(sd_dq_in), .sd_dq_out(sd_dq_out), .sd_dq_oe(sd_dq_oe), .sd_dq_oe_next());
   sdram_model #(.TAc(6ns), .TOh(2ns), .TRcd(21ns)) model (
       .clk(sd_clk), .cke(1'b1), .cs_n(1'b0), .ras_n(sd_ras_n), .cas_n(sd_cas_n),
       .we_n(sd_we_n), .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(sd_dq));

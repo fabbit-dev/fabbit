@@ -239,7 +239,7 @@ module retro_budget (
       .rsp_valid(phy_rsp), .rsp_ready(phy_rsp_ready), .rsp_rdata(phy_rdata),
       .sd_a(generic_sd_a), .sd_ba(generic_sd_ba), .sd_ras_n(generic_sd_ras_n),
       .sd_cas_n(generic_sd_cas_n), .sd_we_n(generic_sd_we_n), .sd_dq_in(generic_dq_in),
-      .sd_dq_out(generic_dq_out), .sd_dq_oe(generic_dq_oe));
+      .sd_dq_out(generic_dq_out), .sd_dq_oe(generic_dq_oe), .sd_dq_oe_next());
 
   wire [2:0] pixel_valid, pixel_pop;
   wire [28:0] pixel_data [3];

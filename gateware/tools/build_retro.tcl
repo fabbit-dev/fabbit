@@ -115,6 +115,7 @@ foreach name {profiles/retro/retro_regs_pkg.sv common/video/video_pkg.sv
     profiles/retro/md/retro_md_memory.sv profiles/retro/retro_mem_mux.sv
     profiles/retro/retro_mem_lanes.sv profiles/retro/retro_sdram.sv
     profiles/retro/retro_sdram_owner.sv profiles/retro/retro_sdram_single.sv
+    profiles/retro/retro_sdram_phy.sv
     profiles/retro/retro_sdram_io.sv
     profiles/retro/retro_pixels.sv profiles/retro/retro_framebuffer.sv
     profiles/retro/retro_rom_writer.sv profiles/retro/retro_video.sv

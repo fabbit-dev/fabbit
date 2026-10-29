@@ -200,7 +200,8 @@ module retro_top #(
   wire [8:0] nindex,nline;
   wire [15:0] naudio;
   wire [31:0] dq_in,n_dq_out,m_dq_out,s_dq_out;
-  wire n_dq_oe,m_dq_oe,s_dq_oe;
+  wire n_dq_oe,m_dq_oe,s_dq_oe,m_dq_oe_next;
+  wire [31:0] md_dq_in;
   wire [10:0] n_a,m_a,s_a;
   wire [1:0] n_ba,m_ba,s_ba;
   wire [2:0] n_cmd,m_cmd,s_cmd;
@@ -312,18 +313,19 @@ module retro_top #(
   // Conditional ESMT(2S) -7 protocol budget: RCD/RP21ns, RFC63ns,
   // RAS42ns, write-to-PRE two FULL clocks. Fitted grade/board eye unknown.
   retro_sdram #(.InitCycles(10740),.RefreshCycles(375),.Trcd(2),.Trp(2),.Trfc(4),
-      .Tras(3),.Twr(2),.Tmrd(2),.Cas(3)) md_memory (
+      .Tras(3),.Twr(2),.Tmrd(2),.Cas(3),.PadPhy(Systems==3'b010)) md_memory (
       .clk(md_clk),.rst(rst_md || controllers_reset || selected!=2),
       .initialized(md_memory_ready),.req_valid(physical_valid),.req_ready(physical_ready),
       .req_write(physical_write),.req_addr(physical_addr),.req_wdata(physical_data),
       .rsp_valid(physical_rsp),.rsp_ready(physical_rsp_ready),.rsp_rdata(memory_read),
       .sd_a(m_a),.sd_ba(m_ba),.sd_ras_n(m_cmd[2]),.sd_cas_n(m_cmd[1]),.sd_we_n(m_cmd[0]),
-      .sd_dq_in(dq_in),.sd_dq_out(m_dq_out),.sd_dq_oe(m_dq_oe));
+      .sd_dq_in(md_dq_in),.sd_dq_out(m_dq_out),.sd_dq_oe(m_dq_oe),.sd_dq_oe_next(m_dq_oe_next));
 `else
   wire [1:0] fabric_ready=0,fabric_rsp=0;
   wire fabric_idle=1;
   assign md_req_ready=0;assign md_rsp=0;assign md_rdata=0;assign md_memory_ready=0;
   assign m_a=0;assign m_ba=0;assign m_cmd=3'b111;assign m_dq_out=0;assign m_dq_oe=0;
+  assign m_dq_oe_next=0;
 `endif
   assign md_cdc_idle=fabric_idle && host_bridge_idle && !byte_busy;
 
@@ -467,7 +469,18 @@ module retro_top #(
   ODDR #(.DDR_CLK_EDGE("SAME_EDGE")) memory_clock_forward (
       .C(physical_clock),.CE(1'b1),.D1(1'b1),.D2(1'b0),.R(1'b0),.S(1'b0),.Q(sdram_clk));
 `endif
-  retro_sdram_io physical_io (.dq_in,.dq_out,.dq_oe(dq_drive),.sd_dq(sdram_dq));
+  // MD-only: every DQ register sits in the pad (retro_sdram_phy), clocked by the MD
+  // controller clock. The controller holds dq_oe_next low in reset, so a foreign owner
+  // request (controller held in reset by selected!=2) never drives DQ. Other images keep
+  // the owner-gated fabric path.
+  if (Systems==3'b010) begin : g_pad_dq
+    retro_sdram_phy physical_io (.clk(md_clk),.dq_out(m_dq_out),.dq_oe_d(m_dq_oe_next),
+        .dq_in(md_dq_in),.sd_dq(sdram_dq));
+    assign dq_in=md_dq_in;
+  end else begin : g_fabric_dq
+    retro_sdram_io physical_io (.dq_in,.dq_out,.dq_oe(dq_drive),.sd_dq(sdram_dq));
+    assign md_dq_in=dq_in;
+  end
   wire video_fault;
   wire [1:0] selected_bus=status_bus[41:40];
   wire running_bus=status_bus[RunningBit];

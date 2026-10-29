@@ -74,3 +74,25 @@ module ODDR #(
   end
   always @(negedge C) Q <= d2;
 endmodule
+
+// IDDR (SAME_EDGE): Q1 — D на переднем фронте C, Q2 — D на заднем, оба выдаются с переднего.
+module IDDR #(
+    parameter string DDR_CLK_EDGE = "SAME_EDGE",
+    parameter string SRTYPE = "SYNC"
+) (
+    output logic Q1,
+    output logic Q2,
+    input  wire  C,
+    input  wire  CE,
+    input  wire  D,
+    input  wire  R,
+    input  wire  S
+);
+  logic fall = 0;
+  initial begin Q1 = 0; Q2 = 0; end
+  always @(negedge C) fall <= D;
+  always @(posedge C) begin
+    Q1 <= D;
+    Q2 <= fall;
+  end
+endmodule
