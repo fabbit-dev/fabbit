@@ -15,7 +15,9 @@
 module retro_sdram_eye #(
     parameter bit Mode = 1'b0,
     // CAS latency override for diagnosis; 0 = profile value (MD 3, SNES 2).
-    parameter int CasOverride = 0
+    parameter int CasOverride = 0,
+    // 1: DQ through retro_sdram_phy (pad ODDR/IDDR), as the single-console images.
+    parameter bit PadPhy = 1'b0
 ) (
     input  wire        clk,
     output wire        led,
@@ -139,17 +141,23 @@ module retro_sdram_eye #(
   logic [20:0] req_addr = '0;
   logic [31:0] req_wdata = '0;
   wire [31:0] rsp_rdata, dq_in, dq_out;
-  wire dq_oe;
+  wire dq_oe, dq_oe_next;
   retro_sdram #(
       .InitCycles(Mode ? 18000 : 10740), .RefreshCycles(Mode ? 480 : 375),
       .Trcd(2), .Trp(2), .Trfc(Mode ? 6 : 4), .Tras(Mode ? 4 : 3), .Twr(2), .Tmrd(2),
-      .Cas(CasOverride != 0 ? CasOverride : Mode ? 2 : 3)
+      .Cas(CasOverride != 0 ? CasOverride : Mode ? 2 : 3), .PadPhy(PadPhy)
   ) u_mem (
       .clk(mclk), .rst(rst_mem), .initialized(init), .req_valid, .req_ready, .req_write,
       .req_addr, .req_wdata, .rsp_valid, .rsp_ready(1'b1), .rsp_rdata,
       .sd_a(sdram_a), .sd_ba(sdram_ba), .sd_ras_n(sdram_ras_n), .sd_cas_n(sdram_cas_n),
-      .sd_we_n(sdram_we_n), .sd_dq_in(dq_in), .sd_dq_out(dq_out), .sd_dq_oe(dq_oe));
-  retro_sdram_io u_io (.dq_out, .dq_oe, .dq_in, .sd_dq(sdram_dq));
+      .sd_we_n(sdram_we_n), .sd_dq_in(dq_in), .sd_dq_out(dq_out), .sd_dq_oe(dq_oe),
+      .sd_dq_oe_next(dq_oe_next));
+  if (PadPhy) begin : g_pad
+    retro_sdram_phy u_phy (.clk(mclk), .dq_out, .dq_oe_d(dq_oe_next), .dq_in,
+        .sd_dq(sdram_dq));
+  end else begin : g_fabric
+    retro_sdram_io u_io (.dq_out, .dq_oe, .dq_in, .sd_dq(sdram_dq));
+  end
 
   function automatic logic [31:0] pattern(input logic [20:0] a, input logic [15:0] p);
     logic [31:0] h;
@@ -243,6 +251,10 @@ module retro_sdram_eye #(
       8'd10: csr_rdata = {19'd0, bits, 1'b0, init, rsp_valid, req_ready, req_valid, waiting,
                           phase};
       8'd11: csr_rdata = {11'd0, req_addr};
+      // Состояние контроллера (отладка, без CDC): [3:0] state, [19:4] wait_left[15:0],
+      // 20 response, 21 refresh_left==0.
+      8'd14: csr_rdata = {10'd0, u_mem.refresh_left == 0, u_mem.response,
+                          u_mem.wait_left[15:0], 4'(u_mem.state)};
       8'd12: csr_rdata = err_got_word;
       8'd13: csr_rdata = err_want_word;
       default: csr_rdata = '0;
@@ -311,5 +323,24 @@ module retro_sdram_eye_md_iob_dq (
     inout wire [31:0] sdram_dq
 );
   retro_sdram_eye #(.Mode(1'b0)) u (.*);
+endmodule
+`default_nettype wire
+`default_nettype none
+// DQ через retro_sdram_phy: все регистры данных в площадке (ODDR/IDDR).
+module retro_sdram_eye_md_pad (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b0),.PadPhy(1'b1)) u (.*);
+endmodule
+module retro_sdram_eye_snes_pad (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b1),.PadPhy(1'b1)) u (.*);
 endmodule
 `default_nettype wire

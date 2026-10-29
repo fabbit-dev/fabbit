@@ -71,7 +71,8 @@ sdram_eye_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.
 # «Глаз» SDRAM на частотах ретро-профиля (Vivado): make viv_retro_sdram_eye_md / _snes.
 RETRO_EYE_SRC := common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/qspi_slave.sv \
                  common/icap_ctrl.sv common/profile_shell.sv common/profile_bus.sv \
-                 profiles/retro/retro_sdram.sv profiles/retro/retro_sdram_io.sv diag/retro_sdram_eye.sv
+                 profiles/retro/retro_sdram.sv profiles/retro/retro_sdram_io.sv \
+                 profiles/retro/retro_sdram_phy.sv diag/retro_sdram_eye.sv
 RETRO_EYE_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc \
                  constraints/sdram.xdc constraints/retro_sdram_eye.xdc
 retro_sdram_eye_md_SRC := $(RETRO_EYE_SRC)
@@ -85,6 +86,10 @@ retro_sdram_eye_snes_iob_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_snes_iob_XDC := $(retro_sdram_eye_md_iob_XDC)
 retro_sdram_eye_snes_iob_cl3_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_snes_iob_cl3_XDC := $(retro_sdram_eye_md_iob_XDC)
+retro_sdram_eye_md_pad_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_md_pad_XDC := $(retro_sdram_eye_md_iob_XDC)
+retro_sdram_eye_snes_pad_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_snes_pad_XDC := $(retro_sdram_eye_md_iob_XDC)
 retro_sdram_eye_md_iob_dq_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_md_iob_dq_XDC := $(retro_sdram_eye_md_iob_XDC) constraints/retro_sdram_eye_iob_dq.xdc
 

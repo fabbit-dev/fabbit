@@ -14,7 +14,8 @@ module tb_retro_sdram_eye;
   wire [10:0] sdram_a;
   wire [1:0] sdram_ba;
   wire [31:0] sdram_dq;
-  retro_sdram_eye #(.Mode(Mode)) dut (.*);
+  parameter bit PadPhy = 1'b0;
+  retro_sdram_eye #(.Mode(Mode),.PadPhy(PadPhy)) dut (.*);
   sdram_model #(.DynamicCasTiming(1'b1),.TOh(2ns),.TRcd(21ns)) model (
       .clk(sdram_clk),.cke(1'b1),.cs_n(1'b0),.ras_n(sdram_ras_n),.cas_n(sdram_cas_n),
       .we_n(sdram_we_n),.ba(sdram_ba),.a(sdram_a),.dqm(4'b0),.dq(sdram_dq));
