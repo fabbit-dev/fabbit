@@ -1,0 +1,11 @@
+(sym_lib_table
+  (version 7)
+
+  (lib (name "AON_Draft") (type "KiCad") (uri "${KIPRJMOD}/symbols/TPS63802DLAR.kicad_sym") (options "") (descr "Project-local symbol library"))
+
+  (lib (name "FabbitMCU") (type "KiCad") (uri "${KIPRJMOD}/symbols/CH32H417QEU6.kicad_sym") (options "") (descr "Project-local symbol library"))
+
+  (lib (name "FabbitClocks") (type "KiCad") (uri "${KIPRJMOD}/symbols/MC306_Family.kicad_sym") (options "") (descr "Project-local symbol library"))
+
+  (lib (name "Fabbit") (type "KiCad") (uri "${KIPRJMOD}/symbols/Fabbit.kicad_sym") (options "") (descr "Fabbit project symbols built from pin tables"))
+)
