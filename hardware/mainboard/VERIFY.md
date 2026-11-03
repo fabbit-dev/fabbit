@@ -7,7 +7,7 @@ PCB со схемой не синхронизирована. Подавать п
 
 ## Принципиальная схема
 
-Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1109, сетей 1030, листов 19. Статус `?` у строки значит: остался хотя бы один пункт чек-листа (обычно футпринт или режим), он указан в столбце «Открыто».
+Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1111, сетей 1030, листов 19. Статус `?` у строки значит: остался хотя бы один пункт чек-листа (обычно футпринт или режим), он указан в столбце «Открыто».
 
 ### Supervisor MCU (`supervisor-mcu.kicad_sch`, 48 деталей)
 
@@ -211,14 +211,15 @@ Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1109, сете�
 | R1702…R1756 (47) | — | — | —, SCES934A с. 6; SBVS351D с. 21 | — | не назначен | 4,7 кОм ×8 подтяжки; 220 кОм ×8 стяжки входов; 2,2 кОм ×7 стяжки DIR/затвора; 31,6 кОм / 10 кОм делитель REF; 1 кОм ×2 (Б-Э, преднатяг шины); 100 кОм ×13; 17,4 кОм, 56,2 кОм (FB); 150 кОм (делитель VTref); 33 Ом ×4; всё 1 % 0603 | ? | MPN не выбраны | 2026-11-03 |
 | C1701…C1734 (34) | — | — | —, SCES934A п. 11.1; SBVS351D с. 5; TPS22917 с. 19 | — | не назначен | 100 нФ 16 В X7R 0603 ×28; C1729 1 мкФ 16 В X7R 0805 и C1730 10 нФ C0G 0603 (компенсация шунта, ставятся, ресерч C-parts п. 9); 1 мкФ 10 В X7R ×2; 2,2 мкФ 10 В X7R; 1 нФ 50 В X7R (CT) | ? | MPN не выбраны; устойчивость шунта проверить на стенде | 2026-11-03 |
 
-### Lab PSU power (`lab-psu.kicad_sch`, 124 деталей)
+### Lab PSU power (`lab-psu.kicad_sch`, 126 деталей)
 
 | Обозн. | MPN | LCSC | Даташит, стр. | Пины | Футпринт | Режимы | Статус | Открыто | Дата |
 |---|---|---|---|---|---|---|---|---|---|
-| U1412 | TMUX1574PWR | C2673443 | [TI TMUX1574 ZHCSIX6B (англ. SCDS391), 09.2019](https://www.ti.com/lit/ds/symlink/tmux1574.pdf), с. 3–7, 22–24 | ✓ PW-16 с. 3–4: 1 SEL, 2/3 S1A/S1B, 4 D1, 5/6 S2A/S2B, 7 D2, 8 GND, 9–14 канал 3/4 на GND (с. 24), 15 EN_N на GND, 16 VDD | Package_SO:TSSOP-16_4.4x5mm_P0.65mm, сверка land pattern не записана | VDD 3V3_AON (1,5…5,5 В), C1428 100 нФ (с. 4); сигнал ≤ 2×VDD, ≤ 5,5 В, при VDD < 1,5 В ≤ 3,6 В (с. 5); RON ≤ 4,5 Ом, IPOFF ≤ 2 мкА, VIH 1,2 В, VIL 0,45 В (с. 6); CON ≤ 12 пФ (с. 7); SEL fail-safe до 5,5 В (с. 23). TPS-сторона без подтяжки к 5,2 В: только 100 кОм на GND (R1439/R1440) | ? | сверка land pattern; ёмкость шины I2C_SYS против tr ≤ 120 нс TPS55289 (SLVSGA9A с. 9) | 2026-11-03 |
+| U1412 | TMUX1574PWR | C2673443 | [TI TMUX1574 ZHCSIX6B (англ. SCDS391), 09.2019](https://www.ti.com/lit/ds/symlink/tmux1574.pdf), с. 3–7, 22–24 | ✓ PW-16 с. 3–4: 1 SEL, 2/3 S1A/S1B, 4 D1, 5/6 S2A/S2B, 7 D2, 8 GND, 9–14 канал 3/4 на GND (с. 24), 15 EN_N на GND, 16 VDD | Package_SO:TSSOP-16_4.4x5mm_P0.65mm, сверка land pattern не записана | VDD 3V3_AON (1,5…5,5 В), C1428 100 нФ (с. 4); сигнал ≤ 2×VDD, ≤ 5,5 В, при VDD < 1,5 В ≤ 3,6 В (с. 5); RON ≤ 4,5 Ом, IPOFF ≤ 2 мкА, VIH 1,2 В, VIL 0,45 В (с. 6); CON ≤ 12 пФ (с. 7); SEL fail-safe до 5,5 В (с. 23). Отдельная шина MCU I2C4 (S1B/S2B), подтяжки R1448/R1449 2,2 кОм к 3V3_AON, C ≈ 40 пФ, tr ≈ 75 нс < 120 нс TPS55289 (с. 9); TPS-сторона без подтяжки к 5,2 В: только 100 кОм на GND (R1439/R1440) | ? | сверка land pattern | 2026-11-03 |
 | U1416 | TPS3808G01DBVR | C19653 | [TI TPS3808 SBVS050J, 08.2008](https://www.ti.com/lit/ds/symlink/tps3808.pdf), с. 2–3, 5–6 | ✓ DBV-6: 1 RESET_N → LAB_I2C_SEL, 2 GND, 3 MR_N к 3V3_AON, 4 CT открыт, 5 SENSE, 6 VDD 3V3_AON | Package_TO_SOT_SMD:SOT-23-6 | VIT 0,405 В ±2 % (с. 3); делитель R1445 698 кОм / R1446 100 кОм: порог LAB_TPS_VCC 3,14…3,33 В; VOL ≤ 0,4 В при 1 мА < VIL TMUX 0,45 В; R1447 100 кОм к 3V3_AON; td 12…28 мс (CT открыт); IDD ≤ 5 мкА | ok | — | 2026-11-03 |
 | U1414 | TPS3808G33DBVR | C43698 | [TI TPS3808 SBVS050J, 08.2008](https://www.ti.com/lit/ds/symlink/tps3808.pdf), с. 2–3, 5 | ✓ DBV-6: 1 RESET_N → U1415, 2 GND, 3 MR_N к VSYS, 4 CT открыт, 5 SENSE = 3V3_AON, 6 VDD = VSYS | Package_TO_SOT_SMD:SOT-23-6 | VIT 3,07 В ±1,5 % (3,024…3,116 В), гистерезис 1…2,5 %; VDD 1,7…6,5 В от VSYS; R1442 10 кОм к VSYS: 0,46 мА < 1 мА условия VOL; td 12…28 мс | ? | скорость спада LED-шины при провале AON (LED_DROP_TIME_PENDING), проверить на макете | 2026-11-03 |
 | U1415 | SN74LVC1G14DBVR | C7835 | [TI SN74LVC1G14 SCES218Y](https://www.ti.com/lit/ds/symlink/sn74lvc1g14.pdf), с. 3–6 | ✓ DBV-5: 1 NC, 2 A, 3 GND, 4 Y, 5 VCC (с. 3) | Package_TO_SOT_SMD:SOT-23-5 | VCC 1,65…5,5 В от VSYS; вход триггер Шмитта от RESET_N с подтяжкой 10 кОм; при 100 мкА VOH ≥ VCC − 0,1 В, VOL ≤ 0,1 В → затвор Q1420 PMV65XP | ok | — | 2026-11-03 |
+| D1406, D1407 | SMBJ15CA | C78809 | [Littelfuse SMBJ series (LCSC JC.07/04/25)](https://www.littelfuse.com/assetdocs/littelfuse-tvs-diode-smbj-datasheet), с. 1–2 | ✓ двунаправленный DO-214AA, 1 → LAB_P1/LAB_P2, 2 → GND | не назначен (SMB) | VRWM 15 В, VBR 16,7–18,5 В, VC 24,4 В при 24,6 А (с. 2) < 25 В abs max VOUT/ISP/ISN TPS55289 (SLVSGA9A с. 5); выход лаб. БП ≤ 15 В в прошивке | ? | футпринт SMB; Vmax 15 В в прошивке | 2026-11-03 |
 
 ### Safety envelope (`safety.kicad_sch`, 294 деталей)
 
@@ -231,15 +232,15 @@ Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1109, сете�
 | U1510, U1528, U1549 | SN74LVC32APWR | C352974 | [TI SN74LVC32A SCAS286P](https://www.ti.com/lit/ds/symlink/sn74lvc32a.pdf), с. 1 | ✓ PW-14: та же нумерация, что у LVC08 (1A 1, 1B 2, 1Y 3 … VCC 14) | Package_SO:TSSOP-14_4.4x5mm_P0.65mm | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус | ? | land pattern | 2026-11-03 |
 | U1511 | SN74LVC02APWR | C75069 | [TI SN74LVC02A SCAS280I](https://www.ti.com/lit/ds/symlink/sn74lvc02a.pdf), с. 1 | ✓ PW-14: 1Y 1, 1A 2, 1B 3, 2Y 4, 2A 5, 2B 6, GND 7, 3A 8, 3B 9, 3Y 10, 4A 11, 4B 12, 4Y 13, VCC 14 (выход первым) | Package_SO:TSSOP-14_4.4x5mm_P0.65mm | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус | ? | JLC 140 шт.; land pattern | 2026-11-03 |
 | U1512…U1547 (5) | CD74HC4060M96 | C134017 | [TI CD74HC4060 SCHS207G, 10.2003](https://www.ti.com/lit/ds/symlink/cd74hc4060.pdf), с. 1–3, 5–7 | ✓ SOIC-16: 1 Q12, 2 Q13, 3 Q14, 4 Q6, 5 Q5, 6 Q7, 7 Q4, 8 GND, 9 φO/CTC, 10 φO/RTC, 11 φI/RS, 12 MR, 13 Q9, 14 Q8, 15 Q10, 16 VCC; символ Fabbit по 16 выводам | Package_SO:SOIC-16_3.9x9.9mm_P1.27mm | HC 2–6 В от 3V3_AON (с. 1, 3); RC: T≈2,2·Rt·Ct (с. 7, только типовое); Ct 10 нФ C0G 5 %, Rt/R2 1 %; MR min 120 нс (с. 6) | ? | допуск частоты RC не нормирован (замер на стенде, decisions 02.11); C1515/C1522/C1525/C1558 10nF_PENDING | 2026-11-03 |
-| U1527…U1538 (6) | SN74LVC1G3208DBVR | C2682152 | [TI SN74LVC1G3208 SCES605B](https://www.ti.com/lit/ds/symlink/sn74lvc1g3208.pdf), с. 1, 4 | ✓ DBV-6: 1 A, 2 GND, 3 B, 4 Y, 5 VCC, 6 C; Y=(A+B)·C (с. 1) | Package_TO_SOT_SMD:SOT-23-6 | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус | ? | JLC 3 шт. при 6 на плату: нужна закупка или замена (аналог TECH PUBLIC SN74LVC1G3208DBVR-TP C51939611 без проверки ДШ) | 2026-11-03 |
-| U1531, U1540, U1541, U1543 | 74LVC1G11GV,125 | C548240 | [TI SN74LVC1G11 SCES487F (точного ДШ Nexperia GV на диске нет)](https://assets.nexperia.com/documents/data-sheet/74LVC1G11.pdf), с. 1 | ✓ по TI DBV: 1 A, 2 GND, 3 B, 4 Y, 5 VCC, 6 C; символ 74xGxx:74LVC1G11 совпадает | Package_TO_SOT_SMD:SC-74-6_1.55x2.9mm_P0.95mm | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус | ? | JLC 1 шт. при 4 на плату; ДШ Nexperia не сверен. Кандидат TI SN74LVC1G11DBVR C22046 (23064 шт., тот же pinout DBV) | 2026-11-03 |
+| U1527…U1538 (6) | SN74LVC1G3208DBVR | C2682152 | [TI SN74LVC1G3208 SCES605B](https://www.ti.com/lit/ds/symlink/sn74lvc1g3208.pdf), с. 1, 4 | ✓ DBV-6: 1 A, 2 GND, 3 B, 4 Y, 5 VCC, 6 C; Y=(A+B)·C (с. 1) | Package_TO_SOT_SMD:SOT-23-6 | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус | ? | JLC 3 шт. при 6 на плату: закупка оригинала TI отдельно (решение 03.11) | 2026-11-03 |
+| U1531, U1540, U1541, U1543 | SN74LVC1G11DBVR | C22046 | [TI SN74LVC1G11 SCES487F](https://www.ti.com/lit/ds/symlink/sn74lvc1g11.pdf), с. 1, 4 | ✓ DBV-6 с. 1: 1 A, 2 GND, 3 B, 4 Y, 5 VCC, 6 C; символ 74xGxx:74LVC1G11 совпадает | Package_TO_SOT_SMD:SOT-23-6 | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус | ok | — | 2026-11-03 |
 | U1503, U1507, U1508 | 74LVC1G08GW,125 | C12512 | [TI SN74LVC1G08 SCES217AA (pinout SOT-353 общий)](https://assets.nexperia.com/documents/data-sheet/74LVC1G08.pdf), с. 1 | ✓ SOT-353: 1 A, 2 B, 3 GND, 4 Y, 5 VCC | Package_TO_SOT_SMD:SOT-353_SC-70-5 | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус | ? | ДШ Nexperia не сверен | 2026-11-03 |
 | U1551…U1555 (5) | SN74LVC1G125DBVR | C23654 | [TI SN74LVC1G125 SCES223U, 08.2026](https://www.ti.com/lit/ds/symlink/sn74lvc1g125.pdf), с. 3 | ✓ DBV-5: 1 OE_N, 2 A, 3 GND, 4 Y, 5 VCC (с. 3) | Package_TO_SOT_SMD:SOT-23-5 | VCC 3V3_AON (ROC 1,65…3,6 В); VIH 2,0 В, VIL 0,8 В при 2,7…3,6 В; входы до 5,5 В; 100 нФ на корпус; чтение через 4,7 кОм, ток встречного включения ≤ 0,70 мА | ok | — | 2026-11-03 |
 | D1501, D1502, D1503 | 1N4148WS-7-F | — | [Diodes 1N4148WS DS30097 Rev.25-2, 03.2016](https://www.diodes.com/assets/Datasheets/ds30097.pdf), с. 1–2 | ✓ SOD-323, полоса = катод | не назначен (SOD-323) | VF ≤ 0,715 В при 1 мА; IR ≤ 30 мкА при 25 В/150 °C; учтено в модели safety | ? | LCSC не указан; футпринт | 2026-11-03 |
 
 ## Схема целиком
 
-- Строк проверки: 138; ok 3, ? 135, нет 0.
+- Строк проверки: 139; ok 4, ? 135, нет 0.
 - Листы связаны глобальными метками: одно имя сети означает одну сеть во всём проекте.
 - Питание: USB-C PD (TPS25751) → PD_SINK → зарядник BQ25798 → VSYS; от VSYS: 3V3_AON
   (TPS63802), 5V_FPGA и PP5V (TPS61023), ключи TPS22917; ядро MCU 1,23 В (TLV62569) от 3V3_AON;
@@ -249,7 +250,7 @@ Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1109, сете�
   - `pin_to_pin`: 13
   - `isolated_pin_label`: 4
 - Предупреждения `isolated_pin_label`: сети `_PENDING` и выводы MCU, чей приёмник не выбран.
-- Детали без строки в таблице: 374 (lab-psu 120, safety 116, lab-meas 73, radio-storage 19, ui-input 17, power-aon 10, video 6, power-rails 5, power-charger 3, fpga 3, la-a 2); проверка по даташитам впереди.
+- Детали без строки в таблице: 374 (lab-psu 120, safety 116, lab-meas 73, radio-storage 19, ui-input 17, power-aon 10, video 6, power-rails 5, fpga 3, power-charger 3, la-a 2); проверка по даташитам впереди.
 - Предупреждения `pin_to_pin` с PWR_FLAG: выводы GND и PAD на сети с флагом питания,
   KiCad помечает тип вывода; соединение штатное.
 
