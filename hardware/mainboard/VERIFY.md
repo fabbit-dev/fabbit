@@ -220,6 +220,7 @@ Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1111, сете�
 | U1414 | TPS3808G33DBVR | C43698 | [TI TPS3808 SBVS050J, 08.2008](https://www.ti.com/lit/ds/symlink/tps3808.pdf), с. 2–3, 5 | ✓ DBV-6: 1 RESET_N → U1415, 2 GND, 3 MR_N к VSYS, 4 CT открыт, 5 SENSE = 3V3_AON, 6 VDD = VSYS | Package_TO_SOT_SMD:SOT-23-6 | VIT 3,07 В ±1,5 % (3,024…3,116 В), гистерезис 1…2,5 %; VDD 1,7…6,5 В от VSYS; R1442 10 кОм к VSYS: 0,46 мА < 1 мА условия VOL; td 12…28 мс | ? | скорость спада LED-шины при провале AON (LED_DROP_TIME_PENDING), проверить на макете | 2026-11-03 |
 | U1415 | SN74LVC1G14DBVR | C7835 | [TI SN74LVC1G14 SCES218Y](https://www.ti.com/lit/ds/symlink/sn74lvc1g14.pdf), с. 3–6 | ✓ DBV-5: 1 NC, 2 A, 3 GND, 4 Y, 5 VCC (с. 3) | Package_TO_SOT_SMD:SOT-23-5 | VCC 1,65…5,5 В от VSYS; вход триггер Шмитта от RESET_N с подтяжкой 10 кОм; при 100 мкА VOH ≥ VCC − 0,1 В, VOL ≤ 0,1 В → затвор Q1420 PMV65XP | ok | — | 2026-11-03 |
 | D1406, D1407 | SMBJ15CA | C78809 | [Littelfuse SMBJ series (LCSC JC.07/04/25)](https://www.littelfuse.com/assetdocs/littelfuse-tvs-diode-smbj-datasheet), с. 1–2 | ✓ двунаправленный DO-214AA, 1 → LAB_P1/LAB_P2, 2 → GND | не назначен (SMB) | VRWM 15 В, VBR 16,7–18,5 В, VC 24,4 В при 24,6 А (с. 2) < 25 В abs max VOUT/ISP/ISN TPS55289 (SLVSGA9A с. 5); выход лаб. БП ≤ 15 В в прошивке | ? | футпринт SMB; Vmax 15 В в прошивке | 2026-11-03 |
+| Q1403 | PMV40UN2R | C179442 | [Nexperia PMV40UN2](https://assets.nexperia.com/documents/data-sheet/PMV40UN2.pdf), с. 2, 6 | ✓ SOT-23: 1 G = LAB_TPS_EN, 2 S = LAB_EN_UVLO, 3 D = LAB_UVLO_TOP (с. 2) | Package_TO_SOT_SMD:SOT-23 | VDS 30 В ≥ VIN_LAB 20 В через 40,2 кОм; VGS ±12 В при ≤ 3,3 В; VGSth 0,4–0,9 В (с. 6) → EN ≥ 1,95 В на −40 °C > VUVLO 1,26 В TPS55289 | ok | — | 2026-11-03 |
 
 ### Safety envelope (`safety.kicad_sch`, 294 деталей)
 
@@ -240,7 +241,7 @@ Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1111, сете�
 
 ## Схема целиком
 
-- Строк проверки: 139; ok 4, ? 135, нет 0.
+- Строк проверки: 140; ok 5, ? 135, нет 0.
 - Листы связаны глобальными метками: одно имя сети означает одну сеть во всём проекте.
 - Питание: USB-C PD (TPS25751) → PD_SINK → зарядник BQ25798 → VSYS; от VSYS: 3V3_AON
   (TPS63802), 5V_FPGA и PP5V (TPS61023), ключи TPS22917; ядро MCU 1,23 В (TLV62569) от 3V3_AON;
@@ -250,7 +251,7 @@ Native netlist KiCad 10.0.6 (2026-11-03): компонентов 1111, сете�
   - `pin_to_pin`: 13
   - `isolated_pin_label`: 4
 - Предупреждения `isolated_pin_label`: сети `_PENDING` и выводы MCU, чей приёмник не выбран.
-- Детали без строки в таблице: 374 (lab-psu 120, safety 116, lab-meas 73, radio-storage 19, ui-input 17, power-aon 10, video 6, power-rails 5, fpga 3, power-charger 3, la-a 2); проверка по даташитам впереди.
+- Детали без строки в таблице: 373 (lab-psu 119, safety 116, lab-meas 73, radio-storage 19, ui-input 17, power-aon 10, video 6, power-rails 5, power-charger 3, fpga 3, la-a 2); проверка по даташитам впереди.
 - Предупреждения `pin_to_pin` с PWR_FLAG: выводы GND и PAD на сети с флагом питания,
   KiCad помечает тип вывода; соединение штатное.
 
