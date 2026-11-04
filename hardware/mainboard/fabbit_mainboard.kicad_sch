@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Fabbit mainboard")
-		(date "2026-11-01")
+		(date "2026-11-04")
 		(company "Fabbit")
 		(comment 1 "DRAFT, INCOMPLETE, DO NOT POWER")
 		(comment 2 "Sheets connect by global labels")
@@ -653,6 +653,52 @@
 			(project ""
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
 					(page "10")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 177.8 132.08)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "be4a5654-e7eb-451c-a704-e28d7e030271")
+		(property "Sheetname" "Safety: crowbar and generator"
+			(at 177.8 131.368 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "safety-crow.kicad_sch"
+			(at 177.8 145.375 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "21")
 				)
 			)
 		)
