@@ -1,0 +1,941 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "9c62ab38-49ad-4c41-a787-a9e39c3fb4e9")
+	(paper "A4")
+	(title_block
+		(title "Fabbit mainboard")
+		(date "2026-11-04")
+		(company "Fabbit")
+		(comment 1 "DRAFT, INCOMPLETE, DO NOT POWER")
+		(comment 2 "Sheets connect by global labels")
+		(comment 3 "No PCB synchronization")
+	)
+	(lib_symbols)
+	(sheet
+		(at 127 106.68)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "17a4792a-64de-41d8-9549-6a6dfffe6888")
+		(property "Sheetname" "Mezzanine"
+			(at 127 105.968 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mezz.kicad_sch"
+			(at 127 119.975 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "16")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 132.08)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "2e14f9f5-7198-49f0-b8bd-6d0e7a15b2e7")
+		(property "Sheetname" "Safety envelope"
+			(at 127 131.368 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "safety.kicad_sch"
+			(at 127 145.375 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "20")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 76.2 132.08)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "4ac60144-0ecb-40c3-91cd-7d5376eb1917")
+		(property "Sheetname" "Lab measurement"
+			(at 76.2 131.368 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "lab-meas.kicad_sch"
+			(at 76.2 145.375 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "19")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 81.28)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "4c01d669-63f7-4316-89a7-a2ec9ca28634")
+		(property "Sheetname" "Power rails"
+			(at 127 80.5684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power-rails.kicad_sch"
+			(at 127 94.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "12")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 25.4 30.48)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "4fa20713-b5c7-48fa-8fae-4da4d49e3d26")
+		(property "Sheetname" "Supervisor MCU"
+			(at 25.4 29.7684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "supervisor-mcu.kicad_sch"
+			(at 25.4 43.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 76.2 106.68)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "6250da10-26ba-44e2-93e0-30b5fc29fec2")
+		(property "Sheetname" "LA port A"
+			(at 76.2 105.968 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "la-a.kicad_sch"
+			(at 76.2 119.975 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "15")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 55.88)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "645c5d14-6b72-41b0-8e01-62c5454da160")
+		(property "Sheetname" "Radio and storage"
+			(at 127 55.1684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "radio-storage.kicad_sch"
+			(at 127 69.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 177.8 55.88)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "7139a54f-e90e-46c5-b0b5-686986047faa")
+		(property "Sheetname" "UI input"
+			(at 177.8 55.1684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "ui-input.kicad_sch"
+			(at 177.8 69.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "9")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 177.8 81.28)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "8282ab2b-1bdb-4b79-a9ad-340c6513cdc1")
+		(property "Sheetname" "Video"
+			(at 177.8 80.5684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "video.kicad_sch"
+			(at 177.8 94.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "13")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 76.2 55.88)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "837eeae3-b07e-47d4-940a-593b0563f406")
+		(property "Sheetname" "Peripherals"
+			(at 76.2 55.1684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "periph.kicad_sch"
+			(at 76.2 69.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 25.4 132.08)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "8ae5701c-39f3-445d-9e7d-b0493ab26af8")
+		(property "Sheetname" "Lab PSU power"
+			(at 25.4 131.368 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "lab-psu.kicad_sch"
+			(at 25.4 145.375 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "18")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 177.8 106.68)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "96bd7a15-0d02-4b93-ad1c-c2601c3c3c57")
+		(property "Sheetname" "LA port B and MIPI20"
+			(at 177.8 105.968 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "la-b.kicad_sch"
+			(at 177.8 119.975 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "17")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 76.2 30.48)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "b237a12f-6fd4-4c46-9745-82ae0915ecda")
+		(property "Sheetname" "Supervisor memory"
+			(at 76.2 29.7684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "supervisor-memory.kicad_sch"
+			(at 76.2 43.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 25.4 81.28)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "b3e42c29-23d7-4c16-b508-1203e9ff0795")
+		(property "Sheetname" "USB-C PD"
+			(at 25.4 80.5684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power-usb.kicad_sch"
+			(at 25.4 94.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "10")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 177.8 132.08)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "be4a5654-e7eb-451c-a704-e28d7e030271")
+		(property "Sheetname" "Safety: crowbar and generator"
+			(at 177.8 131.368 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "safety-crow.kicad_sch"
+			(at 177.8 145.375 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "21")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 177.8 30.48)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "c19171ef-369b-4fc1-950f-184b190c36cd")
+		(property "Sheetname" "AON converter draft"
+			(at 177.8 29.7684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power-aon.kicad_sch"
+			(at 177.8 43.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 30.48)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "c56a3743-a8e8-40d6-84fd-c962d0ca583e")
+		(property "Sheetname" "Core converter draft"
+			(at 127 29.7684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power-core.kicad_sch"
+			(at 127 43.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 76.2 81.28)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "da2a5af4-6cc8-4adc-9074-693c40976b56")
+		(property "Sheetname" "Charger and battery"
+			(at 76.2 80.5684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power-charger.kicad_sch"
+			(at 76.2 94.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "11")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 25.4 106.68)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "db81ae3c-60fd-4517-8a3b-6f5aa341ce66")
+		(property "Sheetname" "FPGA module"
+			(at 25.4 105.968 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "fpga.kicad_sch"
+			(at 25.4 119.975 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "14")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 25.4 55.88)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "f61f6466-9ddc-40af-bc8b-51d2c8af61b3")
+		(property "Sheetname" "Sensors"
+			(at 25.4 55.1684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "system-sensors.kicad_sch"
+			(at 25.4 69.1746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)
