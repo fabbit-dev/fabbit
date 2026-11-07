@@ -59,6 +59,52 @@
 		)
 	)
 	(sheet
+		(at 100.33 30.48)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "58fee724-a74a-4bb4-9a07-e452c762aab8")
+		(property "Sheetname" "Relay bridge drivers"
+			(at 100.33 29.7684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "relay-drivers.kicad_sch"
+			(at 100.33 43.7746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 25.4 91.44)
 		(size 38.1 12.7)
 		(exclude_from_sim no)
