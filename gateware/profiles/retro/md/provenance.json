@@ -1,0 +1,159 @@
+{
+  "scope": "Exact MD core sources.f compilation units, included VDP header, FX68K microcode, local wrapper and memory adapter. Not the entire upstream repository.",
+  "upstream": {
+    "repository": "https://github.com/nand2mario/mdtang.git",
+    "commit": "903d30cbd92cf03bc31cd55f925d8985e3225f1e",
+    "manifest": "mdtang_m60k.gprj",
+    "path_base": "src/",
+    "nested_dependencies": "None for this compiled subset; all required RTL is in the pinned tree.",
+    "fx68k_license_reference": {
+      "repository": "https://github.com/ijor/fx68k.git",
+      "commit": "0602ee4627b10f301298f2673d826cdd6baa9327",
+      "license": "LICENSE",
+      "relationship": "License/provenance reference, not an assertion that MDTang RTL equals that snapshot. MDTang retains modified FX68K RTL; microrom.mem and nanorom.mem compare text-identical after normalising line endings. These are CPU control tables, not a console BIOS or game ROM."
+    }
+  },
+  "license_evidence": {
+    "bsd_header": {
+      "license": "BSD-3-Clause",
+      "basis": "Explicit copyright, redistribution and disclaimer text in the listed file, including synthesized-form distribution. Preserve the full original notice in source and distribution materials."
+    },
+    "gpl_header": {
+      "license": "GPL-3.0-or-later",
+      "basis": "Explicit GPL version 3 or later grant in the listed JT12/JT89 file header. Notices retained; license text in licenses/JT12-GPL-3.txt."
+    },
+    "fx68k_directory": {
+      "license": "GPL-3.0",
+      "basis": "FX68K reference repository LICENSE at the pinned commit; no individual grant in these files. MDTang root LICENSE is also GPL-3.0. Do not describe these as explicit file-header grants.",
+      "url": "https://github.com/ijor/fx68k/blob/0602ee4627b10f301298f2673d826cdd6baa9327/LICENSE",
+      "retained_text": "licenses/FX68K-GPL-3.txt"
+    },
+    "mdtang_root": {
+      "license": "GPL-3.0",
+      "basis": "MDTang-authored RAM helpers under the repository-root LICENSE; no individual grant in these files. Introduced in MDTang initial commit 28461add9171ec20430454c1a6f7782349f01d4e. This is repository-scope evidence, not a claim of an explicit file-level grant.",
+      "url": "https://github.com/nand2mario/mdtang/blob/903d30cbd92cf03bc31cd55f925d8985e3225f1e/LICENSE",
+      "retained_text": "licenses/MDTang-GPL-3.txt",
+      "release_caveat": "If explicit individual-file grants are required by release policy, obtain upstream clarification or independently replace these helpers. No invented blanket MIT/BSD grant."
+    },
+    "fabbit_spdx": {
+      "license": "GPL-3.0-or-later",
+      "basis": "Explicit SPDX identifier on the locally authored wrapper and adapter."
+    }
+  },
+  "change_definitions": {
+    "unchanged": "Unmodified file from the pinned MDTang snapshot.",
+    "namespace_ram": "Replace whole-word identifiers dpram, dpram_block and dpram32_block with retro_md_dpram, retro_md_dpram_block and retro_md_dpram32_block; retain ports and original comments/notices.",
+    "portable_block": "Replace the Gowin DPB conditional implementation with the upstream VERILATOR portable branch. Read outputs hold on writes; dual-port synchronous reads retained. Remove the VERILATOR conditional itself; not a vendor blackbox.",
+    "portable_byte_cache": "After portable_block, replace the 32-bit RAM array with four independent 1024x8 byte arrays in generate g_byte. Each port writes a byte only on we && be[lane], and updates read output only on !we. This retains upstream no-change output semantics and permits Xilinx byte-enabled TDP RAM inference.",
+    "system_boundary": "Rename module system to retro_md_system and apply namespace_ram to its instances and comments. Add MEM_REQ=0, MEM_WE=0, MEM_ADDR=0 in the existing MBUS reset branch; initialise ZCLKCNT=0 with the other clock counters. Reset ram_rst_a when reset && !LOADING, otherwise increment by LOADING; connect explicit zero data_b to all four VRAM clear ports. Tie DISK=0 at multitap, and tie ramZ80 unused port wren_b/address_b/data_b to zero. Tie the already uninstantiated SVP_DO=ffff and SVP_DTACK_N=0. Remove both genesis_fm_lpf instances and all genesis_lpf instances; make fm_select_l/r=fm_adjust_l/r, DAC_LDATA/RDATA=PRE_LPF_L/R. Retain real FX68K, T80, VDP, JT12, JT89 and JT12 mixer.",
+    "disable_lightgun": "Remove the gun_io gun instance and replace its GUN_DO connection with 8'hFF. Other gen_io/pad_io logic retained.",
+    "disable_debug_restore": "Connect T80 DIRSet=0 and DIR=212'b0 in T80s, instead of leaving debug-restore inputs floating.",
+    "comment_only": "Whole-word system replacements also affected four FX68K comments, changing 'emulated system' to 'emulated retro_md_system'. No FX68K logic edits.",
+    "change_marker": "Prepend 'Modified for Fabbit on 2026-10-25; original notices retained below.' to changed files. Portable RAM files also carry a portable synchronous RAM explanation.",
+    "local_wrapper": "New machine wrapper with fixed NTSC Americas, three-button controllers, logical memory interface, native video and stereo audio; features and startup contract in source comments.",
+    "local_adapter": "New one-clock toggle-to-masked request/response adapter with validated address windows, big-endian/little-lane conversion, snapshot, drain-on-disable and sticky rejection fault. Not a physical SDRAM controller."
+  },
+  "files": [
+    {"path": "rtl/common/dpram.v", "upstream": "common/dpram.v", "license": "mdtang_root", "changes": ["namespace_ram", "change_marker"]},
+    {"path": "rtl/common/dpram32_block.v", "upstream": "common/dpram32_block.v", "license": "mdtang_root", "changes": ["namespace_ram", "portable_block", "portable_byte_cache", "change_marker"]},
+    {"path": "rtl/common/dpram_block.v", "upstream": "common/dpram_block.v", "license": "mdtang_root", "changes": ["namespace_ram", "portable_block", "change_marker"]},
+    {"path": "rtl/fx68k/fx68k.sv", "upstream": "fx68k/fx68k.sv", "license": "fx68k_directory", "changes": ["comment_only", "change_marker"]},
+    {"path": "rtl/fx68k/fx68kAlu.sv", "upstream": "fx68k/fx68kAlu.sv", "license": "fx68k_directory", "changes": ["unchanged"]},
+    {"path": "rtl/fx68k/uaddrPla.sv", "upstream": "fx68k/uaddrPla.sv", "license": "fx68k_directory", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/adpcm/jt10_adpcm_div.v", "upstream": "jt12/adpcm/jt10_adpcm_div.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12.v", "upstream": "jt12/jt12.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_acc.v", "upstream": "jt12/jt12_acc.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_csr.v", "upstream": "jt12/jt12_csr.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_div.v", "upstream": "jt12/jt12_div.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_dout.v", "upstream": "jt12/jt12_dout.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_eg.v", "upstream": "jt12/jt12_eg.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_eg_cnt.v", "upstream": "jt12/jt12_eg_cnt.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_eg_comb.v", "upstream": "jt12/jt12_eg_comb.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_eg_ctrl.v", "upstream": "jt12/jt12_eg_ctrl.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_eg_final.v", "upstream": "jt12/jt12_eg_final.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_eg_pure.v", "upstream": "jt12/jt12_eg_pure.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_eg_step.v", "upstream": "jt12/jt12_eg_step.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_exprom.v", "upstream": "jt12/jt12_exprom.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_kon.v", "upstream": "jt12/jt12_kon.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_lfo.v", "upstream": "jt12/jt12_lfo.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_logsin.v", "upstream": "jt12/jt12_logsin.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_mmr.v", "upstream": "jt12/jt12_mmr.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_mod.v", "upstream": "jt12/jt12_mod.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_op.v", "upstream": "jt12/jt12_op.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_pcm_interpol.v", "upstream": "jt12/jt12_pcm_interpol.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_pg.v", "upstream": "jt12/jt12_pg.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_pg_comb.v", "upstream": "jt12/jt12_pg_comb.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_pg_dt.v", "upstream": "jt12/jt12_pg_dt.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_pg_inc.v", "upstream": "jt12/jt12_pg_inc.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_pg_sum.v", "upstream": "jt12/jt12_pg_sum.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_pm.v", "upstream": "jt12/jt12_pm.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_reg.v", "upstream": "jt12/jt12_reg.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_rst.v", "upstream": "jt12/jt12_rst.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_sh.v", "upstream": "jt12/jt12_sh.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_sh24.v", "upstream": "jt12/jt12_sh24.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_sh_rst.v", "upstream": "jt12/jt12_sh_rst.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_single_acc.v", "upstream": "jt12/jt12_single_acc.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_sumch.v", "upstream": "jt12/jt12_sumch.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_timers.v", "upstream": "jt12/jt12_timers.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/jt12_top.v", "upstream": "jt12/jt12_top.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/mixer/jt12_comb.v", "upstream": "jt12/mixer/jt12_comb.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/mixer/jt12_decim.v", "upstream": "jt12/mixer/jt12_decim.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/mixer/jt12_fm_uprate.v", "upstream": "jt12/mixer/jt12_fm_uprate.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/mixer/jt12_genmix.v", "upstream": "jt12/mixer/jt12_genmix.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt12/mixer/jt12_interpol.v", "upstream": "jt12/mixer/jt12_interpol.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt89/jt89.v", "upstream": "jt89/jt89.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt89/jt89_mixer.v", "upstream": "jt89/jt89_mixer.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt89/jt89_noise.v", "upstream": "jt89/jt89_noise.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt89/jt89_tone.v", "upstream": "jt89/jt89_tone.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/jt89/jt89_vol.v", "upstream": "jt89/jt89_vol.v", "license": "gpl_header", "changes": ["unchanged"]},
+    {"path": "rtl/peripherals/fourway.v", "upstream": "peripherals/fourway.v", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/peripherals/gen_io.sv", "upstream": "peripherals/gen_io.sv", "license": "bsd_header", "changes": ["disable_lightgun", "change_marker"]},
+    {"path": "rtl/peripherals/multitap.sv", "upstream": "peripherals/multitap.sv", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/peripherals/teamplayer.sv", "upstream": "peripherals/teamplayer.sv", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/t80/t80.v", "upstream": "t80/t80.v", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/t80/t80_alu.v", "upstream": "t80/t80_alu.v", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/t80/t80_mcode.v", "upstream": "t80/t80_mcode.v", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/t80/t80_reg.v", "upstream": "t80/t80_reg.v", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/t80/t80s.v", "upstream": "t80/t80s.v", "license": "bsd_header", "changes": ["disable_debug_restore", "change_marker"]},
+    {"path": "rtl/vdp/vdp.v", "upstream": "vdp/vdp.v", "license": "bsd_header", "changes": ["namespace_ram", "change_marker"]},
+    {"path": "rtl/retro_md_system.sv", "upstream": "system.sv", "license": "bsd_header", "changes": ["system_boundary", "change_marker"]},
+    {"path": "rtl/vdp/vdp_common.v", "upstream": "vdp/vdp_common.v", "license": "bsd_header", "changes": ["unchanged"]},
+    {"path": "rtl/fx68k/microrom.mem", "upstream": "fx68k/microrom.mem", "license": "fx68k_directory", "changes": ["unchanged"]},
+    {"path": "rtl/fx68k/nanorom.mem", "upstream": "fx68k/nanorom.mem", "license": "fx68k_directory", "changes": ["unchanged"]},
+    {"path": "retro_md_core.sv", "upstream": null, "license": "fabbit_spdx", "changes": ["local_wrapper"]},
+    {"path": "retro_md_memory.sv", "upstream": null, "license": "fabbit_spdx", "changes": ["local_adapter"]}
+  ],
+  "reproduction": {
+    "file_paths": "All path fields are relative to this MD directory, except upstream paths relative to upstream.path_base. No network fetch is needed to build the retained sources.",
+    "core_sources": "sources.f",
+    "source_list_paths": "Entries inside sources.f are relative to the repository root, not this directory.",
+    "core_source_count": 64,
+    "core_sources_sha256": "f3e3c057e9021341039b8007d94cf69781942df13e1a6ca1715cc46f25a78e51",
+    "extra_compile_unit": "retro_md_memory.sv is deliberately not added to core-only sources.f; add explicitly for shared-memory integration.",
+    "include_directory": "rtl/vdp",
+    "initialization_files": ["rtl/fx68k/microrom.mem", "rtl/fx68k/nanorom.mem"],
+    "working_directory": "Copy both initialization files into the simulator/synthesizer working directory; FX68K reads their basenames.",
+    "upstream_comparison": "Clone the upstream repository at upstream.commit. For each listed upstream file compare src/<upstream> with <path>, applying only its listed change_definitions; untouched notices and license texts must remain. This manifest describes changes; it does not claim to be an automated patch generator.",
+    "license_copies": [
+      {"path": "licenses/MDTang-GPL-3.txt", "origin": "MDTang LICENSE at upstream.commit"},
+      {"path": "licenses/JT12-GPL-3.txt", "origin": "MDTang src/jt12/LICENSE at upstream.commit"},
+      {"path": "licenses/FX68K-GPL-3.txt", "origin": "FX68K LICENSE at upstream.fx68k_license_reference.commit"}
+    ],
+    "excluded": ["Board top and PLLs", "HDMI and iosys", "Upstream physical SDRAM controller", "SVP/CD/32X", "EEPROM/GameGenie", "External game ROM and console BIOS assets", "Low-pass filter implementations", "Standalone lightgun implementation"]
+  },
+  "tests": {
+    "path_base": "Repository root",
+    "physical_core_test": "gateware/sim/tb_retro_md.sv",
+    "synthetic_program_source": "gateware/sim/retro_md_program.svh",
+    "adapter_test": "gateware/sim/tb_retro_md_memory.sv",
+    "program_provenance": "Self-authored 68000/Z80 instruction sequences encoded in SV tasks, not a game ROM or console BIOS. No external binary or generator required.",
+    "physical_path": "Real MD core -> retro_md_memory -> retro_mem_lanes -> retro_sdram -> retro_sdram_io -> sdram_model. Only preload uses model.mem before reset release; running accesses all traverse the real RTL/DQ path.",
+    "runtime_directory": "gateware/build/tb_retro_md with both retained FX68K initialization files copied there",
+    "upstream_tool_exceptions": {
+      "-Wno-BLKANDNBLK": "Existing FX68K unpacked structs contain separate registered and combinational fields.",
+      "--no-assert-case": "Existing FX68K implicit unique-case assertions fire in uninitialised startup; explicit test assertions remain enabled with --assert.",
+      "-Wno-fatal": "Keep existing upstream warnings visible during the full-core build; no new testbench or adapter warnings suppressed. Standalone adapter test needs no exceptions."
+    },
+    "limitations": "One synthetic program is not proof of game compatibility, DMA deadlines, CDC, physical board timing or STA."
+  }
+}

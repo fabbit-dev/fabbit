@@ -74,3 +74,29 @@ module ODDR #(
   end
   always @(negedge C) Q <= d2;
 endmodule
+
+// IDDR (SAME_EDGE): Q1 — D на переднем фронте C, Q2 — D на заднем, оба выдаются с переднего.
+// Другие режимы DDR_CLK_EDGE не моделируются: для них UNISIM IDDR.v.
+module IDDR #(
+    parameter string DDR_CLK_EDGE = "SAME_EDGE",
+    parameter string SRTYPE = "SYNC",
+    parameter bit INIT_Q1 = 1'b0,
+    parameter bit INIT_Q2 = 1'b0
+) (
+    output logic Q1,
+    output logic Q2,
+    input  wire  C,
+    input  wire  CE,
+    input  wire  D,
+    input  wire  R,
+    input  wire  S
+);
+  logic fall = 0;
+  initial begin Q1 = INIT_Q1; Q2 = INIT_Q2; end
+  initial assert (DDR_CLK_EDGE == "SAME_EDGE") else $fatal(1, "IDDR stub: SAME_EDGE only");
+  always @(negedge C) fall <= D;
+  always @(posedge C) begin
+    Q1 <= D;
+    Q2 <= fall;
+  end
+endmodule

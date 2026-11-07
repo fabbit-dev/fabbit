@@ -6,9 +6,14 @@
 // по A10, PRE, REF. Данные чтения выходят через CL тактов, держатся tOH после следующего фронта.
 // Проверяет tRCD (в нс), чтение/запись в закрытую строку и команды без MRS; нарушения считает в errors.
 module sdram_model #(
-    parameter time TAc = 5.4ns,  // выход данных после фронта (CL2, -6)
-    parameter time TOh = 2.5ns,  // удержание после следующего фронта
-    parameter time TRcd = 15ns   // ACT → READ/WRITE
+    parameter realtime TAc = 5.4ns,  // выход данных после фронта (CL2, -6)
+    parameter realtime TOh = 2.5ns,  // удержание после следующего фронта
+    parameter time TRcd = 15ns,  // legacy default; strict fixtures override21ns
+    // Optional conditional ESMT(2S)-7 timing per programmed CAS. Legacy model
+    // defaults intentionally unchanged for the retained NES baseline test.
+    parameter bit DynamicCasTiming = 1'b0,
+    parameter realtime TAcCl2 = 8ns,
+    parameter realtime TAcCl3 = 6ns
 ) (
     input  wire        clk,
     input  wire        cke,
@@ -50,14 +55,15 @@ module sdram_model #(
         #(TOh) dq_e = 0;
       end
       if (h >= 0) begin
-        #(TAc) dq_o = mem.exists(h[20:0]) ? mem[h[20:0]] : 32'hxxxx_xxxx;
+        #(DynamicCasTiming ? (cl == 2 ? TAcCl2 : TAcCl3) : TAc)
+            dq_o = mem.exists(h[20:0]) ? mem[h[20:0]] : 32'hxxxx_xxxx;
         dq_e = 1;
       end
     join_none
     if (cke && !cs_n) begin
       case ({ras_n, cas_n, we_n})
         3'b000: begin  // MRS
-          cl = a[6:4];
+          cl = int'(a[6:4]);
           mode_set = 1;
           if (a[2:0] != 0) err("BL не 1");
         end
@@ -72,7 +78,7 @@ module sdram_model #(
           if (!mode_set) err("доступ до MRS");
           if (!open_[ba]) err($sformatf("доступ в закрытый банк %0d", ba));
           if ($time - act_t[ba] < TRcd) err($sformatf("tRCD %0t", $time - act_t[ba]));
-          addr = {ba, row[ba], a[7:0]};
+          addr = int'({ba, row[ba], a[7:0]});
           if (we_n) rpipe[cl-2] = addr;  // данные выходят после фронта k+CL−1, верны на k+CL
           else begin
             logic [31:0] old;

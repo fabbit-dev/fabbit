@@ -12,6 +12,7 @@
 #include "input.h"
 #include "nes_rom.h"
 #include "pad.h"
+#include "retro_rom.h"
 
 
 static void hotkey(pad_hotkey_t hk)
@@ -27,12 +28,15 @@ static void hotkey(pad_hotkey_t hk)
         printf("[pad] Fn: меню (OSD ещё нет)\n");
         break;
     case PAD_HK_RESET:
-        if (fl_csr_get(NES_ID) == NES_MAGIC) {
+        if (retro_present()) {
+            retro_reset();
+        } else if (fl_csr_get(NES_ID) == NES_MAGIC) {
             fl_csr_set(NES_CTRL, NES_KEY | 2);
             printf("[pad] Fn+Меню: сброс NES\n");
         }
         break;
     case PAD_HK_EXIT:
+        if (retro_present() && retro_stop() != ESP_OK) break;
         printf("[pad] Fn+Назад: выход в golden\n");
         fl_reboot_golden();
         break;

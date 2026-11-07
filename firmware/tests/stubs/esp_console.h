@@ -9,4 +9,6 @@ typedef struct {
     void *argtable;
 } esp_console_cmd_t;
 esp_err_t esp_console_cmd_register(const esp_console_cmd_t *command);
+#ifndef ESP_ERROR_CHECK
 #define ESP_ERROR_CHECK(e) do { if ((e) != ESP_OK) abort(); } while (0)
+#endif

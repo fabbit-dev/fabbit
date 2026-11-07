@@ -21,6 +21,11 @@ typedef struct {
 typedef struct {
     char name[64];   // для списка: имя файла без расширения
     char path[96];   // файл ROM у порта
+    uint8_t system;  // ROM system ID: 1 NES, 2 MD, 3 SNES; 0 for legacy ports
+    char identity[100]; // system + relative ROM path, independent of display title
+    uint32_t rom_bytes, save_bytes;
+    uint8_t map;
+    bool fast_rom;
     uint8_t mapper;
     uint16_t prg_kb, chr_kb;
     uint32_t runs;

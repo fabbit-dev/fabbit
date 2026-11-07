@@ -41,6 +41,20 @@ static esp_err_t read_header(const char *path, pm_header_t *h)
     return (n == sizeof *h && header_ok(h)) ? ESP_OK : ESP_ERR_INVALID_CRC;
 }
 
+static bool profile_path(const char *file, char *path, size_t size)
+{
+    if (!file || !*file || strchr(file, '/')) return false;
+    int n = snprintf(path, size, ROOT "/%s%s", file, strchr(file, '.') ? "" : ".fbp");
+    return n >= 0 && (size_t)n < size;
+}
+
+bool pm_available(const char *file)
+{
+    char path[300];
+    pm_header_t h;
+    return profile_path(file, path, sizeof path) && read_header(path, &h) == ESP_OK;
+}
+
 void pm_list(void)
 {
     DIR *d = opendir(ROOT);
@@ -139,8 +153,7 @@ static esp_err_t load_locked(const char *file, bool force_write)
 {
     if (!file || !*file || strchr(file, '/')) return ESP_ERR_INVALID_ARG;
     char path[300];
-    int plen = snprintf(path, sizeof path, ROOT "/%s%s", file, strchr(file, '.') ? "" : ".fbp");
-    if (plen < 0 || (size_t)plen >= sizeof path) return ESP_ERR_INVALID_SIZE;
+    if (!profile_path(file, path, sizeof path)) return ESP_ERR_INVALID_SIZE;
     pm_header_t h;
     esp_err_t err = read_header(path, &h);
     ESP_RETURN_ON_ERROR(err, TAG, "заголовок %s", path);

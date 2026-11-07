@@ -1,0 +1,20 @@
+{
+  "license": "MIT",
+  "upstream": "https://github.com/hdl-util/hdmi",
+  "commit": "83b1c9543a91b776671a44e68e130f81cae437b7",
+  "reference_sha256": {
+    "src/packet_assembler.sv": "00d143e3b4226cb8ac7418bab35b9ea6f3a963e81fd0f2f7f3109844f4bde2c6",
+    "src/tmds_channel.sv": "1e45e87703e2ab1790c13235822e8889fb016ad4c11cd9e5def0980d26a24637",
+    "src/audio_sample_packet.sv": "0e3a35ccb3e934eecfcd3916c5dac9ef269abea21472d66ebd2660a9d25e6a13",
+    "src/audio_clock_regeneration_packet.sv": "a8b7f0c592ce8c871bf31986db293799f64893b18b5a6387e262a81b7ec22954",
+    "src/audio_info_frame.sv": "dedd552fa988d9e2875bdadc54f3c08d5041d54637da1ff565d46078eeb2ea89",
+    "src/auxiliary_video_information_info_frame.sv": "c151e2675ad97ef36254044e42657f2d758512d305040137859f9b8806135f64",
+    "src/source_product_description_info_frame.sv": "893269fdccd2dc147e8570519f35308ac5e5460ad7f54bf673b3c31e9a8259de",
+    "LICENSE-MIT": "b39d2287911147fbe58a5a288aa0f2a38b4459575e168551c2a3e3853e01536d"
+  },
+  "adaptation": "BCH polynomial/wire order, audio/ACR/InfoFrame byte layouts and TERC4/guards adapted from MIT upstream references; new CE scheduler, measured ACR and shift assembler. No upstream serializer, clocks, packet_picker or counters.",
+  "sources": ["retro_audio_cdc.sv", "retro_hdmi_packet.sv", "retro_hdmi_audio_tx.sv"],
+  "dependencies": ["common/cdc/sync_bit.sv", "common/cdc/cdc_word.sv", "common/video/video_pkg.sv", "common/video/tmds_encoder.sv", "common/video/tmds_phy_se.sv"],
+  "integration": "retro_hdmi_audio_tx replaces hdmi_tx at 640x480; connect held signed stereo+valid from retro_audio_cdc. Existing pins/PHY/MMCM only. Reset both audio CDC domains on system change. lane_debug/sample_ce/overflow may be left unconnected.",
+  "limitations": ["fixed 800x525 raster/VIC1", "48kHz stereo16 LPCM only", "zero-order hold, not band-limited resampling", "source pulse interval at least four destination clocks", "game audio routing and whole-profile implementation owned by retro_top integrator"]
+}

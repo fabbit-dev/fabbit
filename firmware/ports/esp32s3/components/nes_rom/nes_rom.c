@@ -16,20 +16,7 @@ static const char *TAG = "nes";
 
 bool nes_parse(const uint8_t h[16], nes_info_t *info)
 {
-    // GameLoader не поддерживает trainer и расширенные размеры NES 2.0.
-    if (memcmp(h, "NES\x1a", 4) || !h[4] || h[4] > 32 || h[5] > 32 || (h[6] & 4) ||
-        ((h[7] & 0x0C) != 0 && (h[7] & 0x0C) != 8) ||
-        ((h[7] & 0x0C) == 8 && h[9])) return false;
-    info->mapper = (h[6] >> 4) | (h[7] & 0xF0);
-    if ((h[7] & 0x0C) != 8) {
-        bool dirty = (h[9] & 0xFE) != 0;
-        for (int i = 10; i < 16; i++) dirty |= h[i] != 0;
-        if (dirty) info->mapper = h[6] >> 4;  // как GameLoader
-    }
-    info->prg_kb = h[4] * 16;
-    info->chr_kb = h[5] * 8;
-    info->need = 16 + h[4] * 16384u + h[5] * 8192u;
-    return true;
+    return rom_parse_nes(h, 16, info);
 }
 
 bool nes_present(void)

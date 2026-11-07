@@ -25,11 +25,18 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "profile_mgr.h"
+#include "rom_port.h"
+#include "rom_file.h"
+#include "retro_rom.h"
 
 static const char *TAG = "menu";
 
 #define ROMS "/data/roms"
-#define CORE "nes"          // файл ядра в хранилище: /data/nes.fbp
+// RETRO profile ID 4: per-console images /data/retro-nes.fbp, retro-md.fbp,
+// retro-snes.fbp; the combined /data/retro.fbp is the fallback. Without either, NES
+// games run on the standalone NES profile /data/nes.fbp.
+#define CORE "retro"
+#define NES_CORE "nes"
 #define POLL_MS 300
 #define RUNS_MAX 64
 
@@ -58,6 +65,7 @@ typedef struct {
     uint32_t n;
 } run_t;
 static run_t s_runs[RUNS_MAX];
+static run_t s_legacy_runs[RUNS_MAX];
 static bool demo_requested;
 
 static uint32_t name_hash(const char *s) { return fl_crc32(0, (const uint8_t *)s, strlen(s)); }
@@ -94,8 +102,41 @@ static uint32_t *runs_of(const char *name, bool add)
     return &s_runs[k].n;
 }
 
-static void p_load(lc_saved_t *s) { nvs_get("saved", s, sizeof *s); }
-static void p_save(const lc_saved_t *s) { nvs_put("saved", s, sizeof *s); }
+typedef struct { uint8_t profile; char game[64]; } saved_v1_t;
+typedef struct {
+    uint32_t version;
+    lc_saved_t state;
+    saved_v1_t legacy_anchor;
+} saved_v2_t;
+
+static void p_load(lc_saved_t *s)
+{
+    memset(s, 0, sizeof *s);
+    saved_v1_t old;
+    nvs_get("saved", &old, sizeof old);
+    s->profile = old.profile;
+    memcpy(s->game, old.game, sizeof old.game);
+    saved_v2_t v2;
+    nvs_get("saved_v2", &v2, sizeof v2);
+    // A legacy firmware may have selected another title since v2 last ran.
+    // Only reuse the stronger identity while the old prefix still agrees.
+    if (v2.version == 2 && v2.state.identity[0] && !memcmp(&v2.legacy_anchor, &old, sizeof old))
+        *s = v2.state;
+}
+static void p_save(const lc_saved_t *s)
+{
+    saved_v1_t old;
+    nvs_get("saved", &old, sizeof old);
+    // Old firmware only knows NES title selections. Preserve that selection when
+    // a newer firmware runs MD/SNES, including equal-title cartridges.
+    if (!s->identity[0] || !strncmp(s->identity, "1:", 2)) {
+        old.profile = s->profile;
+        memcpy(old.game, s->game, sizeof old.game);
+        nvs_put("saved", &old, sizeof old);
+    }
+    saved_v2_t v2 = {.version = 2, .state = *s, .legacy_anchor = old};
+    nvs_put("saved_v2", &v2, sizeof v2);
+}
 
 // ---------------- игры ----------------
 
@@ -108,11 +149,8 @@ typedef struct {
 
 static bool fbi_open(const char *rom, fbi_head_t *hd, FILE **pf)
 {
-    size_t len = strlen(rom);
-    if (len < 4) return false;
     char path[112];
-    int plen = snprintf(path, sizeof path, "%.*s.fbi", (int)(len - 4), rom);
-    if (plen < 0 || (size_t)plen >= sizeof path) return false;
+    if (!rom_sidecar(rom, ".fbi", path, sizeof path)) return false;
     FILE *f = fopen(path, "rb");
     if (!f) return false;
     if (fread(hd, 1, sizeof *hd, f) != sizeof *hd || memcmp(hd->magic, "FBTH", 4) ||
@@ -138,33 +176,50 @@ static int p_games(lc_game_t *g, int max)
     struct dirent *e;
     while ((e = readdir(d)) && n < max) {
         size_t l = strlen(e->d_name);
-        if (l < 5 || strcasecmp(e->d_name + l - 4, ".nes")) continue;
+        if (!rom_candidate(e->d_name)) continue;
         lc_game_t *c = &g[n];
         memset(c, 0, sizeof *c);
         if (l + sizeof ROMS + 1 > sizeof c->path) continue;  // путь не влезает
         snprintf(c->path, sizeof c->path, ROMS "/%.*s", (int)(sizeof c->path - sizeof ROMS - 1), e->d_name);
-        FILE *f = fopen(c->path, "rb");
-        uint8_t h[16];
-        nes_info_t info;
-        bool ok = f && fread(h, 1, 16, f) == 16 && nes_parse(h, &info) &&
-                  fseek(f, 0, SEEK_END) == 0 && ftell(f) >= (long)info.need;
-        if (f) fclose(f);
-        if (!ok) continue;
-        c->mapper = info.mapper;
-        c->prg_kb = info.prg_kb;
-        c->chr_kb = info.chr_kb;
-        snprintf(c->name, sizeof c->name, "%.*s", (int)(l - 4), e->d_name);
+        rom_info_t info;
+        // Missing SNES runtime assets must not advertise a launchable cartridge.
+        if (retro_preflight(c->path, &info) != ESP_OK) continue;
+        c->system = (uint8_t)info.system;
+        c->rom_bytes = info.rom_size;
+        c->save_bytes = info.save_size;
+        c->map = info.map;
+        c->fast_rom = info.fast_rom;
+        snprintf(c->identity, sizeof c->identity, "%u:%.*s", c->system, (int)l, e->d_name);
+        c->mapper = info.nes.mapper;
+        c->prg_kb = info.nes.prg_kb;
+        c->chr_kb = info.nes.chr_kb;
+        const char *dot = strrchr(e->d_name, '.');
+        snprintf(c->name, sizeof c->name, "%.*s", (int)(dot - e->d_name), e->d_name);
         fbi_head_t hd;
         FILE *t;
         if (fbi_open(c->path, &hd, &t)) {
             if (hd.title[0]) snprintf(c->name, sizeof c->name, "%.63s", hd.title);
             fclose(t);
         }
-        uint32_t *r = runs_of(c->name, false);
+        uint32_t *r = runs_of(c->identity, false);
         c->runs = r ? *r : 0;
         n++;
     }
     closedir(d);
+    // Legacy title hashes migrate only for an unambiguous NES title; keep the
+    // old NVS blob untouched so old firmware still reads its own counters.
+    for (int i = 0; i < n; i++) {
+        if (g[i].system != ROM_NES || runs_of(g[i].identity, false)) continue;
+        int matches = 0;
+        for (int j = 0; j < n; j++) if (!strcmp(g[i].name, g[j].name)) matches++;
+        if (matches != 1) continue;
+        uint32_t h = name_hash(g[i].name);
+        for (int j = 0; j < RUNS_MAX; j++) if (s_legacy_runs[j].h == h && s_legacy_runs[j].n) {
+            *runs_of(g[i].identity, true) = s_legacy_runs[j].n;
+            g[i].runs = s_legacy_runs[j].n;
+            break;
+        }
+    }
     qsort(g, n, sizeof *g, cmp_game);
     return n;
 }
@@ -189,7 +244,7 @@ typedef struct {
 static void pm_stage(void *ctx, const char *stage, int pct)
 {
     run_ctx_t *r = ctx;
-    r->cb(r->ctx, stage, pct);
+    if (r->cb) r->cb(r->ctx, stage, pct);
 }
 
 // ждать golden после выхода из профиля или отката, до timeout мс
@@ -205,12 +260,88 @@ static bool wait_golden(uint32_t timeout)
     return false;
 }
 
+static void count_run(const lc_game_t *g, const rom_info_t *info)
+{
+    char identity[100];
+    const char *relative = !strncmp(g->path, ROMS "/", sizeof ROMS) ? g->path + sizeof ROMS : g->path;
+    snprintf(identity, sizeof identity, "%u:%s", (unsigned)info->system, relative);
+    uint32_t *runs = runs_of(identity, true);
+    if (*runs < UINT32_MAX) (*runs)++;
+    nvs_put("runs_v2", s_runs, sizeof s_runs);
+}
+
+// Per-console image if it is installed, else the combined core.
+static const char *core_for(rom_system_t system)
+{
+    static const char *const image[] = {[ROM_NES] = CORE "-nes", [ROM_MD] = CORE "-md",
+                                        [ROM_SNES] = CORE "-snes"};
+    if (system > ROM_NONE && system <= ROM_SNES && pm_available(image[system]))
+        return image[system];
+    return CORE;
+}
+
+// NES game with no RETRO image installed: the standalone NES profile.
+static bool nes_standalone(rom_system_t system)
+{
+    return system == ROM_NES && !pm_available(CORE "-nes") && !pm_available(CORE) &&
+           pm_available(NES_CORE);
+}
+
+static bool run_nes_locked(const lc_game_t *g, run_ctx_t *r, char *err, size_t n)
+{
+    esp_err_t e = ESP_OK;
+    if (!nes_present()) {
+        if (retro_present()) {
+            e = retro_stop();
+            if (e == ESP_OK) e = fl_reboot_golden();
+            if (e == ESP_OK && !wait_golden(3000)) e = ESP_ERR_TIMEOUT;
+        }
+        ESP_LOGI(TAG, "%s: ядро %s", g->name, NES_CORE);
+        if (e == ESP_OK) e = pm_load_cb(NES_CORE, false, pm_stage, r);
+        if (e == ESP_OK && !nes_present()) e = ESP_ERR_NOT_SUPPORTED;
+    }
+    uint32_t ms = 0;
+    if (e == ESP_OK) e = nes_load_file(g->path, NULL, NULL, &ms);
+    if (e != ESP_OK) {
+        snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
+        fl_reboot_golden();
+        wait_golden(3000);
+        return false;
+    }
+    ESP_LOGI(TAG, "%s: ROM %u мс", g->name, (unsigned)ms);
+    return true;
+}
+
 static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *err, size_t n)
 {
-    run_ctx_t r = {cb, ctx};
-    esp_err_t e = pm_load_cb(CORE, false, pm_stage, &r);
+    rom_info_t info;
+    esp_err_t e = retro_preflight(g->path, &info);
     if (e != ESP_OK) {
-        snprintf(err, n, "ядро NES не запустилось: %s", esp_err_to_name(e));
+        snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
+        return false;  // отказ до pm_load и любого recovery reboot
+    }
+    run_ctx_t r = {cb, ctx};
+    if (nes_standalone(info.system)) {
+        if (!run_nes_locked(g, &r, err, n)) return false;
+        count_run(g, &info);
+        return true;
+    }
+    // A running image that has this console needs no IPROG. Another image is
+    // drained and left through golden before the right one is loaded.
+    if (!retro_supports(info.system)) {
+        if (retro_present()) {
+            e = retro_stop();
+            if (e == ESP_OK) e = fl_reboot_golden();
+            if (e == ESP_OK && !wait_golden(3000)) e = ESP_ERR_TIMEOUT;
+        }
+        const char *core = core_for(info.system);
+        ESP_LOGI(TAG, "%s: ядро %s", g->name, core);
+        if (e == ESP_OK) e = pm_load_cb(core, false, pm_stage, &r);
+        // The loaded image must really contain the console: never send its ROM blindly.
+        if (e == ESP_OK && !retro_supports(info.system)) e = ESP_ERR_NOT_SUPPORTED;
+    }
+    if (e != ESP_OK) {
+        snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
         fl_id_t id;
         if (fl_id(&id) == ESP_OK && !strcmp(id.magic, "FBPR")) fl_reboot_golden();
         wait_golden(2000);
@@ -218,16 +349,14 @@ static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *e
     }
     // дальше плоскости нет: ПЛИС в профиле, на экране NES
     uint32_t ms = 0;
-    e = nes_load_file(g->path, NULL, NULL, &ms);
+    e = retro_load_file(g->path, NULL, NULL, &ms);
     if (e != ESP_OK) {
         snprintf(err, n, "ROM не загрузился: %s", esp_err_to_name(e));
         fl_reboot_golden();
         wait_golden(3000);
         return false;
     }
-    uint32_t *runs = runs_of(g->name, true);
-    if (*runs < UINT32_MAX) (*runs)++;
-    nvs_put("runs", s_runs, sizeof s_runs);
+    count_run(g, &info);
     ESP_LOGI(TAG, "%s: ROM %u мс", g->name, (unsigned)ms);
     return true;
 }
@@ -324,7 +453,8 @@ static void task(void *arg)
         vTaskDelete(NULL);
         return;
     }
-    nvs_get("runs", s_runs, sizeof s_runs);
+    nvs_get("runs", s_legacy_runs, sizeof s_legacy_runs);
+    nvs_get("runs_v2", s_runs, sizeof s_runs);
     menu_mode_t m = M_WAIT;
     bool started = false, warned = false;
     for (;;) {
@@ -397,10 +527,7 @@ static void task(void *arg)
 void launcher_start(void)
 {
     esp_err_t e = nvs_flash_init();
-    if (e == ESP_ERR_NVS_NO_FREE_PAGES || e == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        e = nvs_flash_init();
-    }
+    // Never erase user state automatically on an incompatible/full NVS partition.
     ESP_ERROR_CHECK(e);
     ESP_ERROR_CHECK(xTaskCreatePinnedToCore(task, "menu", 8192, NULL, 5, NULL, 0) == pdPASS
                         ? ESP_OK : ESP_ERR_NO_MEM);

@@ -21,16 +21,20 @@ module tmds_encoder (
   logic [8:0] qm;
   logic signed [5:0] cnt = '0, diff;  // diff = единицы − нули в qm[7:0]
 
+  function automatic logic [8:0] transition_word(input logic [7:0] value);
+    logic [8:0] result;
+    logic xnor_mode;
+    xnor_mode=ones(value)>4 || (ones(value)==4 && !value[0]);
+    result[0]=value[0];
+    for (int i=1;i<8;i++) result[i]=xnor_mode ? result[i-1] ~^ value[i] :
+                                                             result[i-1] ^ value[i];
+    result[8]=!xnor_mode;
+    return result;
+  endfunction
+
   always_comb begin
     n1d   = ones(d);
-    qm[0] = d[0];
-    if (n1d > 4 || (n1d == 4 && !d[0])) begin
-      for (int i = 1; i < 8; i++) qm[i] = qm[i-1] ~^ d[i];
-      qm[8] = 1'b0;
-    end else begin
-      for (int i = 1; i < 8; i++) qm[i] = qm[i-1] ^ d[i];
-      qm[8] = 1'b1;
-    end
+    qm=transition_word(d);
     n1q  = ones(qm[7:0]);
     diff = $signed({1'b0, n1q, 1'b0}) - 6'sd8;
   end

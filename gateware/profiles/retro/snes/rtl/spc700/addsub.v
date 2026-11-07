@@ -1,0 +1,35 @@
+// Source: nand2mario/snestang 5f0ef193145f67bded7f73f2c477ac8da4d85f7e, src/spc700/addsub.v
+// Upstream project license: GPL-3.0 (see snes/LICENSE upstream copy).
+import spc700::*;
+
+module SPC700_AddSub(
+    input wire [7:0] A,
+    input wire [7:0] B,
+    input wire CI,
+    input wire ADD,
+    output wire [7:0] S,
+    output wire CO,
+    output wire VO,
+    output wire HO
+);
+
+wire [7:0] tempB;
+reg [7:0] res;
+reg C7;
+
+assign tempB = ADD ? B : B ^ 8'hFF;
+always @* begin : P1
+    reg [4:0] temp0, temp1;
+
+    temp0 = ({1'b0,A[3:0]}) + ({1'b0,tempB[3:0]}) + ({4'b0000,CI});
+    temp1 = ({1'b0,A[7:4]}) + ({1'b0,tempB[7:4]}) + ({4'b0000,temp0[4]});
+    res = {temp1[3:0],temp0[3:0]};
+    C7 = temp1[4];
+end
+
+assign S = res;
+assign VO = ( ~(A[7] ^ tempB[7])) & (A[7] ^ res[7]);
+assign HO = (A[4] ^ B[4] ^ res[4]) ^ ~ADD;
+assign CO = C7;
+
+endmodule

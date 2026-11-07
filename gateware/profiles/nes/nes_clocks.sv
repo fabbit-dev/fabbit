@@ -7,10 +7,14 @@
 //   fclk      = VCO / 14 = 64,286 МГц  = 3 × clk, синфазно: контроллер SDRAM (sdram_nes)
 //   sdram_clk = VCO / 14, сдвиг SdramPhase° + динамический (PSEN, шаг VCO/56 = 19,8 пс,
 //               784 шага на период): такт микросхемы, наружу через ODDR.
-// SdramPhase = середина окна, найденного diag/sdram_eye на стенде 2026-10-21: окно 13,3 нс из 15,56 нс
-// (180° + 215 шагов ≈ 279°), 154 прохода по 1M слов без ошибок.
+// SdramPhase = середина окна, найденного diag/sdram_eye на стенде 2026-10-21 (180° + 215 шагов ≈ 279°).
+// Повтор 2026-10-28 тем же битстримом: окно без ошибок 4,8–5,1 нс из 15,56 нс при шаге 0,16–0,32 нс
+// и 0,1–1 с на точку; soak 60 с в середине окна: 154 прохода по 1M слов без ошибок. Прежняя запись
+// «окно 13,3 нс» не воспроизводится.
 module nes_clocks #(
-    parameter real SdramPhase = 279.0
+    parameter real SdramPhase = 279.0,
+    // Preserve the direct clock-pin topology for standalone NES/diagnostics.
+    parameter string Compensation = "ZHOLD"
 ) (
     input  wire clk_25m,
     input  wire psclk,      // такт интерфейса сдвига фазы (шина ESP, 100 МГц)
@@ -26,6 +30,7 @@ module nes_clocks #(
 
   MMCME2_ADV #(
       .BANDWIDTH("OPTIMIZED"),
+      .COMPENSATION(Compensation),
       .CLKIN1_PERIOD(40.0),
       .DIVCLK_DIVIDE(1),
       .CLKFBOUT_MULT_F(36.0),

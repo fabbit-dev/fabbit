@@ -11,13 +11,26 @@
 #include "esp_timer.h"
 #include "fpga_link.h"
 #include "nes_rom.h"
+#include "rom_port.h"
+#include "retro_rom.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 // sdram_eye: номера регистров (diag/sdram_eye.sv)
-enum { EYE_ID = 0, EYE_CTRL = 1, EYE_STAT = 2, EYE_ERR = 3, EYE_FIRST = 4, EYE_FADDR = 5, EYE_PHASE = 6 };
-#define EYE_PERIOD 784  // шагов сдвига на период такта SDRAM: 14 периодов VCO × 56
-#define EYE_STEP_NS 0.01984  // шаг: период VCO 900 МГц / 56
+enum { EYE_ID = 0, EYE_CTRL = 1, EYE_STAT = 2, EYE_ERR = 3, EYE_FIRST = 4, EYE_FADDR = 5, EYE_PHASE = 6,
+       EYE_PERIOD_REG = 7, EYE_STEP_REG = 9 };
+// NES sdram_eye: 784 шага на период (14 периодов VCO × 56), шаг 19,84 пс. retro_sdram_eye
+// сообщает свои числа в регистрах 7 и 9; у старого профиля они читаются как 0.
+static int eye_period(void)
+{
+    uint32_t p = fl_csr_get(EYE_PERIOD_REG);
+    return p ? (int)p : 784;
+}
+static double eye_step_ns(void)
+{
+    uint32_t fs = fl_csr_get(EYE_STEP_REG);
+    return fs ? fs / 1e6 : 0.01984;
+}
 
 // csr <индекс> [значение]: прочитать или записать регистр профиля
 static int cmd_csr(int argc, char **argv)
@@ -79,18 +92,20 @@ static int cmd_eye(int argc, char **argv)
     int step = argc > 1 ? atoi(argv[1]) : 16;
     int ms = argc > 2 ? atoi(argv[2]) : 500;
     if (step < 1) step = 1;
-    int n = (EYE_PERIOD + step - 1) / step;
+    int period = eye_period();
+    double step_ns = eye_step_ns();
+    int n = (period + step - 1) / step;
     bool *ok = calloc(n, sizeof *ok);
     if (!ok) return 1;
     int16_t base = eye_pos();
-    printf("фаза: шаг %d (%.0f пс), %d точек, %d мс на точку\n", step, step * EYE_STEP_NS * 1000, n, ms);
+    printf("фаза: шаг %d (%.0f пс), %d точек, %d мс на точку\n", step, step * step_ns * 1000, n, ms);
     for (int i = 0; i < n; i++) {
         if (i) eye_shift(step);
         uint32_t p, e;
         eye_run(ms, &p, &e);
         ok[i] = p > 0 && e == 0;
         printf("%5d %+7.2f нс  проходов %3" PRIu32 "  ошибок %8" PRIu32 "  %s\n", eye_pos(),
-               (eye_pos() - base) * EYE_STEP_NS, p, e, ok[i] ? "ок" : "X");
+               (eye_pos() - base) * step_ns, p, e, ok[i] ? "ок" : "X");
     }
     // самое длинное окно по кругу
     int best = 0, best_at = -1;
@@ -112,7 +127,7 @@ static int cmd_eye(int argc, char **argv)
     int target = base + mid * step;
     eye_shift(target - eye_pos());
     printf("EYE окно %d точек (%.2f нс), середина %d шагов от начала; фаза %d\n", best,
-           best * step * EYE_STEP_NS, mid * step, eye_pos());
+           best * step * step_ns, mid * step, eye_pos());
     free(ok);
     return 0;
 }
@@ -137,15 +152,22 @@ static int cmd_soak(int argc, char **argv)
 static int cmd_rom(int argc, char **argv)
 {
     if (argc < 2) return 1;
-    if (!nes_present()) {
-        printf("в ПЛИС не профиль NES\n");
-        return 1;
-    }
     char path[160];
     if (strchr(argv[1], '/')) snprintf(path, sizeof path, "%s", argv[1]);
     else snprintf(path, sizeof path, "/data/roms/%s%s", argv[1], strchr(argv[1], '.') ? "" : ".nes");
     uint32_t ms = 0;
-    esp_err_t e = nes_load_file(path, NULL, NULL, &ms);
+    rom_info_t info;
+    esp_err_t e = rom_port_probe(path, &info);
+    if (e == ESP_OK) {
+        fl_lock();
+        if (!retro_present() && !nes_present()) {
+            fl_unlock();
+            printf("в ПЛИС не профиль NES\n");
+            return 1;
+        }
+        e = rom_port_load(path, NULL, NULL, &ms);
+        fl_unlock();
+    }
     printf("ROM %s: %s, %" PRIu32 " мс\n", path, esp_err_to_name(e), ms);
     return e != ESP_OK;
 }
@@ -166,11 +188,23 @@ static int cmd_joy(int argc, char **argv)
 
 static int cmd_nesreset(int argc, char **argv)
 {
+    fl_lock();
+    if (retro_present()) {
+        uint32_t system;
+        esp_err_t e = fl_csr_read(RETRO_SYSTEM, &system, 1);
+        if (e == ESP_OK && system == ROM_NES) e = retro_reset();
+        else if (e == ESP_OK) e = ESP_ERR_INVALID_STATE;
+        fl_unlock();
+        return e != ESP_OK;
+    }
     if (!nes_present()) {
+        fl_unlock();
         printf("в ПЛИС не профиль NES\n");
         return 1;
     }
-    return fl_csr_set(NES_CTRL, NES_KEY | 2) != ESP_OK;
+    esp_err_t e = fl_csr_set(NES_CTRL, NES_KEY | 2);
+    fl_unlock();
+    return e != ESP_OK;
 }
 
 static void reg(const char *name, const char *help, esp_console_cmd_func_t f)
