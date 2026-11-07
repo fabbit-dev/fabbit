@@ -13301,7 +13301,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DGS0010A"
 			(at 63.5 50.8 0)
 			(hide yes)
 			(show_name no)
