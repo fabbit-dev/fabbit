@@ -18617,7 +18617,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:Vishay_VOM1271"
 			(at 934.72 22.86 0)
 			(hide yes)
 			(show_name no)
@@ -24089,7 +24089,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:Vishay_VOM1271"
 			(at 180.34 114.3 0)
 			(hide yes)
 			(show_name no)
@@ -30767,7 +30767,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:Vishay_VOM1271"
 			(at 104.14 271.78 0)
 			(hide yes)
 			(show_name no)
@@ -33399,7 +33399,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:Vishay_VOM1271"
 			(at 452.12 114.3 0)
 			(hide yes)
 			(show_name no)
@@ -39011,7 +39011,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:Vishay_VOM1271"
 			(at 185.42 271.78 0)
 			(hide yes)
 			(show_name no)
@@ -40431,7 +40431,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:Vishay_VOM1271"
 			(at 1127.76 22.86 0)
 			(hide yes)
 			(show_name no)
