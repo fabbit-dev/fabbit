@@ -13779,7 +13779,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DCK_R_PDSO_G5"
 			(at 807.72 124.46 0)
 			(hide yes)
 			(show_name no)
@@ -17168,7 +17168,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DCK_R_PDSO_G5"
 			(at 899.16 124.46 0)
 			(hide yes)
 			(show_name no)
