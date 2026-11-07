@@ -9623,7 +9623,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_PW0024A"
 			(at 167.64 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -9898,7 +9898,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_PW0024A"
 			(at 63.5 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -10173,7 +10173,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_PW0024A"
 			(at 63.5 276.86 0)
 			(hide yes)
 			(show_name no)
