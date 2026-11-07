@@ -9,10 +9,223 @@
 		(date "2026-11-07")
 		(company "Fabbit")
 		(comment 1 "DRAFT, DO NOT POWER")
-		(comment 2 "0x21 TCA9555; P15=DRV fault input; IRQ isolation pending")
-		(comment 3 "2k2 default LOW; write outputs0 before direction; IRQ isolated PENDING")
+		(comment 2 "0x21 TCA9555; P15=DRV fault input; IRQ via candidate OD buffer")
+		(comment 3 "2k2 defaults; write outputs0 before direction; IRQ edge pending")
 	)
 	(lib_symbols
+		(symbol "74xGxx:74LVC1G07"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "74LVC1G07"
+				(at 3.81 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://www.ti.com/lit/ds/symlink/sn74lvc1g07.pdf"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Single Buffer Gate, Open Drain, Low-Voltage CMOS"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "Single Gate Buff LVC CMOS Open Drain"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "SOT?23* Texas?R-PDSO-G5?DCK* Texas?R-PDSO-N5?DRL* Texas?X2SON*0.8x0.8mm*P0.48mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "74LVC1G07_0_1"
+				(polyline
+					(pts
+						(xy -7.62 6.35) (xy -7.62 -6.35) (xy 5.08 0) (xy -7.62 6.35)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy -3.81 -1.27) (xy -1.27 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 1.27) (xy -3.81 0) (xy -2.54 -1.27) (xy -1.27 0) (xy -2.54 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "74LVC1G07_1_1"
+				(pin free line
+					(at -2.54 -10.16 90)
+					(length 6.35)
+					(name "NC"
+						(effects
+							(font
+								(size 0.762 0.762)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -15.24 0 0)
+					(length 7.62)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -5.08 -10.16 90)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin open_collector line
+					(at 12.7 0 180)
+					(length 7.62)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -5.08 10.16 270)
+					(length 5.08)
+					(name "VCC"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:C"
 			(pin_numbers
 				(hide yes)
@@ -957,644 +1170,662 @@
 			(embedded_fonts no)
 		)
 	)
+	(no_connect
+		(at 340.36 60.96)
+		(uuid "b0274d2f-dcad-4b9d-b4a4-ec47d2261830")
+	)
 	(wire
 		(pts
-			(xy 50.8 48.26) (xy 58.42 48.26)
+			(xy 22.86 138.43) (xy 22.86 148.59)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "043d9168-127d-4455-8a6a-6154398dd5ac")
+		(uuid "08dc1aba-8055-445f-a744-4d591ff7ab54")
 	)
 	(wire
 		(pts
-			(xy 289.56 57.15) (xy 289.56 62.23)
+			(xy 132.08 46.99) (xy 132.08 52.07)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "0630e7d6-3916-4ef9-bd70-e17b8df2fe2e")
+		(uuid "102eefb1-e998-4fe4-85ee-013af928023d")
 	)
 	(wire
 		(pts
-			(xy 93.98 58.42) (xy 101.6 58.42)
+			(xy 233.68 52.07) (xy 233.68 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "066ae667-6241-4544-b185-1369af7a635e")
+		(uuid "13d13e9f-54aa-47a0-aa2b-1153bf0dfee8")
 	)
 	(wire
 		(pts
-			(xy 218.44 36.83) (xy 218.44 44.45)
+			(xy 91.44 53.34) (xy 99.06 53.34)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "06d325ef-5142-49fb-bdc8-704919f2a3f3")
+		(uuid "16d359b4-f2bd-4188-b000-43612e27a333")
 	)
 	(wire
 		(pts
-			(xy 76.2 34.29) (xy 76.2 40.64)
+			(xy 91.44 60.96) (xy 99.06 60.96)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "0949e0c3-090a-421e-8196-8020bfa9b789")
+		(uuid "1cb5705e-ebf9-453b-bd12-6a98cc6181da")
 	)
 	(wire
 		(pts
-			(xy 228.6 52.07) (xy 228.6 57.15)
+			(xy 50.8 86.36) (xy 55.88 86.36)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "0dcacbc9-dc01-4170-b315-c7aa43d48cc9")
+		(uuid "1e0a5b16-9dfe-4c61-9309-23984629c984")
 	)
 	(wire
 		(pts
-			(xy 93.98 66.04) (xy 101.6 66.04)
+			(xy 223.52 36.83) (xy 223.52 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "13cfbcf5-bbef-45ad-8d44-c103594481d9")
+		(uuid "1f847a5a-8257-4d65-ac84-73e418fa2522")
 	)
 	(wire
 		(pts
-			(xy 93.98 76.2) (xy 101.6 76.2)
+			(xy 284.48 40.64) (xy 284.48 49.53)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "1ad0f057-c881-4d22-91cf-8211b8554224")
+		(uuid "218c9d8b-6db2-45ce-8e5b-2fb5244396d2")
 	)
 	(wire
 		(pts
-			(xy 93.98 53.34) (xy 101.6 53.34)
+			(xy 152.4 36.83) (xy 152.4 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "1b128338-9ba4-45f5-ad07-9e1a81a09d4e")
+		(uuid "2e3929e4-b8c7-4b49-94cd-86c1875a8153")
 	)
 	(wire
 		(pts
-			(xy 238.76 52.07) (xy 238.76 57.15)
+			(xy 132.08 33.02) (xy 132.08 39.37)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "1b6b9554-7fc2-4c92-8296-dc525e012412")
+		(uuid "2fc21e2a-c147-4ead-a25d-735bdbb2af9a")
 	)
 	(wire
 		(pts
-			(xy 187.96 52.07) (xy 187.96 57.15)
+			(xy 213.36 52.07) (xy 213.36 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "2aa42c06-4cab-442b-92e2-71991e78da6b")
+		(uuid "3b057f85-4a3c-4cf3-a4a1-790a09c73a2c")
 	)
 	(wire
 		(pts
-			(xy 177.8 52.07) (xy 177.8 57.15)
+			(xy 73.66 34.29) (xy 73.66 40.64)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "3ded2bb8-914a-4d0d-9c05-41ae13bce6ef")
+		(uuid "3c9b436f-7b34-4ad4-8bdf-f8b89ac138bc")
 	)
 	(wire
 		(pts
-			(xy 53.34 86.36) (xy 58.42 86.36)
+			(xy 142.24 36.83) (xy 142.24 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "466dfbe1-3c09-46f9-81e9-38dd8a6dbe7e")
+		(uuid "3d59520e-3079-4f6e-a178-64b2097c40e4")
 	)
 	(wire
 		(pts
-			(xy 93.98 50.8) (xy 101.6 50.8)
+			(xy 91.44 71.12) (xy 99.06 71.12)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "467b2a5a-b17c-4359-8a42-17466803cff3")
+		(uuid "4479b8c8-883e-4583-8302-84eb0bd5de5a")
 	)
 	(wire
 		(pts
-			(xy 46.99 53.34) (xy 58.42 53.34)
+			(xy 48.26 48.26) (xy 55.88 48.26)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "4df541de-73dd-48e1-97de-af5d3486e44c")
+		(uuid "458f2bef-9379-474d-a842-0ae39cff0b68")
 	)
 	(wire
 		(pts
-			(xy 93.98 60.96) (xy 101.6 60.96)
+			(xy 243.84 36.83) (xy 243.84 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "53e674c8-13af-4a4a-805c-02c67bef23e7")
+		(uuid "45de5fbb-f010-4aa9-a1bd-f47095206738")
 	)
 	(wire
 		(pts
-			(xy 177.8 36.83) (xy 177.8 44.45)
+			(xy 284.48 57.15) (xy 284.48 62.23)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "604f6256-91f7-42e2-b077-2c2d992dc4a3")
+		(uuid "48486f9d-94b0-4748-841e-9e55b1477db1")
 	)
 	(wire
 		(pts
-			(xy 137.16 33.02) (xy 137.16 39.37)
+			(xy 223.52 52.07) (xy 223.52 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "60acc7a5-291b-445c-8897-54a9daafc848")
+		(uuid "4c7ebd4b-6b74-40cd-ba33-0d6713a0e819")
 	)
 	(wire
 		(pts
-			(xy 198.12 52.07) (xy 198.12 57.15)
+			(xy 182.88 36.83) (xy 182.88 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "671237b5-2f15-40f2-9011-671476b0210c")
+		(uuid "51fc3d43-09b5-4cf5-b417-d9f226c8339a")
 	)
 	(wire
 		(pts
-			(xy 93.98 78.74) (xy 101.6 78.74)
+			(xy 388.62 46.99) (xy 388.62 52.07)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "7365be62-7db0-45fe-bbf4-8e2840f07f27")
+		(uuid "5358bf83-8724-4e66-a176-fc8375fd02d3")
 	)
 	(wire
 		(pts
-			(xy 289.56 40.64) (xy 289.56 49.53)
+			(xy 73.66 96.52) (xy 73.66 101.6)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "773ed741-a707-4f1d-9eaf-0b505f080391")
+		(uuid "5af7da1b-7be3-4c68-a008-6bf9e5d30439")
 	)
 	(wire
 		(pts
-			(xy 228.6 36.83) (xy 228.6 44.45)
+			(xy 254 52.07) (xy 254 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "78c83c92-76df-41d4-bd4a-c5fc8f0edb12")
+		(uuid "64442135-cf27-43af-9af2-d6a44ad5abc8")
 	)
 	(wire
 		(pts
-			(xy 93.98 86.36) (xy 102.87 86.36)
+			(xy 91.44 81.28) (xy 100.33 81.28)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "79a4abf2-248d-467d-bb16-9b0abaf5e3dc")
+		(uuid "648174a8-9032-44a1-aed2-fc3a7cac6604")
 	)
 	(wire
 		(pts
-			(xy 238.76 36.83) (xy 238.76 44.45)
+			(xy 91.44 88.9) (xy 100.33 88.9)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "7aac7c95-d64f-4e5c-a40e-c5bfee4c187c")
+		(uuid "649f3833-2e1b-42c1-a30c-ba8832be3dfc")
 	)
 	(wire
 		(pts
-			(xy 198.12 36.83) (xy 198.12 44.45)
+			(xy 152.4 52.07) (xy 152.4 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "7cdc3b73-007a-48df-a884-6c7efbd12b33")
+		(uuid "64c37ddf-c96c-4785-a80f-cb00c66056ad")
 	)
 	(wire
 		(pts
-			(xy 208.28 36.83) (xy 208.28 44.45)
+			(xy 142.24 52.07) (xy 142.24 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "7d20dc7e-b52d-445d-af72-655674535426")
+		(uuid "6638b7a2-2f30-4b43-ac2b-eccaabe9387b")
 	)
 	(wire
 		(pts
-			(xy 76.2 96.52) (xy 76.2 101.6)
+			(xy 91.44 66.04) (xy 99.06 66.04)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "8098cda6-b76e-4458-8898-eee4353ccad1")
+		(uuid "6bd522ff-4ec7-4495-9eec-169ed127022d")
 	)
 	(wire
 		(pts
-			(xy 187.96 36.83) (xy 187.96 44.45)
+			(xy 264.16 40.64) (xy 264.16 49.53)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "80fc0c3b-20fe-4c3c-81a0-83f83612609d")
+		(uuid "6d97a0a1-cbbd-4db7-b28b-463f9f1dedc2")
 	)
 	(wire
 		(pts
-			(xy 52.07 88.9) (xy 58.42 88.9)
+			(xy 213.36 36.83) (xy 213.36 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "84018486-7c46-401b-b846-900e5940f26f")
+		(uuid "725f62c1-74e6-44ab-b5b0-dcf123b109a7")
 	)
 	(wire
 		(pts
-			(xy 269.24 57.15) (xy 269.24 62.23)
+			(xy 91.44 50.8) (xy 99.06 50.8)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "89554e6c-5d67-4c60-b001-d8da51b14e85")
+		(uuid "75d58f2c-76f7-4a4e-8843-89b87927b2c8")
 	)
 	(wire
 		(pts
-			(xy 157.48 36.83) (xy 157.48 44.45)
+			(xy 162.56 36.83) (xy 162.56 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "8ec962e9-df2e-4ef2-8339-3cda74bd19fe")
+		(uuid "76259d1f-57c5-49dd-bb48-7a5869a9134e")
 	)
 	(wire
 		(pts
-			(xy 167.64 36.83) (xy 167.64 44.45)
+			(xy 91.44 76.2) (xy 99.06 76.2)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "9a84d738-f711-48d0-9b1f-9559641ad896")
+		(uuid "7c667eda-34cc-4b66-8c5c-d14458a7b5cd")
 	)
 	(wire
 		(pts
-			(xy 259.08 52.07) (xy 259.08 57.15)
+			(xy 337.82 34.29) (xy 337.82 40.64)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "9f62bbc8-f00e-4cdc-820c-c60f16b92e07")
+		(uuid "7c702f26-2c50-4423-8fc1-e13a128f2f6c")
 	)
 	(wire
 		(pts
-			(xy 137.16 46.99) (xy 137.16 52.07)
+			(xy 274.32 57.15) (xy 274.32 62.23)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "9f9784af-ca62-4b0d-94d8-7c740c369bf2")
+		(uuid "802e88d6-7982-40e4-9e69-620303a26a0f")
 	)
 	(wire
 		(pts
-			(xy 248.92 52.07) (xy 248.92 57.15)
+			(xy 172.72 36.83) (xy 172.72 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "a31cc015-71ba-49c9-86cd-0add3079091f")
+		(uuid "821b13a7-d101-491b-9a00-3df230e9c036")
 	)
 	(wire
 		(pts
-			(xy 93.98 83.82) (xy 104.14 83.82)
+			(xy 172.72 52.07) (xy 172.72 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "a663114f-79b4-414c-af1b-35daa1939511")
+		(uuid "8b9082e7-0373-4df6-8008-1cddb8ffb1a6")
 	)
 	(wire
 		(pts
-			(xy 93.98 81.28) (xy 102.87 81.28)
+			(xy 203.2 36.83) (xy 203.2 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "acfa345d-d710-40d7-b785-a30352d57df1")
+		(uuid "8da64b7f-39f2-41c8-be23-a6c18c5b7048")
 	)
 	(wire
 		(pts
-			(xy 147.32 52.07) (xy 147.32 57.15)
+			(xy 91.44 63.5) (xy 99.06 63.5)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "b22cb3d6-17ce-46b1-9a37-b57e32c24171")
+		(uuid "924d83d6-b7cf-4fc9-bcff-2ef381f4e6df")
 	)
 	(wire
 		(pts
-			(xy 93.98 55.88) (xy 101.6 55.88)
+			(xy 182.88 52.07) (xy 182.88 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "b32e3af6-93d6-4b30-83af-bf86afcd5b9b")
+		(uuid "98c2a46e-8a56-44a8-bd00-8164ff6a17c2")
 	)
 	(wire
 		(pts
-			(xy 218.44 52.07) (xy 218.44 57.15)
+			(xy 203.2 52.07) (xy 203.2 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "b36d2bcb-b091-452d-8fae-ca6d8f800799")
+		(uuid "9928dc7a-4d77-4e69-8d09-c703cff40c40")
 	)
 	(wire
 		(pts
-			(xy 93.98 63.5) (xy 101.6 63.5)
+			(xy 388.62 33.02) (xy 388.62 39.37)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "bfb64366-14fc-44b6-b983-b114555ab573")
+		(uuid "9e369d85-7607-41fc-9581-79d48f61722a")
 	)
 	(wire
 		(pts
-			(xy 248.92 36.83) (xy 248.92 44.45)
+			(xy 49.53 88.9) (xy 55.88 88.9)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "c1740629-2158-4e00-b44e-ff0dac2ee207")
+		(uuid "a5e9b668-6e59-459d-b09d-490fb1f42181")
 	)
 	(wire
 		(pts
-			(xy 93.98 48.26) (xy 101.6 48.26)
+			(xy 91.44 55.88) (xy 99.06 55.88)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "c487d088-a7b8-4f0f-8b81-6675306d630c")
+		(uuid "b49293c2-f6ea-469d-9935-3692ad0b973f")
 	)
 	(wire
 		(pts
-			(xy 259.08 36.83) (xy 259.08 44.45)
+			(xy 274.32 40.64) (xy 274.32 49.53)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "c9a293b4-53c7-495c-8b97-f7629eec2ab7")
+		(uuid "b5d451bd-0a5f-4e87-88c0-a4f0f91b863c")
 	)
 	(wire
 		(pts
-			(xy 208.28 52.07) (xy 208.28 57.15)
+			(xy 233.68 36.83) (xy 233.68 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "cc81206d-4271-4d93-8c5e-ed9f7f843268")
+		(uuid "b6a4b25c-46cc-4201-a825-e27f35249d5e")
 	)
 	(wire
 		(pts
-			(xy 167.64 52.07) (xy 167.64 57.15)
+			(xy 91.44 73.66) (xy 99.06 73.66)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "cccf1617-2944-4594-be76-3ad2aa36999a")
+		(uuid "c21c71c4-9fc6-471c-a295-093ea6148cf5")
 	)
 	(wire
 		(pts
-			(xy 269.24 40.64) (xy 269.24 49.53)
+			(xy 91.44 86.36) (xy 100.33 86.36)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "cd966c4c-c572-4856-b5c1-bd34f8f1faf1")
+		(uuid "c6a792e8-0f80-42fb-a9a4-b9d0adbb846f")
 	)
 	(wire
 		(pts
-			(xy 279.4 57.15) (xy 279.4 62.23)
+			(xy 193.04 36.83) (xy 193.04 44.45)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "cdb1e25a-833b-4b80-80cc-e6e46db6a8be")
+		(uuid "c7f278fa-e33f-4e09-a2ee-2817f9bf7366")
 	)
 	(wire
 		(pts
-			(xy 147.32 36.83) (xy 147.32 44.45)
+			(xy 22.86 124.46) (xy 22.86 130.81)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "d5e20751-2610-48e8-a180-a0bfdaf662bf")
+		(uuid "ca328d8e-2fe6-4c97-92cb-65cdac310c64")
 	)
 	(wire
 		(pts
-			(xy 53.34 83.82) (xy 58.42 83.82)
+			(xy 193.04 52.07) (xy 193.04 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "d7e3e457-758b-478a-bcb3-9d7ec4fa8a61")
+		(uuid "cb32ca8d-3e92-45f3-b0da-63d77f70863e")
 	)
 	(wire
 		(pts
-			(xy 93.98 71.12) (xy 101.6 71.12)
+			(xy 91.44 48.26) (xy 99.06 48.26)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "dca2c94c-137f-4b03-a073-d2d82ac0524c")
+		(uuid "d001fbe6-b188-4da7-9902-e200db45816a")
 	)
 	(wire
 		(pts
-			(xy 93.98 73.66) (xy 101.6 73.66)
+			(xy 91.44 78.74) (xy 99.06 78.74)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "e0f29855-b86e-44f6-9984-87b751c50a64")
+		(uuid "d03d6036-e423-4b4b-8e7f-42a0d5edcbdf")
 	)
 	(wire
 		(pts
-			(xy 279.4 40.64) (xy 279.4 49.53)
+			(xy 50.8 83.82) (xy 55.88 83.82)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "e254263d-3593-4c03-92ca-2d88c46c9a42")
+		(uuid "d6926dd8-a152-4750-af5a-b7dd39a415b4")
 	)
 	(wire
 		(pts
-			(xy 50.8 50.8) (xy 58.42 50.8)
+			(xy 162.56 52.07) (xy 162.56 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "e698328e-eb94-4bdb-8bf0-de611612a578")
+		(uuid "e36ed742-bf2d-4dca-9daa-1b59828cd1f3")
 	)
 	(wire
 		(pts
-			(xy 157.48 52.07) (xy 157.48 57.15)
+			(xy 243.84 52.07) (xy 243.84 57.15)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "eb840522-a2f9-4b3c-9668-ec28ef2e7dd3")
+		(uuid "e43c49f5-f2c7-4bb3-878d-b3578b7e29a9")
 	)
 	(wire
 		(pts
-			(xy 93.98 88.9) (xy 102.87 88.9)
+			(xy 355.6 50.8) (xy 363.22 50.8)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "f848222e-9c76-4d29-ace5-d6dfb66a1da8")
+		(uuid "e4497732-5758-4f53-9cc8-17fda4217840")
 	)
-	(global_label "ANA_I2C_SDA"
+	(wire
+		(pts
+			(xy 91.44 58.42) (xy 99.06 58.42)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "e47742ee-47ae-4c2d-bbda-3be97e3b2af3")
+	)
+	(wire
+		(pts
+			(xy 48.26 50.8) (xy 55.88 50.8)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ea916f5a-2016-4244-ad28-7e4c73843544")
+	)
+	(wire
+		(pts
+			(xy 91.44 83.82) (xy 101.6 83.82)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "eaaf2184-e4b6-4791-bf8a-cbb72debe0fc")
+	)
+	(wire
+		(pts
+			(xy 317.5 50.8) (xy 327.66 50.8)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "eec62585-a31e-44eb-b5a1-201916912136")
+	)
+	(wire
+		(pts
+			(xy 264.16 57.15) (xy 264.16 62.23)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "f31a7e5d-9fff-49cc-9e2c-6d56497d411b")
+	)
+	(wire
+		(pts
+			(xy 45.72 53.34) (xy 55.88 53.34)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "f32ca9b1-f471-4e90-810c-9da5c3140a7f")
+	)
+	(wire
+		(pts
+			(xy 254 36.83) (xy 254 44.45)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "f5852349-5f72-4a6a-b02a-9b5719dd6cc7")
+	)
+	(wire
+		(pts
+			(xy 337.82 60.96) (xy 337.82 66.04)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "f5bb4a94-7295-4654-89d1-8c5493ac3014")
+	)
+	(global_label "RELAY_4_IN1"
 		(shape bidirectional)
-		(at 50.8 48.26 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "045b7d06-ab9d-459c-87be-8229194569d6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 50.8 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_SPARE_3"
-		(shape bidirectional)
-		(at 102.87 88.9 0)
+		(at 99.06 63.5 0)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify left)
 		)
-		(uuid "0af4a66f-a30c-4c48-b2ac-2408d9dad297")
+		(uuid "04e8e71c-c0dc-4e24-bfd6-4fdd79119272")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 102.87 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_WAKE_REQ"
-		(shape bidirectional)
-		(at 269.24 40.64 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "0c236438-959b-423e-8032-60fc34e5ff9f")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 269.24 40.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_WAKE_REQ"
-		(shape bidirectional)
-		(at 102.87 81.28 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "0e60a8d2-6529-4692-ac18-8a1ff8f9582b")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 102.87 81.28 0)
+			(at 99.06 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1607,16 +1838,610 @@
 	)
 	(global_label "MEZZ_3V3"
 		(shape bidirectional)
-		(at 76.2 34.29 90)
+		(at 73.66 34.29 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify bottom)
 		)
-		(uuid "0f8d2272-7b07-49b6-9ff4-37c8ed976327")
+		(uuid "075c6325-b6b1-4f7a-b665-fa90892b2b79")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 76.2 34.29 0)
+			(at 73.66 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_2_IN2"
+		(shape bidirectional)
+		(at 172.72 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "1072a2fc-62c8-40cb-8757-11eb76d6bc1a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 172.72 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_5_IN2"
+		(shape bidirectional)
+		(at 99.06 73.66 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "10d3b056-9921-4da9-8641-a03505ece5dc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 73.66 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_3_IN1"
+		(shape bidirectional)
+		(at 99.06 58.42 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "1e4fc525-c5e0-4a0e-8d39-85303e658eaf")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MEZZ_3V3"
+		(shape bidirectional)
+		(at 22.86 124.46 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "1ec6ec9b-cbcb-4f9f-afa3-6848759fd115")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 22.86 124.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "ANA_I2C_SDA"
+		(shape bidirectional)
+		(at 48.26 48.26 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "2050691f-2c99-4185-8934-a6e3ffbdde71")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 48.26 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_INT_LOCAL_N"
+		(shape bidirectional)
+		(at 45.72 53.34 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "29baf2e6-db53-4aa3-a3bc-a633a5f09dc2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 45.72 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MEZZ_3V3"
+		(shape bidirectional)
+		(at 132.08 33.02 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "2d828c95-40af-4440-ab8e-3176339262f2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 132.08 33.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_3_IN1"
+		(shape bidirectional)
+		(at 182.88 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "2e0fe636-0783-4d63-8eeb-f721a814c38d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 182.88 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_4_IN2"
+		(shape bidirectional)
+		(at 213.36 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "2f5dda81-d1b2-4aea-b8a4-433c3fc45dd8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 213.36 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_WAKE_REQ"
+		(shape bidirectional)
+		(at 100.33 81.28 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "33e0720f-ecc2-4e94-82d7-35220dbb383e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 100.33 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MEZZ_3V3"
+		(shape bidirectional)
+		(at 49.53 88.9 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "3a30ea84-5700-4cbe-a819-081e17c4cbb5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 49.53 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MEZZ_3V3"
+		(shape bidirectional)
+		(at 337.82 34.29 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "3c32eca0-b1a3-4851-a877-d8b0b1e5bd17")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 337.82 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MEZZ_IRQ_N"
+		(shape bidirectional)
+		(at 363.22 50.8 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "41869734-0b86-41f2-a8fc-f996fd155d28")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 363.22 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_1_IN2"
+		(shape bidirectional)
+		(at 152.4 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "42395f8f-8508-49e1-be70-81201dbac989")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 152.4 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_2_IN2"
+		(shape bidirectional)
+		(at 99.06 55.88 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "448199e1-5b83-4687-86a6-ece319be4114")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 55.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_2_IN1"
+		(shape bidirectional)
+		(at 99.06 53.34 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "45d9f88f-f706-4d75-92ab-f299ead23b14")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_6_IN2"
+		(shape bidirectional)
+		(at 99.06 78.74 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "4b76b244-b541-4f04-a909-0cde437777ef")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 78.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_INT_LOCAL_N"
+		(shape bidirectional)
+		(at 317.5 50.8 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "4e1175bc-953c-4b76-bb10-52c7e08f55ea")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 317.5 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_1_IN2"
+		(shape bidirectional)
+		(at 99.06 50.8 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "5042ee07-27cd-4c71-b3d2-d2626af30401")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_5_IN1"
+		(shape bidirectional)
+		(at 99.06 71.12 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "583131d0-6b06-44f2-805d-cb3883d0ab2c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_SPARE_2"
+		(shape bidirectional)
+		(at 100.33 86.36 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "76933ed3-cce2-46b5-90e6-99c801a6e32e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 100.33 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_4_IN2"
+		(shape bidirectional)
+		(at 99.06 66.04 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "7a098781-de38-433e-aff3-c663d2bf40d4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_1_IN1"
+		(shape bidirectional)
+		(at 142.24 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "7b1fee67-dd4f-47fb-b362-0d519ce95663")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 142.24 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MEZZ_3V3"
+		(shape bidirectional)
+		(at 388.62 33.02 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "870278d6-1d96-46f2-a839-bd374f57fe33")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 388.62 33.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_SPARE_3"
+		(shape bidirectional)
+		(at 100.33 88.9 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "8e934141-a677-4fa4-91f1-1d910eac9735")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 100.33 88.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_5_IN1"
+		(shape bidirectional)
+		(at 223.52 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "8f1e23d7-8221-48bc-a4f2-c73d7cd1ed08")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 223.52 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_WAKE_REQ"
+		(shape bidirectional)
+		(at 264.16 40.64 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "924437fb-0973-4377-8bce-de5a434fbf86")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 264.16 40.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1629,16 +2454,16 @@
 	)
 	(global_label "RELAY_DRV_FAULT_N"
 		(shape bidirectional)
-		(at 104.14 83.82 0)
+		(at 101.6 83.82 0)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify left)
 		)
-		(uuid "15359a65-9759-47a4-bf9a-250b43ed0876")
+		(uuid "b914211f-9d55-4d23-845c-469f4b308539")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 104.14 83.82 0)
+			(at 101.6 83.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1649,84 +2474,18 @@
 			)
 		)
 	)
-	(global_label "RELAY_1_IN2"
+	(global_label "RELAY_6_IN2"
 		(shape bidirectional)
-		(at 101.6 50.8 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "19142f0b-7104-4813-9243-07431322d1d8")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 50.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_2_IN2"
-		(shape bidirectional)
-		(at 177.8 36.83 90)
+		(at 254 36.83 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify bottom)
 		)
-		(uuid "28146784-2d7c-4fd6-b3e9-ed295518fc19")
+		(uuid "bb51660a-fa87-4e92-805b-14db9391d507")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 177.8 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_4_IN1"
-		(shape bidirectional)
-		(at 101.6 63.5 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "3b07240d-2b07-4bb1-8924-6a7b1e1069ed")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_3_IN1"
-		(shape bidirectional)
-		(at 101.6 58.42 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "3c46feea-a481-41a0-8ccb-8913b5ec36d0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 58.42 0)
+			(at 254 36.83 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1739,82 +2498,16 @@
 	)
 	(global_label "RELAY_SPARE_2"
 		(shape bidirectional)
-		(at 279.4 40.64 90)
+		(at 274.32 40.64 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify bottom)
 		)
-		(uuid "473a2635-a061-4f46-b7e4-340daa74ea4b")
+		(uuid "be341b12-80b1-40b4-9544-24f1618494f6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 279.4 40.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_INT_N_PENDING"
-		(shape bidirectional)
-		(at 46.99 53.34 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "48037a92-649f-460a-882a-29815427ba16")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 46.99 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_5_IN1"
-		(shape bidirectional)
-		(at 228.6 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "4f7ca125-e714-49c6-8b2f-f93f1e80fe14")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 228.6 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_1_IN2"
-		(shape bidirectional)
-		(at 157.48 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "5d1c2bb9-4147-421b-926b-7e8aa9dbe4d5")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 157.48 36.83 0)
+			(at 274.32 40.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1827,60 +2520,16 @@
 	)
 	(global_label "ANA_I2C_SCL"
 		(shape bidirectional)
-		(at 50.8 50.8 180)
+		(at 48.26 50.8 180)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify right)
 		)
-		(uuid "5d533aa9-181f-449e-8ced-819f5b5783c7")
+		(uuid "c02aaa46-1126-4b6d-bc0a-a9b9e4cf8424")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 50.8 50.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_1_IN1"
-		(shape bidirectional)
-		(at 101.6 48.26 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "5e4b9729-e144-4e47-b86f-f0d22e6093f7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_1_IN1"
-		(shape bidirectional)
-		(at 147.32 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "6c463ac1-123b-4b4f-afce-1a4afabde332")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 147.32 36.83 0)
+			(at 48.26 50.8 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1893,16 +2542,60 @@
 	)
 	(global_label "RELAY_3_IN2"
 		(shape bidirectional)
-		(at 101.6 60.96 0)
+		(at 99.06 60.96 0)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify left)
 		)
-		(uuid "6dd59723-1881-4f73-8661-6e58ccac1b65")
+		(uuid "ca27c417-31c9-43f5-a346-ed771e53ea5d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 60.96 0)
+			(at 99.06 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_2_IN1"
+		(shape bidirectional)
+		(at 162.56 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "cf9026a9-d233-4f2c-80c6-25b9276fbda9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 162.56 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_6_IN1"
+		(shape bidirectional)
+		(at 243.84 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "d82bde41-a370-4065-b20a-71bcb4f1e079")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 243.84 36.83 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1915,390 +2608,16 @@
 	)
 	(global_label "RELAY_3_IN2"
 		(shape bidirectional)
-		(at 198.12 36.83 90)
+		(at 193.04 36.83 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify bottom)
 		)
-		(uuid "76ae24c4-24a9-42aa-92d5-9b48e55175d6")
+		(uuid "dc8ed159-49d6-4b8e-8a52-93e92efd92e1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 198.12 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_4_IN2"
-		(shape bidirectional)
-		(at 101.6 66.04 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "76aeda1c-927a-4d06-9a68-43c8430692b4")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 66.04 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "MEZZ_3V3"
-		(shape bidirectional)
-		(at 137.16 33.02 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "8b0d8b2e-7a70-47c3-9149-907db0fe499f")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 137.16 33.02 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_5_IN2"
-		(shape bidirectional)
-		(at 101.6 73.66 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "8c08149b-ac83-445a-bdf0-987469cfe815")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_2_IN2"
-		(shape bidirectional)
-		(at 101.6 55.88 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "986b7ced-c425-45fa-9045-ec1cfd1bd704")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 55.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_SPARE_2"
-		(shape bidirectional)
-		(at 102.87 86.36 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "a7ce325c-fda4-4023-af0a-8044a3b405d1")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 102.87 86.36 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_SPARE_3"
-		(shape bidirectional)
-		(at 289.56 40.64 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "a9283db9-c190-4bc4-8e23-4c27f15f29d6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 289.56 40.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_4_IN2"
-		(shape bidirectional)
-		(at 218.44 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "b23c0a50-90f8-4c52-9188-6e2ea5993320")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 218.44 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_5_IN1"
-		(shape bidirectional)
-		(at 101.6 71.12 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "b25f36b5-d9b5-4e32-beb0-301c8c3b436b")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 71.12 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_6_IN1"
-		(shape bidirectional)
-		(at 101.6 76.2 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "be3b1b87-c046-4bd1-862b-62efce5e39d4")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 76.2 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_6_IN1"
-		(shape bidirectional)
-		(at 248.92 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "beb3c3ad-77b7-4e0f-882e-535c8908df53")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 248.92 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_3_IN1"
-		(shape bidirectional)
-		(at 187.96 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "ce01de56-3dc1-4d8d-8b0d-dc4a37308497")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 187.96 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_6_IN2"
-		(shape bidirectional)
-		(at 101.6 78.74 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "e7525ab1-b16e-41c5-956f-71cae0364f94")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 78.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_2_IN1"
-		(shape bidirectional)
-		(at 101.6 53.34 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "ebae457c-e185-4bad-8b3a-ff947735a666")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.6 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_5_IN2"
-		(shape bidirectional)
-		(at 238.76 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "f5d2d947-fbd2-4183-9bf0-625526666e49")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 238.76 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "MEZZ_3V3"
-		(shape bidirectional)
-		(at 52.07 88.9 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "f642485e-8c97-47b8-8edf-60612eba4310")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 52.07 88.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_6_IN2"
-		(shape bidirectional)
-		(at 259.08 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "f6e61748-0a44-4eee-ba4f-210043e86dfb")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 259.08 36.83 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "RELAY_2_IN1"
-		(shape bidirectional)
-		(at 167.64 36.83 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "f9335911-ebd9-4d44-aea0-1b8fff612bc6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 167.64 36.83 0)
+			(at 193.04 36.83 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2311,16 +2630,126 @@
 	)
 	(global_label "RELAY_4_IN1"
 		(shape bidirectional)
-		(at 208.28 36.83 90)
+		(at 203.2 36.83 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify bottom)
 		)
-		(uuid "fbaf7337-a5c4-45c8-a0a8-6bb34c94cb3b")
+		(uuid "de3bd6d1-87d2-4e3c-bb44-f14ce1a32876")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 208.28 36.83 0)
+			(at 203.2 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_5_IN2"
+		(shape bidirectional)
+		(at 233.68 36.83 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "e4de6e14-05b3-4c38-820b-a3b88ba0f573")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 233.68 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_INT_LOCAL_N"
+		(shape bidirectional)
+		(at 22.86 148.59 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify top)
+		)
+		(uuid "ecb6be97-6cc2-4c1b-a12f-d53a8428ddb5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 22.86 148.59 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_6_IN1"
+		(shape bidirectional)
+		(at 99.06 76.2 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "f4558cb9-0af0-49ca-918a-43a009f536e8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_SPARE_3"
+		(shape bidirectional)
+		(at 284.48 40.64 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "f7093019-1a9e-4562-8ef4-8118275e9d14")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 284.48 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "RELAY_1_IN1"
+		(shape bidirectional)
+		(at 99.06 48.26 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "fbc68dd4-9704-492a-91c9-3ec728bb7968")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2333,7 +2762,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 137.16 52.07 0)
+		(at 254 57.15 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2341,1361 +2770,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "13b2c3c3-8c11-4d35-96af-238a0bb066a8")
-		(property "Reference" "#PWR03004"
-			(at 137.16 58.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 137.16 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 137.16 52.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 137.16 52.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 137.16 52.07 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "ea8a1488-fb9e-4644-b808-213210c5c8af")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03004")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 238.76 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "1db440b7-6d5a-4172-9657-4babe5edc086")
-		(property "Reference" "R310"
-			(at 236.22 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 242.57 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 238.76 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 238.76 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 238.76 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 238.76 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "fd122675-c232-4e0e-be0b-676d71a1af7e")
-		)
-		(pin "1"
-			(uuid "ce2cd196-cda8-42f6-a31b-129c7b4e51ce")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R310")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 157.48 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "1e3a5063-1a91-4262-b239-758aea64c9e5")
-		(property "Reference" "#PWR03006"
-			(at 157.48 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 157.48 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 157.48 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 157.48 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 157.48 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "a45b4d34-848b-4c66-918d-b59066a01741")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03006")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 218.44 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "1e842fc3-ad67-4810-9f07-8997a85bd7f1")
-		(property "Reference" "R308"
-			(at 215.9 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 222.25 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 218.44 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 218.44 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 218.44 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 218.44 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "d501f391-d72e-4761-a201-0b358277b552")
-		)
-		(pin "1"
-			(uuid "a213a039-bfd9-4bb9-9ca3-996b6a2d4de9")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R308")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Interface_Expansion:TCA9555PWR")
-		(at 76.2 68.58 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "25bbb4b8-955f-49a2-ae18-382fd3ea1073")
-		(property "Reference" "U301"
-			(at 76.2 68.58 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "TCA9555PWR"
-			(at 76.2 76.2 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 76.2 68.58 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "TCA9555PWR"
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C465732"
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Texas Instruments"
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Address" "0x21 A2=0 A1=0 A0=1"
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "Twelve relay bridge inputs; bridges and sleep gate not built"
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Default" "POR inputs have internal pullups; external2k2 force low; firmware write0 before configoutputs"
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Fault_input" "P15 pin18=combined DRV nFAULT; keep INPUT permanently; polling only until IRQ isolation built"
-			(at 76.2 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "10"
-			(uuid "4894a77d-9761-4ca1-a7b3-7d4327a644b8")
-		)
-		(pin "9"
-			(uuid "31699ecf-6b2c-4b83-91b9-b6656ef63d12")
-		)
-		(pin "19"
-			(uuid "6173e6a3-6267-481a-a7f1-6df0a3abe9e7")
-		)
-		(pin "16"
-			(uuid "4e470f40-a4e0-4b26-b4ef-7976bc3bfbc5")
-		)
-		(pin "3"
-			(uuid "119da99d-bc61-4cf7-8520-1cc6530ea81c")
-		)
-		(pin "24"
-			(uuid "039b060f-6404-4beb-9078-fccbf778b160")
-		)
-		(pin "22"
-			(uuid "227d091c-98a5-4671-97f3-29d9f9ca571b")
-		)
-		(pin "14"
-			(uuid "c65ab327-9b69-4dd9-8252-778b1790c9c3")
-		)
-		(pin "11"
-			(uuid "de7fcea8-ea13-4afd-95ce-cc64ade91036")
-		)
-		(pin "2"
-			(uuid "55d935fa-f761-48df-813b-cb78f2591f8a")
-		)
-		(pin "8"
-			(uuid "3aafed79-fb55-48a9-9483-71187ee932fe")
-		)
-		(pin "17"
-			(uuid "068b1b94-2481-4796-850b-8b4ff1974d39")
-		)
-		(pin "4"
-			(uuid "53153f12-ba60-4aec-87e4-b42afa02413b")
-		)
-		(pin "15"
-			(uuid "55d8a391-a08d-447b-80ca-8873efad5850")
-		)
-		(pin "23"
-			(uuid "f2399bac-f5f3-4248-ae65-6a9fda880a7b")
-		)
-		(pin "12"
-			(uuid "3c36d729-b6e8-44d5-b231-80907c8125b6")
-		)
-		(pin "7"
-			(uuid "c33ef123-0a86-4f24-833d-648b7233d12c")
-		)
-		(pin "18"
-			(uuid "d4087879-f696-4ca9-b12e-9a5b293ab64f")
-		)
-		(pin "21"
-			(uuid "7e9ac8ce-f150-49ac-9e70-4f78b3f4a628")
-		)
-		(pin "6"
-			(uuid "725cc4b3-b84d-4429-b1ea-220db14703c5")
-		)
-		(pin "13"
-			(uuid "7e628db0-e8de-420a-9e8a-0fda43495af7")
-		)
-		(pin "1"
-			(uuid "ccaf3858-260c-4627-823e-6b67334e4df5")
-		)
-		(pin "5"
-			(uuid "e709eb7e-ddd0-432e-af03-2f4611191c42")
-		)
-		(pin "20"
-			(uuid "b0964186-bbe8-4dc2-892b-50019903923e")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "U301")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 177.8 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "2af51f8b-591f-4c58-847c-db32ca80d36b")
-		(property "Reference" "#PWR03008"
-			(at 177.8 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 177.8 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 177.8 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 177.8 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 177.8 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "24bfface-a0d8-433b-9960-23131cd5c325")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03008")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 76.2 101.6 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "2eefc421-38b0-4e50-8e33-8580baeffa07")
-		(property "Reference" "#PWR03003"
-			(at 76.2 107.95 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 76.2 106.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 76.2 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 76.2 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 76.2 101.6 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "bd516cae-1788-492e-ab88-a3093bf56299")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03003")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 147.32 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "3198b964-ddc8-4c07-90c3-c52db8714da5")
-		(property "Reference" "R301"
-			(at 144.78 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 151.13 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 147.32 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 147.32 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 147.32 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 147.32 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "76503586-4999-4678-aee1-dc87341202dd")
-		)
-		(pin "2"
-			(uuid "3258b4b0-544e-4491-8d56-3988d0b55b2a")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R301")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 208.28 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "338ebe58-6bca-4cfa-8c61-20b86bbbd899")
-		(property "Reference" "R307"
-			(at 205.74 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 212.09 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 208.28 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 208.28 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 208.28 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 208.28 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "732e3866-4c50-4698-8dfc-fc6771f4490d")
-		)
-		(pin "1"
-			(uuid "fb0400bd-5118-46a5-bd1b-3fd6a122cdd3")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R307")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 289.56 62.23 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "366f0ed0-a35e-47ff-ac12-ee8ef0f3de19")
-		(property "Reference" "#PWR03019"
-			(at 289.56 68.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 289.56 67.31 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 289.56 62.23 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 289.56 62.23 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 289.56 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "11c3fc01-485e-477d-a7cf-cc45b8dce0a8")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03019")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 187.96 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "38fa0f61-5938-4cc6-95c2-7fb64403d952")
-		(property "Reference" "R305"
-			(at 185.42 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 191.77 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 187.96 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 187.96 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 187.96 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 187.96 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "071b0573-39f5-4acc-b4e2-d934a4600ec0")
-		)
-		(pin "1"
-			(uuid "b41c8de2-8464-4032-8d65-58ea7f8625f4")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R305")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 238.76 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "3f4b442d-7940-4616-ba73-0e23ab86255d")
-		(property "Reference" "#PWR03014"
-			(at 238.76 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 238.76 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 238.76 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 238.76 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 238.76 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "56464f9e-e68a-46fc-89f1-477a03428bce")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03014")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 137.16 43.18 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "5631670e-4591-46e7-8799-7c24e0ffef2f")
-		(property "Reference" "C301"
-			(at 134.62 43.18 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100nF 16V X7R 0603"
-			(at 140.97 43.18 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 137.16 43.18 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 137.16 43.18 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 137.16 43.18 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "7e2cce6a-0999-4878-a1ed-f042990ef7c0")
-		)
-		(pin "1"
-			(uuid "c26d9991-8432-44fa-9765-a1896044e347")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "C301")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 218.44 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "71ec9352-6c4e-4c22-be29-3b404e8ffa71")
-		(property "Reference" "#PWR03012"
-			(at 218.44 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 218.44 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 218.44 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 218.44 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 218.44 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "c18316e7-cfbb-415b-a2d3-2e9760d86b80")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03012")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 147.32 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "77575aae-c76d-4411-a3ed-eba952b1e1dd")
-		(property "Reference" "#PWR03005"
-			(at 147.32 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 147.32 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 147.32 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 147.32 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 147.32 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "c2068d97-16dd-4a40-ae87-828f3c7a1bf0")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03005")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 259.08 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "7a9adb68-38fc-4e98-b556-0204076009df")
+		(uuid "03bae810-f586-4ffc-9d12-e4c089030de5")
 		(property "Reference" "#PWR03016"
-			(at 259.08 63.5 0)
+			(at 254 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3706,7 +2783,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 259.08 62.23 0)
+			(at 254 62.23 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3716,7 +2793,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 259.08 57.15 0)
+			(at 254 57.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3727,7 +2804,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 259.08 57.15 0)
+			(at 254 57.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3738,7 +2815,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 259.08 57.15 0)
+			(at 254 57.15 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3748,7 +2825,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "235dda34-aaf2-4318-b1dc-c16fc719e397")
+			(uuid "114c5709-c6ad-4d6e-96f3-06e9564dd569")
 		)
 		(instances
 			(project "fabbit_analog"
@@ -3760,84 +2837,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 198.12 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "7b6c2604-0fe8-4fe8-8fea-b73ccc705c33")
-		(property "Reference" "#PWR03010"
-			(at 198.12 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 198.12 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 198.12 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 198.12 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 198.12 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "e2d606db-d8f8-4d17-a0b6-3eb83c55e44e")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03010")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R")
-		(at 279.4 53.34 0)
+		(at 274.32 53.34 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3845,9 +2846,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "7e5f0d5e-8cec-43b0-ae06-69226be91e70")
+		(uuid "091dd722-5fa6-473d-8b30-342aedcdf4e4")
 		(property "Reference" "R315"
-			(at 276.86 53.34 90)
+			(at 271.78 53.34 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3857,7 +2858,7 @@
 			)
 		)
 		(property "Value" "10k 1% 0603"
-			(at 283.21 53.34 90)
+			(at 276.86 53.34 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3867,7 +2868,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 279.4 53.34 0)
+			(at 274.32 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3878,7 +2879,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 279.4 53.34 0)
+			(at 274.32 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3889,7 +2890,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 279.4 53.34 0)
+			(at 274.32 53.34 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3899,7 +2900,7 @@
 			)
 		)
 		(property "Role" "Unused reserved port held low, no driver assigned"
-			(at 279.4 53.34 0)
+			(at 274.32 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3910,10 +2911,10 @@
 			)
 		)
 		(pin "2"
-			(uuid "464154b6-4428-4743-994d-1ed19be3743f")
+			(uuid "5274bcef-7318-48be-903c-113df35c7e96")
 		)
 		(pin "1"
-			(uuid "eb5fc2bc-be25-4854-a147-f5fd5a4872d4")
+			(uuid "88ffcd36-a9a1-4633-9419-9a7f701a74ca")
 		)
 		(instances
 			(project "fabbit_analog"
@@ -3925,97 +2926,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 177.8 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "8244354b-c768-437b-b7d5-a199b8e936d0")
-		(property "Reference" "R304"
-			(at 175.26 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 181.61 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 177.8 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 177.8 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 177.8 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 177.8 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "33731821-bb8f-4a0d-81f8-691a162a1a82")
-		)
-		(pin "1"
-			(uuid "eaa64c59-2dd2-47c2-accf-de92d2d784c8")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R304")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
-		(at 167.64 57.15 0)
+		(at 264.16 62.23 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4023,161 +2935,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "84cd7790-5265-4355-a6d4-a3623978588f")
-		(property "Reference" "#PWR03007"
-			(at 167.64 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 167.64 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 167.64 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 167.64 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 167.64 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "cfc699ad-5435-445a-8bdd-ceca1b0adb5b")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03007")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 228.6 57.15 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "90381680-9f6e-479c-a4f8-62fb7d5d83d5")
-		(property "Reference" "#PWR03013"
-			(at 228.6 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 228.6 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 228.6 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 228.6 57.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 228.6 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6718a78a-91ca-475e-a53c-72eb5aa47a9b")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03013")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 269.24 62.23 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "970d12f3-5cb6-42c2-8cc4-ebf00798ade7")
+		(uuid "0b52ff35-5364-4ea1-a20f-0be0941a33ee")
 		(property "Reference" "#PWR03017"
-			(at 269.24 68.58 0)
+			(at 264.16 68.58 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4188,7 +2948,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 269.24 67.31 0)
+			(at 264.16 67.31 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4198,7 +2958,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 269.24 62.23 0)
+			(at 264.16 62.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4209,7 +2969,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 269.24 62.23 0)
+			(at 264.16 62.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4220,7 +2980,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 269.24 62.23 0)
+			(at 264.16 62.23 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4230,7 +2990,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "e6fad89c-9548-4a49-93f6-5b7cffe8952e")
+			(uuid "b005aef3-2c5e-43fe-b990-36e409a2b26a")
 		)
 		(instances
 			(project "fabbit_analog"
@@ -4243,7 +3003,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 53.34 83.82 0)
+		(at 337.82 66.04 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4251,9 +3011,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "9850f65e-5ea2-4428-bc86-5c7d0960ae2c")
-		(property "Reference" "#PWR03002"
-			(at 53.34 90.17 0)
+		(uuid "0fb94d6c-247a-49f6-ad1b-d4ae7e323436")
+		(property "Reference" "#PWR03020"
+			(at 337.82 72.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4264,7 +3024,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 53.34 88.9 0)
+			(at 337.82 71.12 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4274,7 +3034,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 53.34 83.82 0)
+			(at 337.82 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4285,7 +3045,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 53.34 83.82 0)
+			(at 337.82 66.04 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4296,7 +3056,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 53.34 83.82 0)
+			(at 337.82 66.04 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4306,546 +3066,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b389614f-4fc6-40bd-b355-c90cf837a80e")
+			(uuid "39369443-2191-42fa-9591-376ea3de857d")
 		)
 		(instances
 			(project "fabbit_analog"
 				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03002")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 269.24 53.34 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "9c4c9617-6a33-4d77-acc8-f3d213d1b226")
-		(property "Reference" "R313"
-			(at 266.7 53.34 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 273.05 53.34 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 269.24 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 269.24 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 269.24 53.34 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR low on relay wake request; buffered before nSLEEP"
-			(at 269.24 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "553acd4c-4c5d-4e50-9f18-127ef56f8e50")
-		)
-		(pin "1"
-			(uuid "f7a205a0-d1ff-4717-8948-9b6718ae6b68")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R313")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 289.56 53.34 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "9f0cc6f1-ea1c-4387-8dc5-1a456d778d9b")
-		(property "Reference" "R316"
-			(at 287.02 53.34 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10k 1% 0603"
-			(at 293.37 53.34 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 289.56 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 289.56 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 289.56 53.34 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "Unused reserved port held low, no driver assigned"
-			(at 289.56 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "9bfb2439-346e-40ca-9fa9-56bde346fee5")
-		)
-		(pin "1"
-			(uuid "55e4e5ca-1fbb-4590-be43-e8fdb8fae651")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R316")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 248.92 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "ab3e244d-c6b1-419e-ad88-85198784c82b")
-		(property "Reference" "R311"
-			(at 246.38 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 252.73 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 248.92 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 248.92 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 248.92 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 248.92 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "19ecf49d-1942-48cd-8a79-21647b212e14")
-		)
-		(pin "2"
-			(uuid "9d79d4e3-d140-4d0a-b6da-169820239754")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R311")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 198.12 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "b1ecb823-3cfc-428a-b3e1-6a842a29c822")
-		(property "Reference" "R306"
-			(at 195.58 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 201.93 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 198.12 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 198.12 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 198.12 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 198.12 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "0f9f37c9-4d94-49d7-9466-139bbdb1292d")
-		)
-		(pin "2"
-			(uuid "58f6fc79-7b27-495e-bba1-333a879f0b00")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R306")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 157.48 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "ba4681cf-f375-4bf0-8891-ad33e9a17f8b")
-		(property "Reference" "R302"
-			(at 154.94 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 161.29 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 157.48 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 157.48 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 157.48 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 157.48 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "28771563-5065-49ee-830b-7a5ce94c4244")
-		)
-		(pin "1"
-			(uuid "7ee7585d-80b0-4519-b885-b39519b8c55b")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R302")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 259.08 48.26 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c6060600-0b24-4b1e-8ab7-c66aff78c6ba")
-		(property "Reference" "R312"
-			(at 256.54 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.2k 1% 0603"
-			(at 262.89 48.26 90)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 259.08 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 259.08 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 259.08 48.26 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 259.08 48.26 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "0e82cd70-ae4d-43bc-84dd-96269783eb89")
-		)
-		(pin "1"
-			(uuid "a8860f6c-9f7c-4cdf-8e40-128abe91ac84")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "R312")
+					(reference "#PWR03020")
 					(unit 1)
 				)
 			)
@@ -4853,7 +3079,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 279.4 62.23 0)
+		(at 172.72 57.15 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4861,9 +3087,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "cc0a12b0-8c7a-4dba-94d2-01ee770ce009")
-		(property "Reference" "#PWR03018"
-			(at 279.4 68.58 0)
+		(uuid "14bef6cb-bb87-4ef7-9ca0-65884b7a617b")
+		(property "Reference" "#PWR03008"
+			(at 172.72 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4874,7 +3100,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 279.4 67.31 0)
+			(at 172.72 62.23 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4884,7 +3110,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 279.4 62.23 0)
+			(at 172.72 57.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4895,7 +3121,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 279.4 62.23 0)
+			(at 172.72 57.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4906,7 +3132,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 279.4 62.23 0)
+			(at 172.72 57.15 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4916,7 +3142,161 @@
 			)
 		)
 		(pin "1"
-			(uuid "4cdffba8-c5fb-4bdb-897c-c773653a2069")
+			(uuid "13d79f52-eb1f-42c0-80a5-6823a284f802")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03008")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 132.08 43.18 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1bcae642-e432-47d6-9cf2-23530171248b")
+		(property "Reference" "C301"
+			(at 129.54 43.18 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100nF 16V X7R 0603"
+			(at 134.62 43.18 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 132.08 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 132.08 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 132.08 43.18 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "11c6297a-6941-4106-99ce-9e6ce52a0ce2")
+		)
+		(pin "1"
+			(uuid "3027d89f-60e7-4adc-aa80-def1fbcc9c90")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "C301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 274.32 62.23 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1fb7ab58-d068-4115-97a6-61460cfd7197")
+		(property "Reference" "#PWR03018"
+			(at 274.32 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 274.32 67.31 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 274.32 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 274.32 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 274.32 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4d7b9be1-2ed1-4f9a-807b-5fcf444d0b7c")
 		)
 		(instances
 			(project "fabbit_analog"
@@ -4929,7 +3309,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 187.96 57.15 0)
+		(at 73.66 101.6 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4937,9 +3317,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "d18a257d-e71e-4f4d-b417-6ec11a93d838")
-		(property "Reference" "#PWR03009"
-			(at 187.96 63.5 0)
+		(uuid "337879be-fec5-49e3-8713-11e1900cc660")
+		(property "Reference" "#PWR03003"
+			(at 73.66 107.95 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4950,7 +3330,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 187.96 62.23 0)
+			(at 73.66 106.68 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4960,7 +3340,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 187.96 57.15 0)
+			(at 73.66 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4971,7 +3351,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 187.96 57.15 0)
+			(at 73.66 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4982,7 +3362,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 187.96 57.15 0)
+			(at 73.66 101.6 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4992,88 +3372,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "120a82e7-cb5d-4ef5-b572-07660a0fbe27")
+			(uuid "5f1333e9-7edc-4e9e-9b9f-9cbcdb2a13df")
 		)
 		(instances
 			(project "fabbit_analog"
 				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03009")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 53.34 86.36 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "df559058-7fcd-4a0a-a0a3-cc931c5cc117")
-		(property "Reference" "#PWR03001"
-			(at 53.34 92.71 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 53.34 91.44 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 53.34 86.36 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 53.34 86.36 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 53.34 86.36 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "43472001-0e70-4dfd-b612-da899f6e7168")
-		)
-		(instances
-			(project "fabbit_analog"
-				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03001")
+					(reference "#PWR03003")
 					(unit 1)
 				)
 			)
@@ -5081,7 +3385,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 228.6 48.26 0)
+		(at 213.36 48.26 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5089,9 +3393,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "e9872861-2640-4e60-82b8-9943365fc1a4")
-		(property "Reference" "R309"
-			(at 226.06 48.26 90)
+		(uuid "3885009f-79f5-4be7-ad7f-e4a2efb9ddfa")
+		(property "Reference" "R308"
+			(at 210.82 48.26 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5101,7 +3405,7 @@
 			)
 		)
 		(property "Value" "2.2k 1% 0603"
-			(at 232.41 48.26 90)
+			(at 215.9 48.26 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5111,7 +3415,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 228.6 48.26 0)
+			(at 213.36 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5122,7 +3426,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 228.6 48.26 0)
+			(at 213.36 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5133,7 +3437,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 228.6 48.26 0)
+			(at 213.36 48.26 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5143,7 +3447,172 @@
 			)
 		)
 		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 228.6 48.26 0)
+			(at 213.36 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "af3fea2b-8ba0-43dc-b017-929e1a509de3")
+		)
+		(pin "1"
+			(uuid "67f5220a-2dab-4112-895c-cf917db14363")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R308")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 203.2 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3d798bdc-9741-4bf4-ad90-efa58467b3e4")
+		(property "Reference" "#PWR03011"
+			(at 203.2 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 203.2 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 203.2 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 203.2 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 203.2 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "952ef2fc-3f6a-40b8-b4eb-dddf1d31ac70")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 223.52 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "49b74f1f-c6c1-418a-bfcb-02e488fdff19")
+		(property "Reference" "R309"
+			(at 220.98 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 226.06 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 223.52 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 223.52 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 223.52 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 223.52 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5154,10 +3623,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "86cfe9ec-6450-40c0-a3a5-89f463bdb60f")
+			(uuid "fca15357-524f-454e-8eac-cb368d93ae8f")
 		)
 		(pin "2"
-			(uuid "a6ccc94c-936c-4154-b2ff-7f1aed56edc6")
+			(uuid "5795043f-96cf-449f-b621-545c569af672")
 		)
 		(instances
 			(project "fabbit_analog"
@@ -5170,7 +3639,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 167.64 48.26 0)
+		(at 193.04 48.26 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5178,9 +3647,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "f16298dc-220b-4831-8ba7-a82641d2af39")
-		(property "Reference" "R303"
-			(at 165.1 48.26 90)
+		(uuid "4f04e419-7aba-495f-8d86-cc23708e7472")
+		(property "Reference" "R306"
+			(at 190.5 48.26 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5190,7 +3659,7 @@
 			)
 		)
 		(property "Value" "2.2k 1% 0603"
-			(at 171.45 48.26 90)
+			(at 195.58 48.26 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5200,7 +3669,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 167.64 48.26 0)
+			(at 193.04 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5211,7 +3680,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 167.64 48.26 0)
+			(at 193.04 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5222,7 +3691,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 167.64 48.26 0)
+			(at 193.04 48.26 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5232,7 +3701,7 @@
 			)
 		)
 		(property "Role" "POR pulldown against TCA9555 internal pullup"
-			(at 167.64 48.26 0)
+			(at 193.04 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5243,10 +3712,188 @@
 			)
 		)
 		(pin "1"
-			(uuid "f526a7d0-2115-4e43-adf0-6f5210365ee2")
+			(uuid "01fc9001-ed02-408c-9530-fa694928031f")
 		)
 		(pin "2"
-			(uuid "0db4d725-79bf-4ba9-bd05-310a306cb6bf")
+			(uuid "99c0d653-8481-475a-88b8-6b51837522a9")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R306")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 142.24 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "52458ee7-c86c-4981-b0b2-a970a5510be4")
+		(property "Reference" "R301"
+			(at 139.7 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 144.78 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 142.24 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 142.24 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 142.24 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "cd8ace67-5652-47eb-9509-6e26b6e73210")
+		)
+		(pin "1"
+			(uuid "87a3c5b3-1faf-44c9-90d7-15cd8e1ea394")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 162.56 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "58213f46-a90a-47bd-93de-15000cae7769")
+		(property "Reference" "R303"
+			(at 160.02 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 165.1 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 162.56 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 162.56 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 162.56 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 162.56 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "7329eea2-3b9f-4bce-b9d1-187def13d7a8")
+		)
+		(pin "1"
+			(uuid "3bd54504-dbe4-46ce-9780-a6747bb9859a")
 		)
 		(instances
 			(project "fabbit_analog"
@@ -5258,8 +3905,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 208.28 57.15 0)
+		(lib_id "Device:R")
+		(at 264.16 53.34 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5267,10 +3914,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "f42d6969-650d-4319-bbf1-c9f8573c9637")
-		(property "Reference" "#PWR03011"
-			(at 208.28 63.5 0)
-			(hide yes)
+		(uuid "61e03cb3-934e-4630-9744-150fb8543a0c")
+		(property "Reference" "R313"
+			(at 261.62 53.34 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5279,8 +3925,8 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 208.28 62.23 0)
+		(property "Value" "2.2k 1% 0603"
+			(at 266.7 53.34 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5290,7 +3936,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 208.28 57.15 0)
+			(at 264.16 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5301,7 +3947,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 208.28 57.15 0)
+			(at 264.16 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5312,7 +3958,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 208.28 57.15 0)
+			(at 264.16 53.34 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5321,13 +3967,27 @@
 				)
 			)
 		)
+		(property "Role" "POR low on relay wake request; buffered before nSLEEP"
+			(at 264.16 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "19d45a09-2e72-45f4-b67c-26eadc86836f")
+		)
 		(pin "1"
-			(uuid "afa730ce-5d27-4414-8244-72ebb4633261")
+			(uuid "580504ea-9f65-45f8-8b56-bec15965c75a")
 		)
 		(instances
 			(project "fabbit_analog"
 				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
-					(reference "#PWR03011")
+					(reference "R313")
 					(unit 1)
 				)
 			)
@@ -5335,7 +3995,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 248.92 57.15 0)
+		(at 50.8 86.36 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5343,9 +4003,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "fe71335a-11c6-43fc-9a69-4658a24c3e59")
-		(property "Reference" "#PWR03015"
-			(at 248.92 63.5 0)
+		(uuid "638fb040-60c0-4637-a001-a1606efd4213")
+		(property "Reference" "#PWR03001"
+			(at 50.8 92.71 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5356,7 +4016,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 248.92 62.23 0)
+			(at 50.8 91.44 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5366,7 +4026,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 248.92 57.15 0)
+			(at 50.8 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5377,7 +4037,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 248.92 57.15 0)
+			(at 50.8 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5388,7 +4048,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 248.92 57.15 0)
+			(at 50.8 86.36 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5398,12 +4058,2220 @@
 			)
 		)
 		(pin "1"
-			(uuid "1b51a99e-fc95-44e9-b8f3-4ba936ad0ea9")
+			(uuid "e0555b9b-d04c-4bff-89cb-936cb879630e")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03001")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 233.68 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "66164989-51dd-4e92-a429-ec18e28ef846")
+		(property "Reference" "#PWR03014"
+			(at 233.68 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 233.68 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 233.68 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 233.68 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 233.68 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "18b0097a-6ab9-4267-a4de-93d30b0ad4f1")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03014")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 388.62 52.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6796ad08-703b-46d7-aa73-b702193815d8")
+		(property "Reference" "#PWR03021"
+			(at 388.62 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 388.62 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 388.62 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 388.62 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 388.62 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "681ca909-230f-4dd0-84ac-865308a5a198")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03021")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 213.36 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6ced6d27-af48-4f94-88f1-d5ebface460a")
+		(property "Reference" "#PWR03012"
+			(at 213.36 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 213.36 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 213.36 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 213.36 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 213.36 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4426257f-3c9f-4105-9c56-4b72f6891218")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 182.88 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7174990f-a432-438d-a660-7072bbd5439c")
+		(property "Reference" "#PWR03009"
+			(at 182.88 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 182.88 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 182.88 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 182.88 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 182.88 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2d7caa72-0c2a-4e88-926a-bc905fa9cc54")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03009")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 233.68 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7ae89f17-7dcf-4eb9-b3a8-f52ec6ee344c")
+		(property "Reference" "R310"
+			(at 231.14 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 236.22 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 233.68 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 233.68 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 233.68 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 233.68 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "a5e500c7-fcfc-4403-925f-63192f847f71")
+		)
+		(pin "1"
+			(uuid "abd63a60-878b-455b-ac14-3c54873e90ef")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R310")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 152.4 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7bbf356c-6e9d-4d81-be23-d96f5c3dfdc6")
+		(property "Reference" "R302"
+			(at 149.86 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 154.94 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 152.4 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 152.4 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 152.4 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 152.4 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c2f3482f-4230-4b76-b869-ccbe33eacf80")
+		)
+		(pin "2"
+			(uuid "67d27162-a01d-4033-9dd5-50ea3127386e")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "74xGxx:74LVC1G07")
+		(at 342.9 50.8 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7ddc4648-63de-4a06-9854-d6fa18090f7e")
+		(property "Reference" "U302"
+			(at 351.79 45.72 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SN74LVC1G07DBVR"
+			(at 359.41 60.96 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 342.9 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/sn74lvc1g07.pdf"
+			(at 342.9 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 342.9 50.8 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SN74LVC1G07DBVR"
+			(at 342.9 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Texas Instruments"
+			(at 342.9 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "Candidate open-drain IRQ power-off isolation; LCSC/stock not verified"
+			(at 342.9 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Qualification" "Input transition<=10ns/V pending; IPOFF10uA atVCC0; brownoutunverified"
+			(at 342.9 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "77f23d65-c434-4d51-b489-9dc7e341ed82")
+		)
+		(pin "5"
+			(uuid "ee97878a-a89e-4a63-864e-7d56185ca7b1")
+		)
+		(pin "3"
+			(uuid "f87293e2-b220-4c66-b05a-21a4cc458257")
+		)
+		(pin "2"
+			(uuid "9ee14257-6c76-4b5c-996a-7595e2a8c865")
+		)
+		(pin "4"
+			(uuid "ce453ea8-4849-4564-b489-8d97695be3fc")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "U302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Interface_Expansion:TCA9555PWR")
+		(at 73.66 68.58 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "821abd1e-d164-4c53-bb06-148edc655591")
+		(property "Reference" "U301"
+			(at 73.66 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TCA9555PWR"
+			(at 73.66 76.2 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 73.66 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "TCA9555PWR"
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C465732"
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Texas Instruments"
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Address" "0x21 A2=0 A1=0 A0=1"
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "Twelve relay bridge inputs; bridges and sleep gate not built"
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Default" "POR inputs have internal pullups; external2k2 force low; firmware write0 before configoutputs"
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Fault_input" "P15 pin18=combined DRV nFAULT; keep INPUT permanently; polling only until IRQ isolation built"
+			(at 73.66 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "10"
+			(uuid "16cf1c68-4516-41e0-a94b-c19119eb22dd")
+		)
+		(pin "3"
+			(uuid "eb481514-86a2-40ef-9318-7498f3fe7164")
+		)
+		(pin "17"
+			(uuid "d43df8d1-ae9b-407b-b89a-8947a9b0fe20")
+		)
+		(pin "9"
+			(uuid "fe9e1336-1bfa-4ba9-906c-969a74d07be4")
+		)
+		(pin "7"
+			(uuid "46ba6afa-c33d-4f79-8c95-4419f05c136e")
+		)
+		(pin "4"
+			(uuid "798cd847-a039-4e9e-bd8f-b707179fa834")
+		)
+		(pin "22"
+			(uuid "e7f0482b-cacc-4beb-b5c4-7cb18ec7b9d6")
+		)
+		(pin "18"
+			(uuid "955204f2-b6e9-495a-9134-027d87b21fe9")
+		)
+		(pin "14"
+			(uuid "6218a240-257d-437c-b9d4-9c6b79814177")
+		)
+		(pin "2"
+			(uuid "788c30c2-62ef-4dde-ade4-94ec13e19e85")
+		)
+		(pin "21"
+			(uuid "b61654eb-e4d9-4b30-a024-f5e95d69eeb9")
+		)
+		(pin "13"
+			(uuid "dc877139-a694-4d06-a495-6c2e33ab4c60")
+		)
+		(pin "5"
+			(uuid "f904ebd0-069c-418d-af55-3abda8b38cfd")
+		)
+		(pin "20"
+			(uuid "d2740e02-516b-4e97-bb55-c9dd911b06d4")
+		)
+		(pin "11"
+			(uuid "c0e248c1-b3ce-4301-9f55-470392767063")
+		)
+		(pin "6"
+			(uuid "1fe3471b-1953-41cc-b3ba-2abbc373ce88")
+		)
+		(pin "23"
+			(uuid "23bde72d-c8c6-41d6-bc1d-c42f6401e3a3")
+		)
+		(pin "16"
+			(uuid "9a9941bf-9acc-4f1f-be4c-ade3a7a10a8a")
+		)
+		(pin "1"
+			(uuid "358cb7b9-c434-48d3-a24a-87a31b0daa38")
+		)
+		(pin "15"
+			(uuid "24840a37-03a1-4b32-8ee6-e406d28e3c69")
+		)
+		(pin "8"
+			(uuid "2a155171-47c3-45d1-a781-fa45ce984627")
+		)
+		(pin "24"
+			(uuid "c6b47928-a21e-479c-9987-651c99f37f94")
+		)
+		(pin "12"
+			(uuid "8acb3de8-5c4b-4189-935d-a3621c96ee20")
+		)
+		(pin "19"
+			(uuid "b3e47595-5e15-42a3-9160-1274954e20dd")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "U301")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 243.84 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "971c787e-d3bd-4395-85b8-0896915f7fd0")
+		(property "Reference" "#PWR03015"
+			(at 243.84 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 243.84 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 243.84 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 243.84 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 243.84 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "600b6096-1bed-4dfe-b222-d606bb6b97f4")
 		)
 		(instances
 			(project "fabbit_analog"
 				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
 					(reference "#PWR03015")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 132.08 52.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "987a80b1-22a5-4ad7-8625-3b6707c2fa7e")
+		(property "Reference" "#PWR03004"
+			(at 132.08 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 132.08 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 132.08 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 132.08 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 132.08 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f7acd565-30a6-4630-9de3-b3cc0c5b945e")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03004")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 193.04 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a78c012d-75ee-4f46-92be-dc70f7a18856")
+		(property "Reference" "#PWR03010"
+			(at 193.04 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 193.04 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 193.04 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 193.04 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 193.04 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4a5fe887-d8b3-459c-8a09-f24de95c15a2")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03010")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 152.4 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a8f31f5d-da97-42f7-864c-ba7e1acac886")
+		(property "Reference" "#PWR03006"
+			(at 152.4 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 152.4 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 152.4 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 152.4 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 152.4 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9375ec77-7eda-4531-b760-c0cafb589a54")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03006")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 162.56 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "abc743d0-ecb3-43fb-b572-7fc521524aea")
+		(property "Reference" "#PWR03007"
+			(at 162.56 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 162.56 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 162.56 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 162.56 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 162.56 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3280570b-d6c6-4ed0-82b0-ad0745b4a008")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03007")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 284.48 62.23 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b72ed1e1-8235-45d4-95c3-5863ba9450ef")
+		(property "Reference" "#PWR03019"
+			(at 284.48 68.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 284.48 67.31 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 284.48 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 284.48 62.23 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 284.48 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a8b78a09-7ebf-4e2f-bbdb-d4f5074e1b55")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03019")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 50.8 83.82 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c336f406-330f-44f0-bbf9-0c9d1470a3bf")
+		(property "Reference" "#PWR03002"
+			(at 50.8 90.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 50.8 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 50.8 83.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 50.8 83.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 50.8 83.82 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fff8128a-43e7-4e9e-888a-e614a3b3027a")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03002")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 182.88 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c725ccbc-2046-418f-a523-9d05d7d63fb8")
+		(property "Reference" "R305"
+			(at 180.34 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 185.42 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 182.88 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 182.88 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 182.88 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 182.88 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "369f9f78-ebae-4aa1-b341-18fa38f0990f")
+		)
+		(pin "2"
+			(uuid "1d85e470-6240-4877-8fe0-791d0468aff1")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R305")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 142.24 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d0a14dd5-1a6a-4a63-ab26-8b38d3709ad6")
+		(property "Reference" "#PWR03005"
+			(at 142.24 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 142.24 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 142.24 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 142.24 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "521fe37b-4e1f-46f3-b216-c3bd2c8fbd9e")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03005")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 254 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d6c9a8b9-6ec5-4300-a604-160c8ef10ec7")
+		(property "Reference" "R312"
+			(at 251.46 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 256.54 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 254 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 254 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 254 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "f542244a-19de-444a-9948-42ba8f0b4c6c")
+		)
+		(pin "1"
+			(uuid "fa29183b-7877-429e-b2ce-3c9f38f8043d")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R312")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 172.72 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "dab58e07-0ac9-4586-bae0-11054a2fc6b3")
+		(property "Reference" "R304"
+			(at 170.18 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 175.26 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 172.72 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 172.72 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 172.72 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 172.72 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fe7f33f1-a141-4164-8c69-8ced90f1f15b")
+		)
+		(pin "2"
+			(uuid "d3f29921-f13d-4ee4-9cd0-7acc0f7dc1c7")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R304")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 203.2 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "dae7cea9-6a23-452f-b9e4-a7972de59aea")
+		(property "Reference" "R307"
+			(at 200.66 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 205.74 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 203.2 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 203.2 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 203.2 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 203.2 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "a2be3e66-6158-41b7-8df5-44eb11bb19fe")
+		)
+		(pin "1"
+			(uuid "69c2a8d3-1172-4979-8dae-e2500706d7db")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R307")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 388.62 43.18 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e3766c0a-d6e8-4745-b931-922b0ebe4eab")
+		(property "Reference" "C302"
+			(at 386.08 43.18 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100nF 16V X7R 0603"
+			(at 391.16 43.18 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 388.62 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 388.62 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 388.62 43.18 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "52f96e2c-26e5-4b85-81b2-674a03c7ee53")
+		)
+		(pin "1"
+			(uuid "1f8145ac-2c58-49ac-8484-98241d566efa")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "C302")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 284.48 53.34 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e59fb384-815c-439e-8b2d-3db1303fd276")
+		(property "Reference" "R316"
+			(at 281.94 53.34 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k 1% 0603"
+			(at 287.02 53.34 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 284.48 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 284.48 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 284.48 53.34 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "Unused reserved port held low, no driver assigned"
+			(at 284.48 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "70a2b679-c2d6-48d8-90da-d3a456c285b6")
+		)
+		(pin "1"
+			(uuid "680eb0dd-d3a3-4625-9437-7565abb45d2e")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R316")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 22.86 134.62 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f25069cb-d77e-423d-b025-44a17b0d6896")
+		(property "Reference" "R317"
+			(at 20.32 134.62 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k 1% 0603"
+			(at 25.4 134.62 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 22.86 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 22.86 134.62 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 22.86 134.62 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "92753f62-eebc-488f-a3fb-ef38acbd1a29")
+		)
+		(pin "2"
+			(uuid "4c6702dd-eab2-4b30-8dbe-7b274d146065")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R317")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 243.84 48.26 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f47cb71c-6717-49b4-9af9-c8728eae4222")
+		(property "Reference" "R311"
+			(at 241.3 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "2.2k 1% 0603"
+			(at 246.38 48.26 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 243.84 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 243.84 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 243.84 48.26 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Role" "POR pulldown against TCA9555 internal pullup"
+			(at 243.84 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3f647167-9596-4a6f-ae79-e193c95e03ce")
+		)
+		(pin "2"
+			(uuid "be36d7d1-29bc-4435-ba70-406aecaa7677")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "R311")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 223.52 57.15 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f7e1ea0f-f740-438e-b145-6d864ec62128")
+		(property "Reference" "#PWR03013"
+			(at 223.52 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 223.52 62.23 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 223.52 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 223.52 57.15 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 223.52 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fdd8697c-1011-4f1e-ba08-0b92b148d5c2")
+		)
+		(instances
+			(project "fabbit_analog"
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7/fa541c96-5a0e-487b-b5f2-6a9a318e49b4"
+					(reference "#PWR03013")
 					(unit 1)
 				)
 			)
