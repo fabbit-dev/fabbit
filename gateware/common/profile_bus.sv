@@ -4,7 +4,8 @@
 // Профиль получает такт шины, её сброс, регистры CSR и поток байтов (см. profile_shell).
 module profile_bus #(
     parameter logic [15:0] ProfileId = 16'd0,
-    parameter bit          UseIcap = 1'b0
+    parameter bit          UseIcap = 1'b0,
+    parameter bit          Readback = 1'b0
 ) (
     input  wire        clk_25m,
     input  wire        esp_sck,
@@ -22,16 +23,28 @@ module profile_bus #(
     output wire  [ 7:0] st_chan,
     output wire  [ 7:0] st_data,
     output wire  [31:0] pad,         // кнопки {пад 1, пад 0}, команда PAD (profile_shell)
-    output wire        pad_stb
+    output wire        pad_stb,
+    output wire [23:0] rb_addr,
+    input  wire [ 7:0] rb_data,
+    output wire        clk_fast,    // 200 MHz, phase-related to clk_bus; unused output is trimmed
+    output wire        bus_header,
+    output wire [ 7:0] bus_command,
+    output wire [23:0] bus_address,
+    output wire        bus_write,
+    output wire [ 7:0] bus_data,
+    output wire        bus_end
 );
-  wire fb, c100_raw, locked;
+  wire fb, c100_raw, c200_raw, locked;
   PLLE2_BASE #(
-      .CLKIN1_PERIOD(40.0), .DIVCLK_DIVIDE(1), .CLKFBOUT_MULT(40), .CLKOUT0_DIVIDE(10)
+      .CLKIN1_PERIOD(40.0), .DIVCLK_DIVIDE(1), .CLKFBOUT_MULT(40),
+      .CLKOUT0_DIVIDE(10), .CLKOUT1_DIVIDE(5)
   ) u_pll (
-      .CLKIN1(clk_25m), .CLKFBIN(fb), .CLKFBOUT(fb), .CLKOUT0(c100_raw), .CLKOUT1(), .CLKOUT2(),
+      .CLKIN1(clk_25m), .CLKFBIN(fb), .CLKFBOUT(fb),
+      .CLKOUT0(c100_raw), .CLKOUT1(c200_raw), .CLKOUT2(),
       .CLKOUT3(), .CLKOUT4(), .CLKOUT5(), .LOCKED(locked), .PWRDWN(1'b0), .RST(1'b0)
   );
   BUFG u_bufg (.I(c100_raw), .O(clk_bus));
+  BUFG u_fast (.I(c200_raw), .O(clk_fast));
   reset_sync u_rst (.clk(clk_bus), .rst_in(!locked), .rst_out(rst_bus));
 
   wire [3:0] d_in, d_out;
@@ -40,11 +53,13 @@ module profile_bus #(
     IOBUF u_io (.IO(esp_d[i]), .I(d_out[i]), .T(~d_oe), .O(d_in[i]));
   end
 
-  profile_shell #(.ProfileId(ProfileId), .UseIcap(UseIcap)) u_shell (
+  profile_shell #(.ProfileId(ProfileId), .UseIcap(UseIcap), .Readback(Readback)) u_shell (
       .clk(clk_bus), .rst(rst_bus), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .d_in(d_in),
       .d_out(d_out), .d_oe(d_oe), .irq(esp_irq),
       .csr_we(csr_we), .csr_waddr(csr_waddr), .csr_wdata(csr_wdata), .csr_raddr(csr_raddr),
       .csr_rdata(csr_rdata), .st_valid(st_valid), .st_chan(st_chan), .st_data(st_data),
-      .pad(pad), .pad_stb(pad_stb));
+      .pad(pad), .pad_stb(pad_stb), .rb_addr(rb_addr), .rb_data(rb_data),
+      .bus_header(bus_header), .bus_command(bus_command), .bus_address(bus_address),
+      .bus_write(bus_write), .bus_data(bus_data), .bus_end(bus_end));
 
 endmodule

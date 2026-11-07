@@ -19,14 +19,15 @@ module IOBUF(input wire I,T,inout wire IO,output wire O);
 endmodule
 module PLLE2_BASE #(parameter real CLKIN1_PERIOD=40.0,
     parameter int DIVCLK_DIVIDE=1,parameter int CLKFBOUT_MULT=40,
-    parameter int CLKOUT0_DIVIDE=10)
+    parameter int CLKOUT0_DIVIDE=10,parameter int CLKOUT1_DIVIDE=10)
     (input wire CLKIN1,CLKFBIN,PWRDWN,RST,output wire CLKFBOUT,
-     output logic CLKOUT0=0,output wire CLKOUT1,CLKOUT2,CLKOUT3,CLKOUT4,CLKOUT5,
+     output logic CLKOUT0=0,output logic CLKOUT1=0,output wire CLKOUT2,CLKOUT3,CLKOUT4,CLKOUT5,
      output logic LOCKED=0);
-  localparam realtime Half=CLKIN1_PERIOD*DIVCLK_DIVIDE*CLKOUT0_DIVIDE/CLKFBOUT_MULT/2;
-  always #(Half) CLKOUT0=~CLKOUT0;
+  localparam realtime Vco=CLKIN1_PERIOD*DIVCLK_DIVIDE/CLKFBOUT_MULT;
+  always #(Vco*CLKOUT0_DIVIDE/2) CLKOUT0=~CLKOUT0;
+  always #(Vco*CLKOUT1_DIVIDE/2) CLKOUT1=~CLKOUT1;
   assign CLKFBOUT=CLKIN1;
-  assign {CLKOUT1,CLKOUT2,CLKOUT3,CLKOUT4,CLKOUT5}=0;
+  assign {CLKOUT2,CLKOUT3,CLKOUT4,CLKOUT5}=0;
   initial begin #1us;LOCKED=1;end
 endmodule
 module MMCME2_ADV #(

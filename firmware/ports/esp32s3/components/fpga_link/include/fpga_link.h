@@ -31,6 +31,7 @@ typedef enum {
     FL_CMD_CSR_R = 0x31,
     FL_CMD_STREAM = 0x32,         // оболочка профиля: addr = канал, байты потока
     FL_CMD_PAD = 0x33,            // оболочка профиля: 4 байта {пад 1, пад 0}, BE
+    FL_CMD_CAPTURE_R = 0x34,      // профиль ЛА: замороженный захват с байтового адреса
     FL_CMD_OSD_RECT = 0x40,       // плоскость меню golden: addr = {y, x}, w h BE, пиксели 4 бит
     FL_CMD_OSD_FILL = 0x41,       // addr = {y, x}, w h BE, байт цвета (2 пикселя)
     FL_CMD_OSD_PAL = 0x42,        // addr = первый индекс, RGB888 × n
@@ -61,6 +62,9 @@ esp_err_t fl_init(uint32_t hz);
 // нельзя разрывать чужими (например, «записать CSR и прочитать ответ»)
 void fl_lock(void);
 void fl_unlock(void);
+// Called under the bus lock before BOOT/REBOOT. Register once during startup.
+// Callback must not acquire the bus lock; use it to release external demo outputs.
+void fl_set_profile_exit_hook(void (*hook)(void));
 esp_err_t fl_set_freq(uint32_t hz);
 uint32_t fl_get_freq(void);
 // прозвонка: линии SCK, CS, IO0..3, IRQ по очереди в 1 на 300 мс

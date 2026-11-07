@@ -39,6 +39,12 @@ static DIR *entry_opendir(const char *path)
     return opendir(local);
 }
 
+// Logic analyzer screen/demo are not under test here: inert stand-ins.
+#include "../ports/esp32s3/main/la_demo.h"
+esp_err_t la_demo_start(void) { return ESP_ERR_NOT_SUPPORTED; }
+void la_demo_stop(void) {}
+void la_demo_poll(void) {}
+
 // Include to reach static entry points without changing production visibility.
 // Unrelated console commands and the menu task are removed by --gc-sections.
 #define fopen entry_fopen

@@ -38,7 +38,8 @@ module sdram_eye (
       .clk_25m(clk), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .esp_d(esp_d), .esp_irq(esp_irq),
       .clk_bus(clk_bus), .rst_bus(rst_bus), .csr_we(csr_we), .csr_waddr(csr_waddr),
       .csr_wdata(csr_wdata), .csr_raddr(csr_raddr), .csr_rdata(csr_rdata), .st_valid(),
-      .st_chan(), .st_data(), .pad(), .pad_stb());
+      .st_chan(), .st_data(), .pad(), .pad_stb(), .rb_addr(), .rb_data(8'd0), .clk_fast(),
+      .bus_header(), .bus_command(), .bus_address(), .bus_write(), .bus_data(), .bus_end());
 
   // ---- такты NES и сдвиг фазы (интерфейс PS в домене шины) ----
   wire nclk, fclk, sd_clk_int, locked, psdone;

@@ -65,10 +65,10 @@ module qspi_slave (
   localparam logic [2:0] RdLat = 3'd4;  // ядро: rd_data валиден через 4 такта после rd_req
   logic [2:0]  rd_pend = 3'd0;
 
-  // команды чтения (docs/bus-protocol.md): golden 01 02 04 06 0B, профиль 01 31
+  // команды чтения (docs/bus-protocol.md): golden 01 02 04 06 0B, профиль 01 31 34
   function automatic logic read_cmd(input logic [7:0] c);
     read_cmd = (c == 8'h01) || (c == 8'h02) || (c == 8'h04) || (c == 8'h06) || (c == 8'h0B) ||
-               (c == 8'h31);
+               (c == 8'h31) || (c == 8'h34);
   endfunction
 
   always_ff @(posedge clk) begin

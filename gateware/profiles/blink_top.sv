@@ -18,7 +18,9 @@ module blink_top #(
   profile_bus #(.ProfileId(ProfileId)) u_bus (
       .clk_25m(clk), .esp_sck(esp_sck), .esp_cs_n(esp_cs_n), .esp_d(esp_d), .esp_irq(esp_irq),
       .clk_bus(c100), .rst_bus(rst_bus), .csr_we(), .csr_waddr(), .csr_wdata(), .csr_raddr(),
-      .csr_rdata(32'd0), .st_valid(), .st_chan(), .st_data(), .pad(), .pad_stb());
+      .csr_rdata(32'd0), .st_valid(), .st_chan(), .st_data(), .pad(), .pad_stb(),
+      .rb_addr(), .rb_data(8'd0), .clk_fast(), .bus_header(), .bus_command(),
+      .bus_address(), .bus_write(), .bus_data(), .bus_end());
 
   logic [26:0] t = 27'd0;
   always_ff @(posedge c100) t <= (t == 27'd99_999_999) ? 27'd0 : t + 27'd1;
