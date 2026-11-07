@@ -14,6 +14,9 @@
 `error "tb_retro_top: MD-less images are not covered by this bench"
 `endif
 module tb_retro_top;
+  function automatic logic [11:0] snes_order(input logic [11:0] g);
+    return {g[9],g[8],g[6],g[4],g[3],g[2],g[1],g[0],g[11],g[10],g[7],g[5]};
+  endfunction
   logic clk=0;always #20 clk=~clk;
   wire led,uart_tx,esp_irq;
   logic esp_sck=0,esp_cs_n=1;
@@ -152,8 +155,10 @@ module tb_retro_top;
         14:nes_buttons=8'h04;15:nes_buttons=8'h08;
         default: ;
       endcase
+      // SNES serial order B,Y,Select,Start,Up,Down,Left,Right,A,X,L,R.
       assert(dut.md.pad1==first && dut.md.pad2==second &&
-             dut.snes.pad1==first && dut.snes.pad2==second && dut.njoy==nes_buttons)
+             dut.snes.pad1==snes_order(first) && dut.snes.pad2==snes_order(second) &&
+             dut.njoy==nes_buttons)
         else $fatal(1,"QSPI pad bit %0d mapping",bit_index);
 `else
       assert(dut.md.pad1==first && dut.md.pad2==second && dut.pad_nes==0 && dut.pad_snes==0)

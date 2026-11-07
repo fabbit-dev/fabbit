@@ -21,7 +21,7 @@ set retro_command_ports [get_ports {sdram_a[*] sdram_ba[*] sdram_ras_n sdram_cas
 # MD-only image: retro_sdram registers drive these pins directly (retro_sdram_single
 # GateCommand=0). Measured on the bench (diag/retro_sdram_eye_md vs _md_iob, 53.69 MHz):
 # IOB packing widens the error-free capture window from ~0.4-2.2 ns to ~4.4-5.3 ns.
-if {$retro_systems == 2} {
+if {$retro_systems == 2 || $retro_systems == 4} {
     set_property IOB TRUE $retro_command_ports
 } else {
     set_property IOB FALSE $retro_command_ports
@@ -375,4 +375,23 @@ if {[retro_has 0]} {
     set_multicycle_path 2 -hold -end -from $nes_clk -to $nes_fclk
     set_multicycle_path 2 -setup -start -from $nes_fclk -to $nes_clk
     set_multicycle_path 1 -hold -start -from $nes_fclk -to $nes_clk
+}
+if {[retro_has 2]} {
+    # SNES 3:1 schedule (snes_memory.sv). service = 3 x master, rising edges coincide
+    # at s0. Console requests launch at s0 and are captured by the sample registers
+    # (enabled on c2) at s2: two service periods. Read results (q registers) change
+    # only on s0/s1 edges, so they reach the next master edge in >= two service
+    # periods. Every other master<->service path keeps its single-period default.
+    set snes_service [get_clocks -of_objects [get_pins u_snesclk/mmcm/CLKOUT0]]
+    set snes_master [get_clocks -of_objects [get_pins u_snesclk/mmcm/CLKOUT1]]
+    set snes_samples [retro_cdc_count [get_cells -quiet -hierarchical -regexp \
+        {^snes/memory/s_(rd|wr|addr|data|lane|quiet)(_reg|\[[0-9]+\]_reg).*}] 40 400 \
+        {SNES request sample registers}]
+    set snes_results [retro_cdc_count [get_cells -quiet -hierarchical -regexp \
+        {^snes/memory/(wram|rom|save)_q_reg\[[0-7]\]$}] 24 24 {SNES read result registers}]
+    set_multicycle_path 2 -setup -end -from $snes_master -to $snes_samples
+    set_multicycle_path 1 -hold -end -from $snes_master -to $snes_samples
+    set_multicycle_path 2 -setup -start -from $snes_results -to $snes_master
+    set_multicycle_path 1 -hold -start -from $snes_results -to $snes_master
+    puts "retro SNES 3:1: [llength $snes_samples] sample, [llength $snes_results] result registers"
 }

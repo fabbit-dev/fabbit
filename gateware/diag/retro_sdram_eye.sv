@@ -17,7 +17,11 @@ module retro_sdram_eye #(
     // CAS latency override for diagnosis; 0 = profile value (MD 3, SNES 2).
     parameter int CasOverride = 0,
     // 1: DQ through retro_sdram_phy (pad ODDR/IDDR), as the single-console images.
-    parameter bit PadPhy = 1'b0
+    parameter bit PadPhy = 1'b0,
+    // SNES 3:1: memory clock 64,43 МГц = 3 × master (VCO 773 МГц /12), CL2, захват c+CAS+1.
+    parameter bit Snes3 = 1'b0,
+    // Product SNES image PHY: SDRAM clock -93.75 deg, 25-tap IDELAY (retro_top).
+    parameter bit Snes3Product = 1'b0
 ) (
     input  wire        clk,
     output wire        led,
@@ -35,8 +39,8 @@ module retro_sdram_eye #(
     inout  wire [31:0] sdram_dq
 );
   assign uart_tx = 1'b1;
-  localparam int Period = Mode ? 560 : 1232;
-  localparam int StepFs = Mode ? 20779 : 15117;
+  localparam int Period = Snes3 ? 672 : Mode ? 560 : 1232;
+  localparam int StepFs = Snes3 ? 23094 : Mode ? 20779 : 15117;
 
   wire clk_bus, rst_bus, csr_we;
   wire [7:0] csr_waddr, csr_raddr;
@@ -52,7 +56,7 @@ module retro_sdram_eye #(
   logic psen = 1'b0, psincdec = 1'b0, ps_busy = 1'b0;
   wire ctl_raw, sd_raw;
   if (Mode) begin : g_snes
-    wire fb1, fb1_buf, src_raw, src, locked1, fb2, fb2_buf, locked2;
+    wire fb1, fb1_buf, src_raw, src, locked1, fb2, fb2_buf, locked2, ref_raw;
     MMCME2_ADV #(.CLKIN1_PERIOD(40.0), .DIVCLK_DIVIDE(1), .CLKFBOUT_MULT_F(47.25),
         .CLKOUT0_DIVIDE_F(55.0)) u_src (
         .CLKIN1(clk), .CLKIN2(1'b0), .CLKINSEL(1'b1), .CLKFBIN(fb1_buf), .CLKFBOUT(fb1),
@@ -64,16 +68,24 @@ module retro_sdram_eye #(
         .CLKINSTOPPED(), .CLKFBSTOPPED());
     BUFG u_fb1 (.I(fb1), .O(fb1_buf));
     BUFG u_src_buf (.I(src_raw), .O(src));
-    MMCME2_ADV #(.CLKIN1_PERIOD(46.56084656), .DIVCLK_DIVIDE(1), .CLKFBOUT_MULT_F(40.0),
-        .CLKOUT0_DIVIDE_F(10.0), .CLKOUT2_DIVIDE(10), .CLKOUT2_PHASE(63.0),
+    MMCME2_ADV #(.CLKIN1_PERIOD(46.56084656), .DIVCLK_DIVIDE(1),
+        .CLKFBOUT_MULT_F(Snes3 ? 36.0 : 40.0), .CLKOUT0_DIVIDE_F(Snes3 ? 12.0 : 10.0),
+        .CLKOUT2_DIVIDE(Snes3 ? 12 : 10),
+        .CLKOUT2_PHASE(Snes3Product ? -93.75 : Snes3 ? 0.0 : 63.0), .CLKOUT3_DIVIDE(4),
         .CLKOUT2_USE_FINE_PS("TRUE")) u_mem (
         .CLKIN1(src), .CLKIN2(1'b0), .CLKINSEL(1'b1), .CLKFBIN(fb2_buf), .CLKFBOUT(fb2),
         .CLKOUT0(ctl_raw), .CLKOUT2(sd_raw), .LOCKED(locked2), .RST(!locked1), .PWRDWN(1'b0),
+        .CLKOUT3(ref_raw),
         .PSCLK(clk_bus), .PSEN(psen), .PSINCDEC(psincdec), .PSDONE(psdone),
         .DADDR(7'd0), .DCLK(1'b0), .DEN(1'b0), .DI(16'd0), .DWE(1'b0), .DO(), .DRDY(),
         .CLKFBOUTB(), .CLKOUT0B(), .CLKOUT1(), .CLKOUT1B(), .CLKOUT2B(),
-        .CLKOUT3(), .CLKOUT3B(), .CLKOUT4(), .CLKOUT5(), .CLKOUT6(),
+        .CLKOUT3B(), .CLKOUT4(), .CLKOUT5(), .CLKOUT6(),
         .CLKINSTOPPED(), .CLKFBSTOPPED());
+    if (Snes3Product) begin : g_idelay_ref
+      wire ref_clk;
+      BUFG u_ref (.I(ref_raw), .O(ref_clk));
+      IDELAYCTRL u_idc (.REFCLK(ref_clk), .RST(!locked2), .RDY());
+    end
     BUFG u_fb2 (.I(fb2), .O(fb2_buf));
     assign locked = locked1 && locked2;
   end else begin : g_md
@@ -143,9 +155,10 @@ module retro_sdram_eye #(
   wire [31:0] rsp_rdata, dq_in, dq_out;
   wire dq_oe, dq_oe_next;
   retro_sdram #(
-      .InitCycles(Mode ? 18000 : 10740), .RefreshCycles(Mode ? 480 : 375),
-      .Trcd(2), .Trp(2), .Trfc(Mode ? 6 : 4), .Tras(Mode ? 4 : 3), .Twr(2), .Tmrd(2),
-      .Cas(CasOverride != 0 ? CasOverride : Mode ? 2 : 3), .PadPhy(PadPhy)
+      .InitCycles(Snes3 ? 13000 : Mode ? 18000 : 10740), .RefreshCycles(Mode ? 480 : 375),
+      .Trcd(2), .Trp(2), .Trfc(Snes3 ? 5 : Mode ? 6 : 4), .Tras(Snes3 ? 3 : Mode ? 4 : 3),
+      .Twr(2), .Tmrd(2), .Cas(CasOverride != 0 ? CasOverride : Mode ? 2 : 3), .PadPhy(PadPhy),
+      .CaptureExtra(Snes3 ? 1 : 0)
   ) u_mem (
       .clk(mclk), .rst(rst_mem), .initialized(init), .req_valid, .req_ready, .req_write,
       .req_addr, .req_wdata, .rsp_valid, .rsp_ready(1'b1), .rsp_rdata,
@@ -153,8 +166,8 @@ module retro_sdram_eye #(
       .sd_we_n(sdram_we_n), .sd_dq_in(dq_in), .sd_dq_out(dq_out), .sd_dq_oe(dq_oe),
       .sd_dq_oe_next(dq_oe_next));
   if (PadPhy) begin : g_pad
-    retro_sdram_phy u_phy (.clk(mclk), .dq_out, .dq_oe_d(dq_oe_next), .dq_in,
-        .sd_dq(sdram_dq));
+    retro_sdram_phy #(.InDelayTaps(Snes3Product ? 25 : 0), .RefMhz(193.3)) u_phy (
+        .clk(mclk), .dq_out, .dq_oe_d(dq_oe_next), .dq_in, .sd_dq(sdram_dq));
   end else begin : g_fabric
     retro_sdram_io u_io (.dq_out, .dq_oe, .dq_in, .sd_dq(sdram_dq));
   end
@@ -342,5 +355,27 @@ module retro_sdram_eye_snes_pad (
     inout wire [31:0] sdram_dq
 );
   retro_sdram_eye #(.Mode(1'b1),.PadPhy(1'b1)) u (.*);
+endmodule
+`default_nettype wire
+`default_nettype none
+// SNES 3:1: 64,43 МГц, CL2, DQ в площадках, захват на такт позже CAS.
+module retro_sdram_eye_snes3_pad (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b1),.PadPhy(1'b1),.Snes3(1'b1)) u (.*);
+endmodule
+`default_nettype wire
+`default_nettype none
+// PHY образа SNES как в retro_top: фаза −93,75°, IDELAY 25 отсчётов, захват CAS+1.
+module retro_sdram_eye_snes3_prod (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b1),.PadPhy(1'b1),.Snes3(1'b1),.Snes3Product(1'b1)) u (.*);
 endmodule
 `default_nettype wire

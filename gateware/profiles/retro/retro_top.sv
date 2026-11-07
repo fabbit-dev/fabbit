@@ -84,12 +84,12 @@ module retro_top #(
   wire nclk=0,nfclk=0,nes_sd_clock=0,nlocked=0;
 `endif
 `ifndef RETRO_NO_SNES
-  wire service,snes_master,snes_sd_clock,slocked,snes_master_ce;
+  wire service,snes_master,snes_sd_clock,snes_idelay_ref,slocked,snes_master_ce;
   retro_snes_clocks u_snesclk (.clk_source(snes_source),.reset(!md_locked),
-      .service,.master(snes_master),.memory_clock(snes_sd_clock),.locked(slocked),
-      .master_ce(snes_master_ce));
+      .service,.master(snes_master),.memory_clock(snes_sd_clock),.idelay_ref(snes_idelay_ref),
+      .locked(slocked),.master_ce(snes_master_ce));
 `else
-  wire service=0,snes_master=0,snes_sd_clock=0,slocked=0,snes_master_ce=0;
+  wire service=0,snes_master=0,snes_sd_clock=0,snes_idelay_ref=0,slocked=0,snes_master_ce=0;
 `endif
   wire clk_pix,clk_5x,rst_pix,vlocked;
   video_clocks #(.BufferedReference(1'b1)) u_vclk (
@@ -148,6 +148,12 @@ module retro_top #(
   function automatic logic [11:0] generic_pad(input logic [15:0] p);
     return {p[15],p[14],p[9:8],p[7:4],p[3:0]};
   endfunction
+  // generic_pad order [0:11] Up,Down,Left,Right,A,B,X,Y,L,R,Select,Start (firmware pad.h)
+  // -> snes_pad serial order [0:11] B,Y,Select,Start,Up,Down,Left,Right,A,X,L,R.
+  // Face buttons keep their positions: A right, B bottom, X top, Y left.
+  function automatic logic [11:0] snes_order(input logic [11:0] g);
+    return {g[9],g[8],g[6],g[4],g[3],g[2],g[1],g[0],g[11],g[10],g[7],g[5]};
+  endfunction
 
   wire [1:0] selected,owner_request,owner;
   wire controllers_reset,owner_busy,running,loading,ready,payload_done,switching;
@@ -201,7 +207,8 @@ module retro_top #(
   wire [8:0] nindex,nline;
   wire [15:0] naudio;
   wire [31:0] dq_in,n_dq_out,m_dq_out,s_dq_out;
-  wire n_dq_oe,m_dq_oe,s_dq_oe,m_dq_oe_next;
+  wire n_dq_oe,m_dq_oe,s_dq_oe,m_dq_oe_next,s_dq_oe_next;
+  wire [31:0] snes_dq_in;
   wire [31:0] md_dq_in;
   wire [10:0] n_a,m_a,s_a;
   wire [1:0] n_ba,m_ba,s_ba;
@@ -397,8 +404,8 @@ module retro_top #(
       .cfg_map({1'b0,snes_map_config[0]}),.cfg_chip(8'b0),.cfg_pal(1'b0),
       .cfg_rom_mask(snes_memory_config[39:18]-1'b1),
       .cfg_save_enable(snes_memory_config[17:0]!=0),
-      .cfg_save_mask(snes_memory_config[16:0]-1'b1),.pad1(generic_pad(pad_snes[15:0])),
-      .pad2(generic_pad(pad_snes[31:16])),.asset_start(asset_start_s),
+      .cfg_save_mask(snes_memory_config[16:0]-1'b1),.pad1(snes_order(generic_pad(pad_snes[15:0]))),
+      .pad2(snes_order(generic_pad(pad_snes[31:16]))),.asset_start(asset_start_s),
       .asset_channel(asset_channel_s),.asset_valid(asset_valid_s),.asset_ready(asset_ready_s),
       .asset_addr(asset_addr_s),.asset_data(asset_data_s),.asset_last(asset_last_s),
       .asset_busy(asset_busy_s),.asset_done(asset_done_s),.asset_error(asset_error_s),
@@ -410,7 +417,8 @@ module retro_top #(
       .host_addr(host_addr_s),.host_wdata(host_data_s),.host_ready(host_ready_s),
       .host_done(host_done_s),.host_rdata(host_read_s),.sd_a(s_a),.sd_ba(s_ba),
       .sd_ras_n(s_cmd[2]),.sd_cas_n(s_cmd[1]),.sd_we_n(s_cmd[0]),.sd_cs_n(),.sd_cke(),
-      .sd_dq_in(dq_in),.sd_dq_out(s_dq_out),.sd_dq_oe(s_dq_oe),.rgb(srgb),
+      .sd_dq_in(snes_dq_in),.sd_dq_out(s_dq_out),.sd_dq_oe_next(s_dq_oe_next),
+      .sd_dq_oe(s_dq_oe),.max_latency(),.rgb(srgb),
       .pixel_ce(spixel),.dotclk(sdot),.hs(shs),.vs(svs),.hde(shde),.vde(svde),
       .highres(shigh),.field(sfield),.interlace(sinterlace),.v224(sv224),.x(sx),.y(sy),
       .audio_l(saudio_l),.audio_r(saudio_r),.audio_ready(saudio_ready));
@@ -426,6 +434,7 @@ module retro_top #(
   wire [15:0] saudio_l=0,saudio_r=0;
   wire saudio_ready=0;
   assign s_a=0;assign s_ba=0;assign s_cmd=3'b111;assign s_dq_out=0;assign s_dq_oe=0;
+  assign s_dq_oe_next=0;
   assign snes_stopped=1;assign snes_ready_md=0;assign assets_md=0;
   assign asset_complete=0;assign asset_failed=0;
   assign w_ready=fabric_ready[1];assign w_rsp=fabric_rsp[1];
@@ -452,9 +461,10 @@ module retro_top #(
   wire [31:0] single_data=Systems[0] ? n_dq_out : Systems[1] ? m_dq_out : s_dq_out;
   wire single_drive=Systems[0] ? n_dq_oe : Systems[1] ? m_dq_oe : s_dq_oe;
   // retro_sdram (MD) resets its command/address registers itself: no gate, IOB-packable.
+  // snes_memory also issues NOP in reset from its own register (service clock): no gate.
   // The NES controller may keep a stale command through reset: keep it gated.
   retro_sdram_single #(.System(Systems[0] ? 2'd1 : Systems[1] ? 2'd2 : 2'd3),
-      .GateCommand(Systems!=3'b010)) owner_switch (
+      .GateCommand(Systems==3'b001)) owner_switch (
       .clk(md_clk),.rst(rst_md),.requested(owner_request),.safe(controllers_reset),
       .owner,.busy(owner_busy),.a(single_a),.ba(single_ba),.command(single_cmd),
       .data(single_data),.drive(single_drive),.sd_a(sdram_a),.sd_ba(sdram_ba),
@@ -478,9 +488,22 @@ module retro_top #(
     retro_sdram_phy physical_io (.clk(md_clk),.dq_out(m_dq_out),.dq_oe_d(m_dq_oe_next),
         .dq_in(md_dq_in),.sd_dq(sdram_dq));
     assign dq_in=md_dq_in;
+    assign snes_dq_in=0;
+  end else if (Systems==3'b100) begin : g_pad_dq_snes
+    // SNES-only: DQ registers in the pad on the SNES service clock. snes_memory holds
+    // dq_oe_next low in reset (owner not SNES), so it never drives DQ then.
+    // 25 taps x 80.8 ps = 2.0 ns: input hold at the READ+3 capture (retro_snes_clocks).
+    retro_sdram_phy #(.InDelayTaps(25),.RefMhz(193.3)) physical_io (.clk(service),
+        .dq_out(s_dq_out),.dq_oe_d(s_dq_oe_next),.dq_in(snes_dq_in),.sd_dq(sdram_dq));
+    IDELAYCTRL idelay_control (.REFCLK(snes_idelay_ref),.RST(!slocked),.RDY());
+    assign dq_in=0;
+    assign md_dq_in=0;
   end else begin : g_fabric_dq
+    // Fabric DQ (multi-console image): SNES write data is not held after WRITE
+    // here; only the per-console SNES image (pad PHY) is a supported SNES target.
     retro_sdram_io physical_io (.dq_in,.dq_out,.dq_oe(dq_drive),.sd_dq(sdram_dq));
     assign md_dq_in=dq_in;
+    assign snes_dq_in=dq_in;
   end
   wire video_fault;
   wire [1:0] selected_bus=status_bus[41:40];

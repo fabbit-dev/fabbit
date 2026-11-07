@@ -1,18 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 `default_nettype none
-// Related clocks: service = 4*free_master, rising edges coincident.
-// free_master_ce is high only at that coincident service rising edge.
-// Console outputs launch at edge0; memory samples at service edge1.
-// permit updates ONLY at service falling edges during free_master HIGH:
-// last decision at edge1.5, stable before master falling edge2 and throughout
-// its low half. BUFGCE CE therefore has a half service period setup at master
-// falling and 2.5 service periods before next rising. Constrain these related
-// clocks/CE paths in the physical top; no timing exceptions asserted here.
-//
-// Whole clock is stopped, including ALL PPU/SCPU/SMP/DSP/RAM pipeline flops.
-// Running/ENABLE/reset state does not change on a memory hold. The controller
-// decides which edge must wait: a legal intermediate edge need not be blocked.
-// Refresh/contention may still stretch master time; no nominal-rate guarantee.
+// Related clocks: service = 3*free_master, rising edges coincident (s0).
+// free_master_ce is high in the service cycle before s0.
+// The memory never holds the clock: core_hold only stops the whole console for
+// stop/reset handshakes. permit updates on the s1 service edge (master high,
+// 2 service periods before the next master rising edge) and is the BUFGCE CE.
 module snes_clock_guard (
     input wire clk_service,
     input wire free_master,
@@ -20,12 +12,14 @@ module snes_clock_guard (
     input wire reset,
     input wire running,
     input wire core_hold,
-    output logic permit,
+    output logic permit = 1'b1,
     output wire core_step,
     output wire clk_core
 );
-    always_ff @(negedge clk_service) begin
-        if (free_master) permit <= reset || !running || !core_hold;
+    logic at_s0 = 1'b0;
+    always_ff @(posedge clk_service) begin
+        at_s0 <= free_master_ce;
+        if (at_s0) permit <= reset || !running || !core_hold;
     end
     assign core_step = free_master_ce && permit;
     // Simulation supplies a glitch-free negedge-latched model of this exact

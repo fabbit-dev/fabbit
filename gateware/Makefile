@@ -90,6 +90,10 @@ retro_sdram_eye_md_pad_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_md_pad_XDC := $(retro_sdram_eye_md_iob_XDC)
 retro_sdram_eye_snes_pad_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_snes_pad_XDC := $(retro_sdram_eye_md_iob_XDC)
+retro_sdram_eye_snes3_pad_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_snes3_pad_XDC := $(retro_sdram_eye_md_iob_XDC)
+retro_sdram_eye_snes3_prod_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_snes3_prod_XDC := $(retro_sdram_eye_md_iob_XDC)
 retro_sdram_eye_md_iob_dq_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_md_iob_dq_XDC := $(retro_sdram_eye_md_iob_XDC) constraints/retro_sdram_eye_iob_dq.xdc
 
@@ -354,6 +358,7 @@ sim_retro_snes_assets: | build
 sim_retro_snes_memory: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_snes_memory \
 	  -Mdir build/tb_retro_snes_memory profiles/retro/snes/snes_memory.sv \
+	  profiles/retro/retro_snes_clocks.sv sim/retro_clock_models.sv \
 	  sim/sdram_model.sv sim/tb_retro_snes_memory.sv > build/tb_retro_snes_memory.log 2>&1
 	build/tb_retro_snes_memory/Vtb_retro_snes_memory
 
@@ -365,27 +370,40 @@ sim_retro_snes_core: | build
 	build/tb_retro_snes_core/Vtb_retro_snes_core
 	build/tb_retro_snes_core/Vtb_retro_snes_core +hirom=1
 
-# Whole master clock is stretched on memory waits. Checks correctness, not
-# nominal 60 Hz / 32 ksample/s gameplay. Both maps use real physical SDRAM model.
+# 3:1 clocks, no memory clock holds, pad-register DQ with board delays, SDRAM model.
 sim_retro_snes: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 \
 	  --top-module tb_retro_snes -Mdir $(CURDIR)/build/tb_retro_snes \
-	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) sim/sdram_model.sv sim/tb_retro_snes.sv \
+	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) profiles/retro/retro_snes_clocks.sv \
+	  sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_snes.sv \
 	  > build/tb_retro_snes.log 2>&1
 	build/tb_retro_snes/Vtb_retro_snes
 	build/tb_retro_snes/Vtb_retro_snes +hirom=1
 	build/tb_retro_snes/Vtb_retro_snes +stop_probe=1
 	build/tb_retro_snes/Vtb_retro_snes +hirom=1 +stop_probe=1
 
+# Refresh 1.5 times as often (RefreshCycles 600 = 9.3 us), extra forced refreshes.
 sim_retro_snes_stress: | build
-	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 -GRefreshInterval=71 \
+	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 -GRefreshInterval=600 \
 	  --top-module tb_retro_snes -Mdir $(CURDIR)/build/tb_retro_snes_stress \
-	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) sim/sdram_model.sv sim/tb_retro_snes.sv \
+	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) profiles/retro/retro_snes_clocks.sv \
+	  sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_snes.sv \
 	  > build/tb_retro_snes_stress.log 2>&1
 	build/tb_retro_snes_stress/Vtb_retro_snes
 	build/tb_retro_snes_stress/Vtb_retro_snes +hirom=1
 	build/tb_retro_snes_stress/Vtb_retro_snes +stop_probe=1
 	build/tb_retro_snes_stress/Vtb_retro_snes +hirom=1 +stop_probe=1
+
+# A user-supplied game image (not in git) through 3:1 clocks, pad DQ and the SDRAM model,
+# frame hashes against the same core with ideal memory: make sim_retro_snes_game
+# SNES_GAME_ARGS="+rom=<hex> +rom_bytes=N +ipl=<hex> +gauss=<hex> +ref=<log> +frames=N".
+sim_retro_snes_game: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps -O3 -j 4 -Wno-fatal \
+	  --top-module tb_retro_snes_game -Mdir $(CURDIR)/build/tb_retro_snes_game \
+	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) profiles/retro/retro_snes_clocks.sv \
+	  sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_snes_game.sv \
+	  > build/tb_retro_snes_game.log 2>&1
+	build/tb_retro_snes_game/Vtb_retro_snes_game $(SNES_GAME_ARGS)
 
 sim_retro_pixels: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_pixels \

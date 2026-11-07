@@ -35,6 +35,7 @@
     "gateware/profiles/retro/snes/snes_pad.sv",
     "gateware/profiles/retro/snes/snes_cart.sv",
     "gateware/profiles/retro/snes/snes_console.sv",
+    "gateware/profiles/retro/snes/snes_aram.sv",
     "gateware/profiles/retro/snes/snes_memory.sv",
     "gateware/profiles/retro/snes/snes_asset_loader.sv",
     "gateware/profiles/retro/snes/snes_clock_guard.sv",
@@ -317,9 +318,15 @@
       "license": "GPL-3.0-or-later"
     },
     {
+      "path": "snes_aram.sv",
+      "origin": "Fabbit original integration RTL",
+      "sha256": "4f6fafc807dc90951caa32e6347f3c3485da7648fbba3fb44231de4150f8907c",
+      "license": "GPL-3.0-or-later"
+    },
+    {
       "path": "snes_memory.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "159a62a3676de7db1ec990935ba7375e33dc2d74ab534055a479709323324678",
+      "sha256": "0498cec43fcefc5f79e198322a2a3ef0a9142cf633ae27a661421affc6ffc9e5",
       "license": "GPL-3.0-or-later"
     },
     {
@@ -331,20 +338,20 @@
     {
       "path": "snes_clock_guard.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "50a1b1eacfec2ee9f14066779e30a5926242ed0c894c0b899ecaf6f005a7325a",
+      "sha256": "9adbc6844e728a6058a85bf06098c599f925069c1540f01db1829bf707dace45",
       "license": "GPL-3.0-or-later"
     },
     {
       "path": "snes_system.sv",
       "origin": "Fabbit original integration RTL",
-      "sha256": "31b622640dd89fbc443650dd060b870f85ba94c7c6d0d7d2c0bd9b8e5192dd9a",
+      "sha256": "040d90388aba25716e24f936fe0723fdbf67f670d0b8f6f6b46968fafa9b79a3",
       "license": "GPL-3.0-or-later"
     }
   ],
   "tests": [
     {
       "path": "gateware/sim/tb_retro_snes.sv",
-      "sha256": "2787ce80094d8ced9262c446b72ffd4fb9907b98b7432c9add6d27fa09cfc09c",
+      "sha256": "6a2c73209b8c9ac6a4d6d48d2247b90416fd97d516c3f7860ba99c11efad3a82",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     },
     {
@@ -354,13 +361,18 @@
     },
     {
       "path": "gateware/sim/tb_retro_snes_memory.sv",
-      "sha256": "a4975a9ee9f6b15ed312147e1a9156fc76ef9f778682183ea7a2eb3eec6c7131",
+      "sha256": "dbedea922a0b9c8a3885c94cf69e573c6e2515e16a66871c9c09bcdc1205940e",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
     },
     {
       "path": "gateware/sim/tb_retro_snes_assets.sv",
       "sha256": "61c4d0fe6c0dca51f298f607d3d1d7b025064f36444e557da8dbcdd23dc3fdd0",
       "origin": "Original synthetic HDL tests/opcode programs; not commercial ROM dumps"
+    },
+    {
+      "path": "gateware/sim/tb_retro_snes_game.sv",
+      "sha256": "829063197c547a421dabbfc8daa1ab7a944f6694c1db67375d48fe84414d3821",
+      "origin": "Original HDL test; game ROM, IPL and Gaussian table are user-supplied at run time, never bundled"
     }
   ],
   "excluded": [
@@ -386,18 +398,18 @@
     "PPU": "Fetch schedule and sprite-size logic tables"
   },
   "clock_contract": {
-    "service": "4x related free master",
-    "primitive": "BUFGCE whole-console clock hold, no ENABLE pause",
-    "performance": "Deadline-aware whole-console hold; native intermediate read edge allowed, unresolved consumption edge blocked. Refresh/contention can still stretch wall time. Timers sized from timing parameters.",
+    "service": "3x related master (64.43 MHz, VCO 773.2 MHz /12), rising edges coincide",
+    "primitive": "BUFGCE whole-console clock gate used only for stop/reset; memory never holds the clock",
+    "performance": "Full speed: requests sampled two service clocks after a master edge, read data registered by master edge +2 (bound +4, measured core tolerance). ARAM in block RAM. SDRAM refresh in the S-CPU DRAM refresh pause; forced only after ForceDebt intervals (<= 7 x 15.6 us).",
     "stop": "run=0 requests quiesce; preserve last-edge sampling and drain, then stop_ack permits owner/config/assets change",
     "reset": "Global reset intentionally discards pending/unissued work; issued physical writes cannot be undone",
     "memory_reset": "Stopped-only physical SDRAM reinitialization, separate from global asset-invalidating reset; preserves IPL/coefficient coverage and blocks host/run until initialized again",
-    "simulation_io": "Conditional ESMT M12L64322A(2S)-7 Rev1.0 CL2 tSACmax8ns, tOHmin2ns, tRCD21ns; ideal forwarded clock phase +2ns. Fitted grade, board delays, slew and routed I/O margins unverified"
+    "simulation_io": "Conditional ESMT M12L64322A(2S)-7 Rev1.0 CL2 tSACmax8ns, tOHmin2ns, tRCD21ns; SDRAM clock -93.75 deg, pad registers, 2 ns input delay. Routed I/O STA against the datasheet with board 0.2-0.8 ns passes; board eye/soak measured on one i9+"
   },
   "limitations": [
-    "No proprietary BIOS/game compatibility proof",
-    "No unconditional wall-clock two-master SDRAM deadline (refresh counterexample retained)",
-    "No physical timing/route/combined-fit signoff"
+    "No proprietary BIOS/game compatibility proof (one title run on the board)",
+    "Read deadline relies on the S-CPU DRAM refresh pause; a read may be late (deadline_fault) only when refresh debt is forced",
+    "Physical I/O timing: datasheet STA with assumed board flight 0.2-0.8 ns, speed grade -7 assumed; board eye measured on one board"
   ],
   "reproduction": {
     "includes": [

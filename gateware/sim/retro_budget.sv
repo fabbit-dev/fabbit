@@ -136,6 +136,7 @@ module retro_budget (
   retro_area cores (.*);
   snes_memory snes_backend (
       .clk(mem_fast_clk), .reset(reset), .master_ce(snes_master_ce),
+      .free_ce(snes_master_ce), .cpu_refresh(1'b0), .max_latency(),
       .enable(snes_memory_enable), .refresh_now(refresh), .initialized(snmem_initialized),
       .drained(snmem_drained), .core_hold(snmem_core_hold),
       .request_inflight(snmem_request_inflight), .needs_data(snmem_needs_data),
@@ -155,7 +156,7 @@ module retro_budget (
       .sd_a(snmem_sd_a), .sd_ba(snmem_sd_ba), .sd_ras_n(snmem_sd_ras_n),
       .sd_cas_n(snmem_sd_cas_n), .sd_we_n(snmem_sd_we_n), .sd_cs_n(snmem_sd_cs_n),
       .sd_cke(snmem_sd_cke), .sd_dq_in(snmem_sd_dq_in),
-      .sd_dq_out(snmem_sd_dq_out), .sd_dq_oe(snmem_sd_dq_oe));
+      .sd_dq_out(snmem_sd_dq_out), .sd_dq_oe_next(), .sd_dq_oe(snmem_sd_dq_oe));
 
   retro_clocks console_clocks (.clk_25m(clk_25m), .reset(reset), .clk_md(md_clk),
       .clk_z80(z80_clk), .clk_snes(snes_clk), .locked(clock_locks[0]));

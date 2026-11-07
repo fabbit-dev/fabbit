@@ -47,12 +47,15 @@ module MMCME2_ADV #(
   localparam realtime Vco=CLKIN1_PERIOD*DIVCLK_DIVIDE/CLKFBOUT_MULT_F;
   always #(Vco*CLKOUT0_DIVIDE_F/2) CLKOUT0=~CLKOUT0;
   always #(Vco*CLKOUT1_DIVIDE/2) CLKOUT1=~CLKOUT1;
+  // Negative phase = the same edge one period earlier: start at phase+360.
+  localparam real Phase2=CLKOUT2_PHASE<0 ? CLKOUT2_PHASE+360.0 : CLKOUT2_PHASE;
+  localparam real Phase3=CLKOUT3_PHASE<0 ? CLKOUT3_PHASE+360.0 : CLKOUT3_PHASE;
   initial begin
-    #(Vco*CLKOUT2_DIVIDE*CLKOUT2_PHASE/360.0);
+    #(Vco*CLKOUT2_DIVIDE*Phase2/360.0);
     forever #(Vco*CLKOUT2_DIVIDE/2) CLKOUT2=~CLKOUT2;
   end
   initial begin
-    #(Vco*CLKOUT3_DIVIDE*CLKOUT3_PHASE/360.0);
+    #(Vco*CLKOUT3_DIVIDE*Phase3/360.0);
     forever #(Vco*CLKOUT3_DIVIDE/2) CLKOUT3=~CLKOUT3;
   end
   assign CLKFBOUT=CLKIN1;assign CLKFBOUTB=~CLKIN1;

@@ -22,7 +22,9 @@ module retro_sdram #(
     // 1: DQ registers live in retro_sdram_phy (pad ODDR/IDDR). sd_dq_in is then the pin
     // sampled one edge earlier, so the capture state waits one more clock: the pin is still
     // sampled at edge c+Cas after READ at c, the response is one clock later.
-    parameter bit PadPhy = 1'b0
+    parameter bit PadPhy = 1'b0,
+    // Extra capture clocks after CAS (round trip longer than one clock minus tSAC).
+    parameter int CaptureExtra = 0
 ) (
     input  wire        clk,
     input  wire        rst,
@@ -62,7 +64,7 @@ module retro_sdram #(
   localparam logic [2:0] Nop = 3'b111, Pre = 3'b010, Ref = 3'b001;
   localparam logic [2:0] Mode = 3'b000, Act = 3'b011, Rd = 3'b101, Wr = 3'b100;
   localparam int WriteWait = Twr > Tras - Trcd ? Twr : Tras - Trcd;
-  localparam int ReadWait = Cas - 1 + (PadPhy ? 1 : 0);
+  localparam int ReadWait = Cas - 1 + (PadPhy ? 1 : 0) + CaptureExtra;
   localparam int ReadPreWait = Tras > Trcd + ReadWait + 2 ? Tras - Trcd - ReadWait - 2 : 0;
   assign {sd_ras_n, sd_cas_n, sd_we_n} = cmd;
   assign sd_dq_out = dq_out;

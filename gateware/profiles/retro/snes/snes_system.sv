@@ -7,7 +7,7 @@
 // (related free-master launches also allowed). Stable config until stop_ack.
 // Assets loader uses free_master; console asset backend uses clk_core. These
 // clocks are identical while stopped/programming; run MUST remain zero until
-// loader done/busy clear. Memory is continuously clocked at 4x, even on hold.
+// loader done/busy clear. Memory is continuously clocked at 3x, even on hold.
 // *_valid A/V strobes are qualified by actual core_step in SERVICE domain;
 // held raw core pulses are never re-counted while the clock is stopped.
 // Reset clears validity and restarts SDRAM; reload all synthetic/user assets.
@@ -24,8 +24,8 @@
 // protocol. It never invalidates IPL/coefficient coverage. Host/run stay blocked
 // until memory initialization and the stop acknowledgement become true again.
 module snes_system #(
-    parameter int unsigned InitCycles = 18000,
-    parameter int unsigned RefreshCycles = 480
+    parameter int unsigned InitCycles = 13000,
+    parameter int unsigned RefreshCycles = 900
 ) (
     input wire clk_service, free_master, free_master_ce,
     input wire reset, console_reset, run,
@@ -68,7 +68,9 @@ module snes_system #(
     output wire sd_ras_n, sd_cas_n, sd_we_n, sd_cs_n, sd_cke,
     input wire [31:0] sd_dq_in,
     output wire [31:0] sd_dq_out,
+    output wire sd_dq_oe_next,
     output wire sd_dq_oe,
+    output wire [3:0] max_latency,
     output wire [14:0] rgb,
     output wire pixel_ce, dotclk, hs, vs, hde, vde,
     output wire highres, field, interlace, v224,
@@ -87,7 +89,7 @@ module snes_system #(
     wire [7:0] wram_data, aram_data, save_data;
     wire [7:0] wram_q, aram_q, rom_q, save_q;
     wire wram_rd, wram_wr, aram_rd, aram_wr, rom_rd, save_rd, save_wr;
-    wire raw_pixel_ce, raw_audio_ready;
+    wire raw_pixel_ce, raw_audio_ready, cpu_refresh;
     typedef enum logic [1:0] {Stopped, Running, Draining, Resetting} stop_state_t;
     stop_state_t stop_state;
     logic [1:0] sample_age, reset_edges;
@@ -169,26 +171,29 @@ module snes_system #(
         .active, .unsupported, .wram_addr, .wram_data, .wram_rd, .wram_wr, .wram_q,
         .aram_addr, .aram_data, .aram_rd, .aram_wr, .aram_q,
         .rom_addr, .rom_rd, .rom_q, .save_addr, .save_data, .save_rd, .save_wr, .save_q,
-        .sysclk_f_ce(), .sysclk_r_ce(), .refresh(), .rgb, .pixel_ce(raw_pixel_ce),
+        .sysclk_f_ce(), .sysclk_r_ce(), .refresh(cpu_refresh), .rgb, .pixel_ce(raw_pixel_ce),
         .dotclk, .hs, .vs, .hde, .vde, .highres, .field, .interlace, .v224, .x, .y,
         .audio_l, .audio_r, .audio_ready(raw_audio_ready)
     );
+    snes_aram aram (.clk(clk_core), .addr(aram_addr), .data(aram_data), .rd(aram_rd),
+        .wr(aram_wr), .q(aram_q));
     snes_memory #(.InitCycles(InitCycles), .RefreshCycles(RefreshCycles)) memory (
         .clk(clk_service), .reset(reset || memory_reset), .master_ce(core_step),
-        .enable(active), .refresh_now,
+        .free_ce(free_master_ce), .max_latency,
+        .enable(active), .refresh_now, .cpu_refresh,
         .initialized(memory_initialized), .drained(memory_drained),
         .core_hold(memory_hold), .request_inflight, .needs_data,
         .refresh_busy, .deadline_fault, .overrun_fault, .protocol_fault,
         .wram_addr, .wram_data, .wram_rd, .wram_wr, .wram_q,
         .wram_valid(), .wram_posted(), .wram_committed(),
-        .aram_addr, .aram_data, .aram_rd, .aram_wr, .aram_q,
+        .aram_addr, .aram_data, .aram_rd(1'b0), .aram_wr(1'b0), .aram_q(),
         .aram_valid(), .aram_posted(), .aram_committed(), .rom_addr, .rom_rd, .rom_q,
         .rom_valid(), .save_addr, .save_data, .save_rd, .save_wr, .save_q,
         .save_valid(), .save_posted(), .save_committed(),
         .host_valid(host_valid && stop_ack), .host_write, .host_addr, .host_wdata,
         .host_ready(host_ready_internal), .host_done, .host_rdata,
         .sd_a, .sd_ba, .sd_ras_n, .sd_cas_n, .sd_we_n, .sd_cs_n, .sd_cke,
-        .sd_dq_in, .sd_dq_out, .sd_dq_oe
+        .sd_dq_in, .sd_dq_out, .sd_dq_oe_next, .sd_dq_oe
     );
 endmodule
 `default_nettype wire
