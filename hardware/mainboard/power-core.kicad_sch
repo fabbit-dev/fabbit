@@ -1243,7 +1243,7 @@
 		(dnp no)
 		(uuid "184cf489-e078-43e7-937d-ecd600d29c9e")
 		(property "Reference" "R201"
-			(at 53.34 59.69 0)
+			(at 49.53 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1253,7 +1253,7 @@
 			)
 		)
 		(property "Value" "105k 0.1%"
-			(at 53.34 67.31 0)
+			(at 57.15 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1572,7 +1572,7 @@
 		(dnp no)
 		(uuid "63ab332d-2e9e-4265-9786-6d70c7fc6106")
 		(property "Reference" "C202"
-			(at 33.02 59.69 0)
+			(at 29.21 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1582,7 +1582,7 @@
 			)
 		)
 		(property "Value" "22uF 6.3V X5R 0805"
-			(at 33.02 67.31 0)
+			(at 36.83 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1760,7 +1760,7 @@
 		(dnp no)
 		(uuid "6bd1e25a-9258-41a2-b3fd-37609bd987e5")
 		(property "Reference" "C203"
-			(at 129.54 59.69 0)
+			(at 125.73 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1770,7 +1770,7 @@
 			)
 		)
 		(property "Value" "6.8pF 50V C0G 0603"
-			(at 129.54 67.31 0)
+			(at 133.35 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1860,7 +1860,7 @@
 		(dnp no)
 		(uuid "8f954715-7f28-415e-9bd9-63a89f210d5c")
 		(property "Reference" "U201"
-			(at 96.52 24.13 0)
+			(at 96.52 20.32 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1870,7 +1870,7 @@
 			)
 		)
 		(property "Value" "TLV62569DBVR"
-			(at 96.52 31.75 0)
+			(at 96.52 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2068,7 +2068,7 @@
 		(dnp no)
 		(uuid "9bac4bb4-df25-4f13-994d-ac437c4fc5b7")
 		(property "Reference" "L201"
-			(at 43.18 39.37 0)
+			(at 39.37 43.18 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2078,7 +2078,7 @@
 			)
 		)
 		(property "Value" "2.2uH"
-			(at 43.18 46.99 0)
+			(at 46.99 43.18 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2365,7 +2365,7 @@
 		(dnp no)
 		(uuid "a87946ed-bf20-4834-aa51-1c48d38dc204")
 		(property "Reference" "R202"
-			(at 63.5 39.37 0)
+			(at 59.69 43.18 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2375,7 +2375,7 @@
 			)
 		)
 		(property "Value" "100k 0.1%"
-			(at 63.5 46.99 0)
+			(at 67.31 43.18 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2618,7 +2618,7 @@
 		(dnp no)
 		(uuid "d7faf9c1-6e30-4ff8-b9e1-0bf90c2b9f8f")
 		(property "Reference" "C201"
-			(at 22.86 39.37 0)
+			(at 19.05 43.18 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2628,7 +2628,7 @@
 			)
 		)
 		(property "Value" "10uF 10V X5R 0603"
-			(at 22.86 46.99 0)
+			(at 26.67 43.18 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
