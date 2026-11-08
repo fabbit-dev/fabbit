@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Fabbit mainboard: MCU core 1.23 V TLV62569")
-		(date "2026-10-31")
+		(date "2026-11-08")
 		(company "Fabbit")
 		(comment 1 "VIN=3V3_AON, EN=AON_PG (TPS63802 PG), FB 105k/100k 0.1%")
 		(comment 2 "DRAFT, DO NOT POWER")
@@ -910,113 +910,13 @@
 	)
 	(wire
 		(pts
-			(xy 83.82 27.94) (xy 88.9 27.94)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "03e86335-8708-46bc-9b7c-b4e4155ec609")
-	)
-	(wire
-		(pts
-			(xy 43.18 46.99) (xy 43.18 58.42)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "28bdc7a6-3ff8-4e68-82ce-c8fec1065d56")
-	)
-	(wire
-		(pts
-			(xy 33.02 67.31) (xy 33.02 72.39)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "2cd303fb-97a2-41a0-8581-5e58c228bce3")
-	)
-	(wire
-		(pts
-			(xy 43.18 33.02) (xy 43.18 39.37)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "2e20c7f8-143a-4f56-81df-3c73fe4f0ca4")
-	)
-	(wire
-		(pts
 			(xy 104.14 25.4) (xy 110.49 25.4)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "3c72c6ee-0c40-4428-9d60-c6c522d18cda")
-	)
-	(wire
-		(pts
-			(xy 22.86 33.02) (xy 22.86 39.37)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "563b5baa-4802-4d19-bd43-442b89f5a6ee")
-	)
-	(wire
-		(pts
-			(xy 33.02 48.26) (xy 33.02 59.69)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "5ed71828-dab6-4412-9d58-c97094db4dbb")
-	)
-	(wire
-		(pts
-			(xy 22.86 46.99) (xy 22.86 52.07)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "9713bfc9-d10c-465a-87db-01a0da4d95cf")
-	)
-	(wire
-		(pts
-			(xy 53.34 67.31) (xy 53.34 73.66)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "b5974e6d-269e-46bd-adf1-feee18dbc4ac")
-	)
-	(wire
-		(pts
-			(xy 104.14 27.94) (xy 110.49 27.94)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "ce75921e-e84b-413f-8bf1-dbae2e3fec33")
-	)
-	(wire
-		(pts
-			(xy 63.5 46.99) (xy 63.5 52.07)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "db97d06c-ab8f-47ff-b90f-700a4fe110de")
+		(uuid "0b4d05fb-9462-4c06-b8e6-dd7b9f76b033")
 	)
 	(wire
 		(pts
@@ -1026,17 +926,47 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "e470dd77-d6b0-4721-80e2-2cd657ee9c4d")
+		(uuid "350a6d40-c663-4870-8274-b414d575bf3b")
 	)
 	(wire
 		(pts
-			(xy 82.55 25.4) (xy 88.9 25.4)
+			(xy 22.86 46.99) (xy 22.86 52.07)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "e61aeb4d-47cc-4832-9911-52710468a974")
+		(uuid "4235f328-4d3f-40fc-912b-fba226c90103")
+	)
+	(wire
+		(pts
+			(xy 33.02 48.26) (xy 33.02 59.69)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "5d0926fa-3ca7-4e4f-ac2e-46ad3dc61866")
+	)
+	(wire
+		(pts
+			(xy 53.34 67.31) (xy 53.34 73.66)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "6acf06d6-ec06-44ce-a180-42615955f1a0")
+	)
+	(wire
+		(pts
+			(xy 33.02 67.31) (xy 33.02 72.39)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "737371ec-baad-460c-a328-4a00b0ad270d")
 	)
 	(wire
 		(pts
@@ -1046,7 +976,27 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "ee545c53-0d53-4a22-a328-ac664cb6785e")
+		(uuid "7800bbde-fdcd-438c-a15c-1ad29c6bc755")
+	)
+	(wire
+		(pts
+			(xy 104.14 27.94) (xy 110.49 27.94)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "7b830e6c-1d9e-4f4b-9fee-3d0886009e5c")
+	)
+	(wire
+		(pts
+			(xy 82.55 25.4) (xy 88.9 25.4)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "89737159-85ea-4788-9fe2-d99f331ef357")
 	)
 	(wire
 		(pts
@@ -1056,16 +1006,77 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "f2387d82-970f-4ff8-9ab5-cdfb5df83393")
+		(uuid "9c8a57ee-caa6-4ad6-a19f-f1062976a7e5")
 	)
-	(label "CORE_SW"
-		(at 110.49 25.4 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
+	(wire
+		(pts
+			(xy 129.54 48.26) (xy 129.54 59.69)
 		)
-		(uuid "0b73ee27-c40d-4c3c-9762-26eba4789820")
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "aef2d34b-ac5f-418c-a39d-b759c2a9ec58")
+	)
+	(wire
+		(pts
+			(xy 22.86 33.02) (xy 22.86 39.37)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "af729403-96cf-4e47-8cc1-ce950b6281ec")
+	)
+	(wire
+		(pts
+			(xy 83.82 27.94) (xy 88.9 27.94)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "b62ae8e6-9eb1-47dd-874e-01f03a5c2b84")
+	)
+	(wire
+		(pts
+			(xy 63.5 46.99) (xy 63.5 52.07)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "c4322194-0cb3-4231-a861-0968da6a1f9a")
+	)
+	(wire
+		(pts
+			(xy 129.54 67.31) (xy 129.54 73.66)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "c736fd89-3b99-448c-9269-1784775bfdc4")
+	)
+	(wire
+		(pts
+			(xy 43.18 33.02) (xy 43.18 39.37)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "f7b21949-5a7e-4aad-8aac-6f9a8efc8c47")
+	)
+	(wire
+		(pts
+			(xy 43.18 46.99) (xy 43.18 58.42)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "f7d7c2ea-6ba7-4cac-aba2-658faf19c816")
 	)
 	(label "CORE_FB"
 		(at 53.34 73.66 90)
@@ -1074,16 +1085,7 @@
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "4893d2b0-918f-45d3-a8a6-1c4cff7aa368")
-	)
-	(label "CORE_SW"
-		(at 43.18 33.02 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "78ab8ae2-7f01-4ace-88fe-2687af7d9a87")
+		(uuid "24410e38-e3f4-4822-b729-8086d8a491ea")
 	)
 	(label "CORE_FB"
 		(at 63.5 33.02 90)
@@ -1092,7 +1094,34 @@
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "a22afaea-779a-4dea-ba70-5e2e3a67468e")
+		(uuid "38a2d0f7-b9e7-4dbe-80a2-e6b2382c8164")
+	)
+	(label "CORE_FB"
+		(at 129.54 73.66 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "3e459e1b-d7cc-4778-95cc-8c50be635b11")
+	)
+	(label "CORE_SW"
+		(at 43.18 33.02 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "9a177afd-2362-49f0-87d9-247476d9ca61")
+	)
+	(label "CORE_SW"
+		(at 110.49 25.4 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "9bdc65bb-0178-4b8f-a5ef-fda4d7505b75")
 	)
 	(label "CORE_FB"
 		(at 110.49 27.94 0)
@@ -1101,20 +1130,86 @@
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "bb9e3bd3-316f-4bcc-a7bc-d2ada4c8af46")
+		(uuid "cf1362f7-d005-44ce-a9ae-e2c149dd4fa7")
 	)
-	(global_label "MCU_CORE_1V2_PENDING"
+	(global_label "3V3_AON"
 		(shape bidirectional)
-		(at 53.34 48.26 90)
+		(at 82.55 25.4 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "0209daef-6f30-4d06-bc59-29aa2ac3a289")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 82.55 25.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "3V3_AON"
+		(shape bidirectional)
+		(at 22.86 33.02 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify bottom)
 		)
-		(uuid "0ba72478-fa6c-4498-93ff-15687aa83d02")
+		(uuid "21d57bc3-0c15-4f21-99fd-baf584dd7f28")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 53.34 48.26 0)
+			(at 22.86 33.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "MCU_CORE_1V2_PENDING"
+		(shape bidirectional)
+		(at 129.54 48.26 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "4806d042-7b10-469a-a935-17b038e00d1a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 129.54 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "AON_PG"
+		(shape bidirectional)
+		(at 83.82 27.94 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "7593e901-713d-4efd-b8a8-900a1ba351e9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 83.82 27.94 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1134,7 +1229,7 @@
 			)
 			(justify bottom)
 		)
-		(uuid "21a48568-b435-43cb-86cc-ed8801f3bf5a")
+		(uuid "7cf890b0-96ab-40a2-8226-e6d93162b11e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 33.02 48.26 0)
 			(hide yes)
@@ -1156,7 +1251,7 @@
 			)
 			(justify top)
 		)
-		(uuid "36a45449-707c-471d-a92e-ee1ab701892c")
+		(uuid "830ea708-edb0-4734-942c-69061e5af46c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 43.18 58.42 0)
 			(hide yes)
@@ -1169,62 +1264,18 @@
 			)
 		)
 	)
-	(global_label "3V3_AON"
+	(global_label "MCU_CORE_1V2_PENDING"
 		(shape bidirectional)
-		(at 22.86 33.02 90)
+		(at 53.34 48.26 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 			(justify bottom)
 		)
-		(uuid "3f206574-ab9d-429d-ad92-7fdeec8a03fd")
+		(uuid "aae53732-d54f-43f0-b827-0af1e2f699f3")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 22.86 33.02 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "3V3_AON"
-		(shape bidirectional)
-		(at 82.55 25.4 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "7c668a19-50b4-493b-8a1d-2a36eed4115e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 82.55 25.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "AON_PG"
-		(shape bidirectional)
-		(at 83.82 27.94 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "ed3d420a-4884-4a6d-a0c2-cc866bb321dd")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 83.82 27.94 0)
+			(at 53.34 48.26 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1244,7 +1295,7 @@
 			)
 			(justify left)
 		)
-		(uuid "fc6c8d84-2072-4ea7-b62e-bec8d3a3d36c")
+		(uuid "e13a9fa8-6b7f-4fa1-a999-7ac42da4c82d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 50.8 109.22 0)
 			(hide yes)
@@ -1259,6 +1310,335 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 22.86 52.07 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0bd6bfef-7983-4792-9b17-7b93caba7eb7")
+		(property "Reference" "#PWR02001"
+			(at 22.86 58.42 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 22.86 57.15 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 22.86 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 22.86 52.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 22.86 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ba088ed0-35b4-475d-ba0d-8955a4239aea")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
+					(reference "#PWR02001")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 53.34 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "184cf489-e078-43e7-937d-ecd600d29c9e")
+		(property "Reference" "R201"
+			(at 53.34 59.69 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "105k 0.1%"
+			(at 53.34 67.31 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 53.34 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Verification" "?"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Assembly" "NOT APPROVED"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Scope" "MAINBOARD STAGED UNPOWERED DRAFT"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "CandidateMPN" "RT0603BRD07105KL"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "CandidateLCSC" "C861072"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "CandidateManufacturer" "Yageo"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "CandidateDatasheet" "https://yageogroup.com/component-documentation/download/datasheet/RT0603BRD07105KL?lang=en"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "R res resistor"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_fp_filters" "R_*"
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fa6b0aaa-025a-4dea-aab3-e228e4de4048")
+		)
+		(pin "2"
+			(uuid "36e60791-243f-4535-ae03-f11f09b1e02f")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
+					(reference "R201")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 50.8 109.22 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3cb1ef60-0b40-4e81-ba0f-ebf7a7ccde4e")
+		(property "Reference" "#FLG0201"
+			(at 50.8 102.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 50.8 104.14 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 50.8 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 50.8 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 50.8 109.22 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9aef0d48-56c5-4a3b-bd1b-94a73c6988f0")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
+					(reference "#FLG0201")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 96.52 40.64 0)
 		(unit 1)
 		(body_style 1)
@@ -1267,7 +1647,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "4bdc6ee6-a497-487c-a004-11069362cfbf")
+		(uuid "58ed3ea9-0bd9-40ae-a309-c27c381d3108")
 		(property "Reference" "#PWR02004"
 			(at 96.52 46.99 0)
 			(hide yes)
@@ -1322,7 +1702,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "4e50b4ff-e79a-469d-8b5c-e767cce54da8")
+			(uuid "0687e133-ab29-4b6a-bc31-34a67d6afb60")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -1335,7 +1715,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 22.86 43.18 0)
+		(at 33.02 63.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1343,9 +1723,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "5c6e6143-00de-4755-90ce-7ffea4c7057c")
-		(property "Reference" "C201"
-			(at 22.86 39.37 0)
+		(uuid "63ab332d-2e9e-4265-9786-6d70c7fc6106")
+		(property "Reference" "C202"
+			(at 33.02 59.69 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1354,8 +1734,8 @@
 				)
 			)
 		)
-		(property "Value" "10uF 10V X5R 0603"
-			(at 22.86 46.99 0)
+		(property "Value" "22uF 6.3V X5R 0805"
+			(at 33.02 67.31 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1365,7 +1745,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1376,7 +1756,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1387,7 +1767,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1397,7 +1777,7 @@
 			)
 		)
 		(property "Verification" "?"
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1408,7 +1788,7 @@
 			)
 		)
 		(property "Assembly" "NOT APPROVED"
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1419,7 +1799,7 @@
 			)
 		)
 		(property "Scope" "MAINBOARD STAGED UNPOWERED DRAFT"
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1429,8 +1809,8 @@
 				)
 			)
 		)
-		(property "CandidateMPN" "CL21A106KAYNNNE"
-			(at 22.86 43.18 0)
+		(property "CandidateMPN" "CL21A226MAQNNNE"
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1440,8 +1820,8 @@
 				)
 			)
 		)
-		(property "CandidateLCSC" "C15850"
-			(at 22.86 43.18 0)
+		(property "CandidateLCSC" "C45783"
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1452,7 +1832,7 @@
 			)
 		)
 		(property "CandidateManufacturer" "Samsung Electro-Mechanics"
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1462,8 +1842,8 @@
 				)
 			)
 		)
-		(property "CandidateDatasheet" "https://product.samsungsem.com/part/download.do?masterKey=CL21A106KAYNNN&type=specsheet"
-			(at 22.86 43.18 0)
+		(property "CandidateDatasheet" "https://product.samsungsem.com/part/download.do?masterKey=CL21A226MAQNNN&type=specsheet"
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1474,7 +1854,7 @@
 			)
 		)
 		(property "Ceff" "PENDING"
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1485,7 +1865,7 @@
 			)
 		)
 		(property "ki_keywords" "cap capacitor"
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1496,7 +1876,7 @@
 			)
 		)
 		(property "ki_fp_filters" "C_*"
-			(at 22.86 43.18 0)
+			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1507,23 +1887,23 @@
 			)
 		)
 		(pin "2"
-			(uuid "58aac851-9f98-4e28-90ac-2d536ac0abe4")
+			(uuid "73961d0e-a1fa-4e45-a698-18047f1fa879")
 		)
 		(pin "1"
-			(uuid "0cdc6a27-7694-4d0c-9921-15d15ef22b8d")
+			(uuid "2380fad6-29ec-4037-971a-06c26afc5bed")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
-					(reference "C201")
+					(reference "C202")
 					(unit 1)
 				)
 			)
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 63.5 52.07 0)
+		(lib_id "Device:C")
+		(at 129.54 63.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1531,10 +1911,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "76689b08-4b6c-451e-a240-03d2636c9b60")
-		(property "Reference" "#PWR02003"
-			(at 63.5 58.42 0)
-			(hide yes)
+		(uuid "6bd1e25a-9258-41a2-b3fd-37609bd987e5")
+		(property "Reference" "C203"
+			(at 129.54 59.69 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1543,8 +1922,8 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 63.5 57.15 0)
+		(property "Value" "6.8pF 50V C0G 0603"
+			(at 129.54 67.31 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1553,8 +1932,8 @@
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 63.5 52.07 0)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 129.54 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1565,7 +1944,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 63.5 52.07 0)
+			(at 129.54 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1576,7 +1955,29 @@
 			)
 		)
 		(property "Description" ""
-			(at 63.5 52.07 0)
+			(at 129.54 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Purpose" "Feedforward across R201, TI SLVSDG1C p9 recommended for R2=100k"
+			(at 129.54 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Verification" "? MPN and transient response pending"
+			(at 129.54 63.5 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1586,12 +1987,223 @@
 			)
 		)
 		(pin "1"
-			(uuid "27b0619a-f43e-4f12-bd7e-9e1144e92362")
+			(uuid "bbe6b6ba-d646-41ca-bd22-e95d3f8f63c6")
+		)
+		(pin "2"
+			(uuid "3dcd249d-4083-4793-9c36-0566b80c6574")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
-					(reference "#PWR02003")
+					(reference "C203")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Regulator_Switching:TLV62569DBV")
+		(at 96.52 27.94 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8f954715-7f28-415e-9bd9-63a89f210d5c")
+		(property "Reference" "U201"
+			(at 96.52 24.13 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TLV62569DBVR"
+			(at 96.52 31.75 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tlv62569.pdf"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 96.52 27.94 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Verification" "?"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Assembly" "NOT APPROVED"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Scope" "MAINBOARD STAGED UNPOWERED DRAFT"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "TLV62569DBVR"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C141836"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Texas Instruments"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Source" "TI SLVSDG1C PDF3,7-10"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Enable" "EN=VIN APPLICATION FIXTURE ONLY; PRODUCT POLICY PENDING"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Cff" "C203 6.8pF across R201; TI SLVSDG1C p9 recommendation for R202=100k; dynamic qualification pending"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "Step-Down Buck DC-DC Regulator Adjustable"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_fp_filters" "SOT?23*"
+			(at 96.52 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "2c62688d-3076-47db-ba92-3eae6ac799a1")
+		)
+		(pin "5"
+			(uuid "d74f709a-ba65-48c4-8b86-423209175cdf")
+		)
+		(pin "4"
+			(uuid "de78bc43-57f9-4c84-a623-968deb4bf849")
+		)
+		(pin "3"
+			(uuid "cda65ac3-b54c-4f79-be4f-ef83053d5ab6")
+		)
+		(pin "1"
+			(uuid "4f4738b6-8580-4cb7-a416-92deb3a12766")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
+					(reference "U201")
 					(unit 1)
 				)
 			)
@@ -1607,7 +2219,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "881e1fb8-a688-4a85-a48f-cd64751ad5b2")
+		(uuid "9bac4bb4-df25-4f13-994d-ac437c4fc5b7")
 		(property "Reference" "L201"
 			(at 43.18 39.37 0)
 			(show_name no)
@@ -1804,10 +2416,10 @@
 			)
 		)
 		(pin "2"
-			(uuid "891be96d-9b4a-414b-88ce-e0d7cd6f412c")
+			(uuid "3668de0d-913c-4f53-a1dc-15a3ca80f25b")
 		)
 		(pin "1"
-			(uuid "19eb177a-925a-4044-b358-14e788f5226c")
+			(uuid "5786828a-8f54-4a96-a853-af35d5ee7012")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -1819,8 +2431,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 50.8 109.22 0)
+		(lib_id "power:GND")
+		(at 63.5 52.07 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -1828,9 +2440,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "9647e767-076d-4d50-b571-8bd11da19f2f")
-		(property "Reference" "#FLG0201"
-			(at 50.8 102.87 0)
+		(uuid "a25e94e9-b82b-4072-839a-dbabebd252ba")
+		(property "Reference" "#PWR02003"
+			(at 63.5 58.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1840,8 +2452,8 @@
 				)
 			)
 		)
-		(property "Value" "PWR_FLAG"
-			(at 50.8 104.14 0)
+		(property "Value" "GND"
+			(at 63.5 57.15 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1851,7 +2463,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 50.8 109.22 0)
+			(at 63.5 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1862,7 +2474,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 50.8 109.22 0)
+			(at 63.5 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1873,7 +2485,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 50.8 109.22 0)
+			(at 63.5 52.07 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -1883,12 +2495,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "4893a30b-3060-4a34-873e-3e07a8bbf518")
+			(uuid "e083b527-c7a3-40a2-9ec3-abfedfa12498")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
-					(reference "#FLG0201")
+					(reference "#PWR02003")
 					(unit 1)
 				)
 			)
@@ -1904,7 +2516,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "c662f355-0f64-4567-8c99-3f9cafc96a6f")
+		(uuid "a87946ed-bf20-4834-aa51-1c48d38dc204")
 		(property "Reference" "R202"
 			(at 63.5 39.37 0)
 			(show_name no)
@@ -2057,10 +2669,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "defcb42a-9614-40e7-a83a-d4c9d21799bf")
+			(uuid "a1e482ad-bf36-4d93-bd21-577c0dd669b0")
 		)
 		(pin "2"
-			(uuid "dd3bf606-911f-43dc-b1ce-7709103fd894")
+			(uuid "5e3b98a9-a477-44ef-a4cc-43c482d77262")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -2081,7 +2693,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "cf19cd55-fee4-421a-9fde-713fffeffffd")
+		(uuid "c521e80f-041d-4590-8994-810af1947323")
 		(property "Reference" "#PWR02002"
 			(at 33.02 78.74 0)
 			(hide yes)
@@ -2136,7 +2748,7 @@
 			)
 		)
 		(pin "1"
-			(uuid "ab4ede06-ca01-48e3-98f2-08b6208adfc1")
+			(uuid "b6647bcb-3dfa-49a8-a0b2-f76607410255")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -2149,7 +2761,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 33.02 63.5 0)
+		(at 22.86 43.18 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2157,9 +2769,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "d5f937ff-707b-483c-91ca-6868c9a1a394")
-		(property "Reference" "C202"
-			(at 33.02 59.69 0)
+		(uuid "d7faf9c1-6e30-4ff8-b9e1-0bf90c2b9f8f")
+		(property "Reference" "C201"
+			(at 22.86 39.37 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2168,8 +2780,8 @@
 				)
 			)
 		)
-		(property "Value" "22uF 6.3V X5R 0805"
-			(at 33.02 67.31 0)
+		(property "Value" "10uF 10V X5R 0603"
+			(at 22.86 46.99 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2179,7 +2791,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2190,7 +2802,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2201,7 +2813,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2211,7 +2823,7 @@
 			)
 		)
 		(property "Verification" "?"
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2222,7 +2834,7 @@
 			)
 		)
 		(property "Assembly" "NOT APPROVED"
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2233,7 +2845,7 @@
 			)
 		)
 		(property "Scope" "MAINBOARD STAGED UNPOWERED DRAFT"
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2243,8 +2855,8 @@
 				)
 			)
 		)
-		(property "CandidateMPN" "CL21A226MAQNNNE"
-			(at 33.02 63.5 0)
+		(property "CandidateMPN" "CL21A106KAYNNNE"
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2254,8 +2866,8 @@
 				)
 			)
 		)
-		(property "CandidateLCSC" "C45783"
-			(at 33.02 63.5 0)
+		(property "CandidateLCSC" "C15850"
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2266,7 +2878,7 @@
 			)
 		)
 		(property "CandidateManufacturer" "Samsung Electro-Mechanics"
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2276,8 +2888,8 @@
 				)
 			)
 		)
-		(property "CandidateDatasheet" "https://product.samsungsem.com/part/download.do?masterKey=CL21A226MAQNNN&type=specsheet"
-			(at 33.02 63.5 0)
+		(property "CandidateDatasheet" "https://product.samsungsem.com/part/download.do?masterKey=CL21A106KAYNNN&type=specsheet"
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2288,7 +2900,7 @@
 			)
 		)
 		(property "Ceff" "PENDING"
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2299,7 +2911,7 @@
 			)
 		)
 		(property "ki_keywords" "cap capacitor"
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2310,7 +2922,7 @@
 			)
 		)
 		(property "ki_fp_filters" "C_*"
-			(at 33.02 63.5 0)
+			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2319,478 +2931,17 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "1"
-			(uuid "67c8c1c2-0808-433c-b249-9e73e21f3910")
 		)
 		(pin "2"
-			(uuid "ff52e9fe-dfbf-4a69-a17e-9c057855cfad")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
-					(reference "C202")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 22.86 52.07 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "f3379f23-6dac-415c-9e07-ab19d3bbcd7f")
-		(property "Reference" "#PWR02001"
-			(at 22.86 58.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 22.86 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 22.86 52.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 22.86 52.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 22.86 52.07 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
+			(uuid "2f89bd30-9108-49ed-a9e0-8ed754f9ae56")
 		)
 		(pin "1"
-			(uuid "6eadefd4-e682-48a3-b75b-9b303bdb6d45")
+			(uuid "9f4d62d1-a6fd-412b-b6e5-9c5349d0e9a5")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
-					(reference "#PWR02001")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Regulator_Switching:TLV62569DBV")
-		(at 96.52 27.94 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "f78048b8-9765-4098-a700-699123544be5")
-		(property "Reference" "U201"
-			(at 96.52 24.13 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "TLV62569DBVR"
-			(at 96.52 31.75 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tlv62569.pdf"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 96.52 27.94 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Verification" "?"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Assembly" "NOT APPROVED"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Scope" "MAINBOARD STAGED UNPOWERED DRAFT"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "TLV62569DBVR"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C141836"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Texas Instruments"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Source" "TI SLVSDG1C PDF3,7-10"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Enable" "EN=VIN APPLICATION FIXTURE ONLY; PRODUCT POLICY PENDING"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Cff" "Not installed; optional compensation unresolved"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "ki_keywords" "Step-Down Buck DC-DC Regulator Adjustable"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "ki_fp_filters" "SOT?23*"
-			(at 96.52 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "3"
-			(uuid "55e2cba0-d5cf-4c0b-a39f-9b881cdccfab")
-		)
-		(pin "1"
-			(uuid "5a0bb1bf-a218-4aed-ae63-47fb6890f2fb")
-		)
-		(pin "2"
-			(uuid "33d38714-bb89-4ea4-b3c7-5f78ee1a76bb")
-		)
-		(pin "5"
-			(uuid "2375dd63-85d2-425c-9404-c1a4f6c7dab1")
-		)
-		(pin "4"
-			(uuid "b76a2edb-9e4b-4d58-8c17-df097968b75a")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
-					(reference "U201")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 53.34 63.5 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "fd14ed07-6edd-4629-88b6-e75de686f5aa")
-		(property "Reference" "R201"
-			(at 53.34 59.69 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "105k 0.1%"
-			(at 53.34 67.31 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 53.34 63.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Verification" "?"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Assembly" "NOT APPROVED"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Scope" "MAINBOARD STAGED UNPOWERED DRAFT"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "CandidateMPN" "RT0603BRD07105KL"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "CandidateLCSC" "C861072"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "CandidateManufacturer" "Yageo"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "CandidateDatasheet" "https://yageogroup.com/component-documentation/download/datasheet/RT0603BRD07105KL?lang=en"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "ki_keywords" "R res resistor"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "ki_fp_filters" "R_*"
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "ff183230-8039-4289-a0fe-92dd80f16cdd")
-		)
-		(pin "2"
-			(uuid "3a692746-295a-4191-a81f-33b4a6c1595c")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/c56a3743-a8e8-40d6-84fd-c962d0ca583e"
-					(reference "R201")
+					(reference "C201")
 					(unit 1)
 				)
 			)
