@@ -37,75 +37,24 @@ module tb_retro_snes_memory;
     wire [1:0] sd_ba;
     wire sd_ras_n, sd_cas_n, sd_we_n, sd_cs_n, sd_cke, sd_dq_oe, sd_dq_oe_next;
     wire [31:0] sd_dq_out;
-    logic [31:0] sd_dq_in = 0;
+    wire [31:0] sd_dq_in;
     snes_memory #(.InitCycles(20), .RefreshCycles(900)) dut (
         .clk(service), .master_ce, .free_ce(master_ce), .*);
 
-    // Pad registers + board: as tb_retro_snes_game.
-    logic [31:0] pad_out = 0, pad_in = 0;
-    logic pad_t = 1;
-    always @(posedge service) begin
-        pad_out <= sd_dq_out; pad_t <= !sd_dq_oe_next; sd_dq_in <= pad_in;
-    end
-    tri [31:0] chip_dq;
-    assign chip_dq = pad_t ? {32{1'bz}} : pad_out;
-    logic [31:0] line [64];
-    initial begin
-        foreach (line[i]) line[i] = 0;
-        forever begin
-            #0.5ns;
-            for (int i = 63; i > 0; i--) line[i] = line[i-1];
-            line[0] = chip_dq;
-            pad_in = line[int'(DqInDelay / 0.5ns) - 1];
-        end
-    end
     wire sd_clk;
-    assign #(SdDelay) sd_clk = memory_clock;
-    sdram_model #(.TAc(8ns), .TOh(2ns), .TRcd(21ns)) model (
-        .clk(sd_clk), .cke(sd_cke), .cs_n(sd_cs_n), .ras_n(sd_ras_n), .cas_n(sd_cas_n),
-        .we_n(sd_we_n), .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(chip_dq));
-
-    // Protocol monitor (chip clock cycles of 15.52 ns).
-    int cyc = 0, last_ref = -100000, last_mrs = -1000, last_any_act = -1000;
-    int last_act [4] = '{-1000, -1000, -1000, -1000};
-    int busy_until [4] = '{-1000, -1000, -1000, -1000};
-    int refs = 0, max_gap = 0, refs_quiet = 0;
-    always @(posedge sd_clk) begin
-        cyc++;
-        if (!sd_cs_n) case ({sd_ras_n, sd_cas_n, sd_we_n})
-            3'b000: begin
-                assert (sd_a == 11'h020) else $fatal(1, "mode not CL2 BL1");
-                last_mrs = cyc;
-            end
-            3'b011: begin
-                assert (cyc - last_mrs >= 2 && cyc - last_ref >= 5 &&
-                        cyc >= busy_until[sd_ba] && cyc - last_any_act >= 1)
-                    else $fatal(1, "ACT tMRD/tRFC/tRP/tRC");
-                last_act[sd_ba] = cyc; last_any_act = cyc;
-            end
-            3'b101, 3'b100: begin
-                assert (cyc - last_act[sd_ba] >= 2 && sd_a[10]) else $fatal(1, "tRCD/AP");
-                if (!sd_we_n) assert (!model.dq_e) else $fatal(1, "DQ contention");
-                // AP: tRAS (3) from ACT, then tRP 2; write adds tRDL 2.
-                busy_until[sd_ba] = (sd_we_n ? cyc + 1 : cyc + 2) + 2;
-                if (busy_until[sd_ba] < last_act[sd_ba] + 5)
-                    busy_until[sd_ba] = last_act[sd_ba] + 5;
-            end
-            3'b001: begin
-                for (int b = 0; b < 4; b++)
-                    assert (cyc >= busy_until[b]) else $fatal(1, "REF bank busy");
-                assert (cyc - last_ref >= 5) else $fatal(1, "tRFC");
-                if (initialized && last_ref > 0 && cyc - last_ref > max_gap)
-                    max_gap = cyc - last_ref;
-                if (enable && cpu_refresh) refs_quiet++;
-                refs++; last_ref = cyc;
-            end
-            default: ;
-        endcase
-        if (initialized && last_ref > 0)
-            assert (cyc - last_ref <= 8054) else $fatal(1, "refresh interval > 125 us");
-    end
-    always @(posedge service) assert (model.errors == 0 && !core_hold) else $fatal(1, "model/hold");
+    tri [31:0] chip_dq;
+    retro_sdram_board #(.SdDelay(SdDelay), .DqInDelay(DqInDelay)) board (
+        .clk_service(service), .memory_clock, .initialized, .sd_a, .sd_ba, .sd_ras_n,
+        .sd_cas_n, .sd_we_n, .sd_cs_n, .sd_cke, .sd_dq_out, .sd_dq_oe_next, .sd_dq_in,
+        .sd_clk, .chip_dq);
+    // Refreshes issued while the console signals its quiet window.
+    int refs_quiet = 0;
+    always @(posedge sd_clk)
+        if (!sd_cs_n && {sd_ras_n, sd_cas_n, sd_we_n} == 3'b001 && enable && cpu_refresh)
+            refs_quiet++;
+    always @(posedge service) assert (!core_hold) else $fatal(1, "clock hold");
+    int max_gap;
+    always @(board.max_ref_gap) max_gap = board.max_ref_gap;
 
     task automatic tick; @(posedge service); #1ns; endtask
     // Console outputs change just after a master edge (s0); returns at s0+.

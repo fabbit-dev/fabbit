@@ -30,6 +30,9 @@ RETRO_SHARED := profiles/retro/retro_control.sv profiles/retro/retro_rom_writer.
                 profiles/retro/retro_sdram_io.sv
 RETRO_MD_SRC := $(patsubst gateware/%,%,$(shell cat profiles/retro/md/sources.f))
 RETRO_SNES_SRC := $(patsubst gateware/%,%,$(shell cat profiles/retro/snes/sources.f))
+# Whole retro_top, same lists as tools/build_retro.tcl: NES, MD, SNES cores, profile.
+RETRO_TOP_SRC := $(patsubst gateware/%,%,$(shell cat profiles/retro/nes/sources.f \
+                   profiles/retro/md/sources.f profiles/retro/snes/sources.f profiles/retro/sources.f))
 RETRO_SNES_INC := -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700
 
 PNR_FLAGS ?= --seed 1
@@ -157,32 +160,36 @@ sim_retro_integration_units: | build
 	build/tb_retro_session/Vtb_retro_session
 
 sim_retro_top: | build
-	python3 -c 'from pathlib import Path; r=Path.cwd().parent; p=Path("build/retro/top/sources.f"); Path("build/retro/top/sim_sources.f").write_text("\n".join(str(Path(x).relative_to(r / "gateware")) for x in p.read_text().splitlines())+"\n")'
 	verilator --binary --assert --timing --timescale 1ns/1ps --no-assert-case \
 	  -Wno-fatal -Wno-BLKANDNBLK -j 4 --top-module tb_retro_top \
 	  -Mdir $(CURDIR)/build/tb_retro_top -Iprofiles/retro/md/rtl/vdp \
 	  -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700 \
-	  -f build/retro/top/sim_sources.f sim/xilinx_stubs.sv sim/retro_clock_models.sv \
-	  profiles/retro/retro_sdram_single.sv profiles/retro/retro_sdram_phy.sv \
-	  sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top.log 2>&1
+	  $(RETRO_TOP_SRC) sim/xilinx_stubs.sv sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top.log 2>&1
 	cp profiles/retro/md/rtl/fx68k/microrom.mem profiles/retro/md/rtl/fx68k/nanorom.mem \
 	  build/tb_retro_top/
 	cd build/tb_retro_top && ./Vtb_retro_top $(RETRO_TOP_ARGS)
 
 # Same bench against the MD-only image: no NES/SNES logic, direct SDRAM owner.
 sim_retro_top_md: | build
-	python3 -c 'from pathlib import Path; r=Path.cwd().parent; p=Path("build/retro/top/sources.f"); Path("build/retro/top/sim_sources.f").write_text("\n".join(str(Path(x).relative_to(r / "gateware")) for x in p.read_text().splitlines())+"\n")'
 	verilator --binary --assert --timing --timescale 1ns/1ps --no-assert-case \
 	  -Wno-fatal -Wno-BLKANDNBLK -j 4 --top-module tb_retro_top \
 	  +define+RETRO_NO_NES+RETRO_NO_SNES \
 	  -Mdir $(CURDIR)/build/tb_retro_top_md -Iprofiles/retro/md/rtl/vdp \
 	  -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700 \
-	  -f build/retro/top/sim_sources.f sim/xilinx_stubs.sv sim/retro_clock_models.sv \
-	  profiles/retro/retro_sdram_single.sv profiles/retro/retro_sdram_phy.sv \
-	  sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top_md.log 2>&1
+	  $(RETRO_TOP_SRC) sim/xilinx_stubs.sv sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top_md.log 2>&1
 	cp profiles/retro/md/rtl/fx68k/microrom.mem profiles/retro/md/rtl/fx68k/nanorom.mem \
 	  build/tb_retro_top_md/
 	cd build/tb_retro_top_md && ./Vtb_retro_top
+
+# Same bench against the shipped SNES-only image: pad PHY, IDELAY, board delays.
+sim_retro_top_snes: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps --no-assert-case \
+	  -Wno-fatal -Wno-BLKANDNBLK -j 4 --top-module tb_retro_top \
+	  +define+RETRO_NO_NES+RETRO_NO_MD \
+	  -Mdir $(CURDIR)/build/tb_retro_top_snes -Iprofiles/retro/md/rtl/vdp \
+	  -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700 \
+	  $(RETRO_TOP_SRC) sim/xilinx_stubs.sv sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top_snes.log 2>&1
+	cd build/tb_retro_top_snes && ./Vtb_retro_top
 
 sim_retro_sdram_single: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps \
@@ -429,7 +436,7 @@ sim_retro_snes_memory: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps --top-module tb_retro_snes_memory \
 	  -Mdir build/tb_retro_snes_memory profiles/retro/snes/snes_memory.sv \
 	  profiles/retro/retro_snes_clocks.sv sim/retro_clock_models.sv \
-	  sim/sdram_model.sv sim/tb_retro_snes_memory.sv > build/tb_retro_snes_memory.log 2>&1
+	  sim/sdram_model.sv sim/retro_sdram_board.sv sim/tb_retro_snes_memory.sv > build/tb_retro_snes_memory.log 2>&1
 	build/tb_retro_snes_memory/Vtb_retro_snes_memory
 
 sim_retro_snes_core: | build
@@ -445,7 +452,7 @@ sim_retro_snes: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 \
 	  --top-module tb_retro_snes -Mdir $(CURDIR)/build/tb_retro_snes \
 	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) profiles/retro/retro_snes_clocks.sv \
-	  sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_snes.sv \
+	  sim/retro_clock_models.sv sim/sdram_model.sv sim/retro_sdram_board.sv sim/tb_retro_snes.sv \
 	  > build/tb_retro_snes.log 2>&1
 	build/tb_retro_snes/Vtb_retro_snes
 	build/tb_retro_snes/Vtb_retro_snes +hirom=1
@@ -457,7 +464,7 @@ sim_retro_snes_stress: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 -GRefreshInterval=600 \
 	  --top-module tb_retro_snes -Mdir $(CURDIR)/build/tb_retro_snes_stress \
 	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) profiles/retro/retro_snes_clocks.sv \
-	  sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_snes.sv \
+	  sim/retro_clock_models.sv sim/sdram_model.sv sim/retro_sdram_board.sv sim/tb_retro_snes.sv \
 	  > build/tb_retro_snes_stress.log 2>&1
 	build/tb_retro_snes_stress/Vtb_retro_snes
 	build/tb_retro_snes_stress/Vtb_retro_snes +hirom=1
@@ -471,7 +478,7 @@ sim_retro_snes_game: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps -O3 -j 4 -Wno-fatal \
 	  --top-module tb_retro_snes_game -Mdir $(CURDIR)/build/tb_retro_snes_game \
 	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) profiles/retro/retro_snes_clocks.sv \
-	  sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_snes_game.sv \
+	  sim/retro_clock_models.sv sim/sdram_model.sv sim/retro_sdram_board.sv sim/tb_retro_snes_game.sv \
 	  > build/tb_retro_snes_game.log 2>&1
 	build/tb_retro_snes_game/Vtb_retro_snes_game $(SNES_GAME_ARGS)
 
@@ -541,7 +548,7 @@ clean:
 	rm -rf build
 .PHONY: all clean sim sim_osd sim_video sim_cdc sim_retro sim_retro_mem_lanes sim_retro_control \
         sim_retro_nes_reset sim_retro_nes_render sim_retro_nes_render_regression \
-        sim_retro_sdram_owner sim_retro_sdram_single sim_retro_top_md \
+        sim_retro_sdram_owner sim_retro_sdram_single sim_retro_top_md sim_retro_top_snes \
         sim_retro_sdram sim_retro_mem_mux sim_retro_rom_writer sim_retro_load sim_retro_md \
         sim_retro_md_memory sim_retro_pixels sim_retro_framebuffer synth_retro_shared \
         sim_retro_framebuffer_444 sim_retro_pad \
