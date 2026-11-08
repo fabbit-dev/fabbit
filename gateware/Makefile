@@ -460,8 +460,10 @@ sim_retro_snes: | build
 	build/tb_retro_snes/Vtb_retro_snes +hirom=1 +stop_probe=1
 
 # Refresh 1.5 times as often (RefreshCycles 600 = 9.3 us), extra forced refreshes.
+# Refresh 1.44x faster than the datasheet needs (700 instead of 1006 cycles): 5.8 owed
+# per 4092-cycle S-CPU line, still below the debt limit of 7, so never forced.
 sim_retro_snes_stress: | build
-	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 -GRefreshInterval=600 \
+	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 -GRefreshInterval=700 \
 	  --top-module tb_retro_snes -Mdir $(CURDIR)/build/tb_retro_snes_stress \
 	  $(RETRO_SNES_INC) $(RETRO_SNES_SRC) profiles/retro/retro_snes_clocks.sv \
 	  sim/retro_clock_models.sv sim/sdram_model.sv sim/retro_sdram_board.sv sim/tb_retro_snes.sv \

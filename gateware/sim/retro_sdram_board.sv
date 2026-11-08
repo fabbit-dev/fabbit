@@ -115,4 +115,9 @@ module retro_sdram_board #(
     function automatic int refreshes_needed();
         return first_ref == 0 ? 0 : (cycle - first_ref) / 1006;
     endfunction
+    // Average met: at most 8 postponed AUTO REFRESH (ESMT) are still owed. Over a long
+    // run a rate even 0.1 % too slow exceeds this (deficit grows with time).
+    function automatic bit refresh_rate_ok();
+        return refreshes + 8 >= refreshes_needed();
+    endfunction
 endmodule

@@ -343,11 +343,12 @@ module retro_top #(
   sync_bit sreset_sync (.clk(service),.d(controllers_reset || selected!=3),.q(controller_reset_s));
   wire snes_stop_s,snes_initialized_s,snes_active,snes_hold,snes_ipl,snes_coeff;
   wire [4:0] snes_unsupported;
-  wire [3:0] snes_overrun;
+  wire [2:0] snes_overrun,snes_deadline;
   wire snes_protocol,snes_failure_md;
-  // Deadline is a wall-clock diagnostic, not fatal under legitimate clock hold.
+  // No clock holds: a late read means the console consumed stale data. Fail closed.
   sync_bit snes_failure_sync (.clk(md_clk),
-      .d((|snes_unsupported) || (|snes_overrun) || snes_protocol),.q(snes_failure_md));
+      .d((|snes_unsupported) || (|snes_overrun) || (|snes_deadline) || snes_protocol),
+      .q(snes_failure_md));
   wire [4:0] snes_map_config;
   wire [41:0] snes_memory_config;
   cdc_word #(.Width(5)) snes_config_map (.sclk(md_clk),.stb(flush),.d(map_config),
@@ -410,9 +411,9 @@ module retro_top #(
       .asset_addr(asset_addr_s),.asset_data(asset_data_s),.asset_last(asset_last_s),
       .asset_busy(asset_busy_s),.asset_done(asset_done_s),.asset_error(asset_error_s),
       .ipl_ready(snes_ipl),.coeff_ready(snes_coeff),.active(snes_active),.stop_ack(snes_stop_s),
-      .unsupported(snes_unsupported),.refresh_now(1'b0),.memory_initialized(snes_initialized_s),
-      .memory_drained(),.memory_hold(snes_hold),.refresh_busy(),.request_inflight(),
-      .needs_data(),.deadline_fault(),.overrun_fault(snes_overrun),.protocol_fault(snes_protocol),
+      .unsupported(snes_unsupported),.memory_initialized(snes_initialized_s),
+      .memory_drained(),.memory_hold(snes_hold),.refresh_busy(),.refresh_forced(),
+      .request_inflight(),.needs_data(),.deadline_fault(snes_deadline),.overrun_fault(snes_overrun),.protocol_fault(snes_protocol),
       .clock_permit(),.core_step(),.clk_core(),.host_valid(host_valid_s),.host_write(host_write_s),
       .host_addr(host_addr_s),.host_wdata(host_data_s),.host_ready(host_ready_s),
       .host_done(host_done_s),.host_rdata(host_read_s),.sd_a(s_a),.sd_ba(s_ba),

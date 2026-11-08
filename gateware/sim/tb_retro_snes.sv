@@ -8,7 +8,7 @@
 module tb_retro_snes;
     parameter realtime SdDelay = 0.5ns;   // board flight of the forwarded clock
     parameter realtime DqInDelay = 5ns;   // board + input buffer + 2 ns IDELAY
-    parameter int unsigned RefreshInterval = 900;
+    parameter int unsigned RefreshInterval = 1006;
     logic source=0;
     always #23.28ns source=!source;
     wire clk_service, free_master, sd_clk_raw, clocks_locked, free_master_ce;
@@ -33,10 +33,9 @@ module tb_retro_snes;
     wire [2:0] asset_error;
     wire ipl_ready,coeff_ready,active,stop_ack;
     wire [4:0] unsupported;
-    logic refresh_now=0;
-    wire memory_initialized,memory_drained,memory_hold,refresh_busy;
-    wire [4:0] request_inflight;
-    wire [3:0] needs_data,deadline_fault,overrun_fault;
+    wire memory_initialized,memory_drained,memory_hold,refresh_busy,refresh_forced;
+    wire [3:0] request_inflight;
+    wire [2:0] needs_data,deadline_fault,overrun_fault;
     wire protocol_fault,clock_permit,core_step,clk_core;
     logic host_valid=0,host_write=0;
     logic [20:0] host_addr=0;
@@ -54,9 +53,10 @@ module tb_retro_snes;
     wire [8:0] x,y;
     wire signed [15:0] audio_l,audio_r;
     wire audio_ready;
-    snes_system #(.InitCycles(20),.RefreshCycles(RefreshInterval)) dut (.*);
+    snes_system #(.InitCycles(20),.RefreshInterval(RefreshInterval)) dut (.*);
     always @(posedge clk_service) if (measuring)
-        assert (deadline_fault==0) else $fatal(1,"read deadline missed %b",deadline_fault);
+        assert (deadline_fault==0 && !refresh_forced)
+            else $fatal(1,"read deadline missed %b / refresh forced %b",deadline_fault,refresh_forced);
     wire sd_clk;
     tri [31:0] sd_dq;
     retro_sdram_board #(.SdDelay(SdDelay), .DqInDelay(DqInDelay)) board (
@@ -119,13 +119,13 @@ module tb_retro_snes;
     // Independent consumption deadline monitor: a read sampled after a core edge
     // must be answered before the fourth following core edge (no clock holds).
     // Observe completion strobes, not the guard's own decision, and never drive RTL.
-    bit [3:0] proof_pending='0;
+    bit [2:0] proof_pending='0;
     int unsigned proof_launched[4];
     int unsigned proof_core_edges=0;
     always @(posedge clk_service) begin
         if (reset || !measuring) proof_pending='0;
         else begin
-            for (int p=0;p<4;p++) begin
+            for (int p=0;p<3;p++) begin
                 if (dut.memory.valid_read[p]) proof_pending[p]=0;
                 if (core_step && proof_pending[p])
                     assert (proof_core_edges-proof_launched[p]<3)
@@ -446,11 +446,6 @@ module tb_retro_snes;
             $display("PASS startup full-master settle, all three launch phases; %s",
                      "reset-clock handover");
             $finish;
-        end
-        // Force extra refresh at different free-master phases in addition to
-        // periodic collisions, without moving the console's own ENABLE/reset.
-        for (int i=0;i<32;i++) begin
-            repeat (37+i%4) tick(); refresh_now=1; tick(); refresh_now=0;
         end
         while (frames<2) tick();
         assert (seen_wram && seen_save && seen_aram && seen_mailbox && &dma_seen)

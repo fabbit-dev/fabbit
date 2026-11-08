@@ -3,7 +3,7 @@
 // Complete clock-stretched SNES -> SDRAM constituent for a static bitstream.
 // No PLL/physical pins/HDMI. Related service/master clocks externally provided.
 // Asset stream/pads/config synchronous to free_master; stop requests run/
-// console_reset, reset, host stream and refresh_now synchronous to clk_service
+// console_reset, reset and host stream synchronous to clk_service
 // (related free-master launches also allowed). Stable config until stop_ack.
 // Assets loader uses free_master; console asset backend uses clk_core. These
 // clocks are identical while stopped/programming; run MUST remain zero until
@@ -25,7 +25,7 @@
 // until memory initialization and the stop acknowledgement become true again.
 module snes_system #(
     parameter int unsigned InitCycles = 13000,
-    parameter int unsigned RefreshCycles = 900
+    parameter int unsigned RefreshInterval = 1006   // 15.6 us at 64.43 MHz
 ) (
     input wire clk_service, free_master, free_master_ce,
     input wire reset, console_reset, run,
@@ -52,10 +52,9 @@ module snes_system #(
     output wire active,
     output wire stop_ack,
     output wire [4:0] unsupported,
-    input wire refresh_now,
-    output wire memory_initialized, memory_drained, memory_hold, refresh_busy,
-    output wire [4:0] request_inflight,
-    output wire [3:0] needs_data, deadline_fault, overrun_fault,
+    output wire memory_initialized, memory_drained, memory_hold, refresh_busy, refresh_forced,
+    output wire [3:0] request_inflight,
+    output wire [2:0] needs_data, deadline_fault, overrun_fault,
     output wire protocol_fault,
     output wire clock_permit, core_step, clk_core,
     input wire host_valid, host_write,
@@ -177,17 +176,16 @@ module snes_system #(
     );
     snes_aram aram (.clk(clk_core), .addr(aram_addr), .data(aram_data), .rd(aram_rd),
         .wr(aram_wr), .q(aram_q));
-    snes_memory #(.InitCycles(InitCycles), .RefreshCycles(RefreshCycles)) memory (
+    snes_memory #(.InitCycles(InitCycles), .RefreshInterval(RefreshInterval)) memory (
         .clk(clk_service), .reset(reset || memory_reset), .master_ce(core_step),
         .free_ce(free_master_ce), .max_latency,
-        .enable(active), .refresh_now, .cpu_refresh,
+        .enable(active), .cpu_refresh,
         .initialized(memory_initialized), .drained(memory_drained),
         .core_hold(memory_hold), .request_inflight, .needs_data,
-        .refresh_busy, .deadline_fault, .overrun_fault, .protocol_fault,
+        .refresh_busy, .refresh_forced, .deadline_fault, .overrun_fault, .protocol_fault,
         .wram_addr, .wram_data, .wram_rd, .wram_wr, .wram_q,
         .wram_valid(), .wram_posted(), .wram_committed(),
-        .aram_addr, .aram_data, .aram_rd(1'b0), .aram_wr(1'b0), .aram_q(),
-        .aram_valid(), .aram_posted(), .aram_committed(), .rom_addr, .rom_rd, .rom_q,
+        .rom_addr, .rom_rd, .rom_q,
         .rom_valid(), .save_addr, .save_data, .save_rd, .save_wr, .save_q,
         .save_valid(), .save_posted(), .save_committed(),
         .host_valid(host_valid && stop_ack), .host_write, .host_addr, .host_wdata,

@@ -33,9 +33,9 @@ module tb_retro_snes_game;
     wire [2:0] asset_error;
     wire ipl_ready, coeff_ready, active, stop_ack;
     wire [4:0] unsupported;
-    wire memory_initialized, memory_drained, memory_hold, refresh_busy;
-    wire [4:0] request_inflight;
-    wire [3:0] needs_data, deadline_fault, overrun_fault, max_latency;
+    wire memory_initialized, memory_drained, memory_hold, refresh_busy, refresh_forced;
+    wire [3:0] request_inflight, max_latency;
+    wire [2:0] needs_data, deadline_fault, overrun_fault;
     wire protocol_fault, clock_permit, core_step, clk_core;
     logic host_valid = 0, host_write = 0;
     logic [20:0] host_addr = 0;
@@ -58,8 +58,8 @@ module tb_retro_snes_game;
         .cfg_pal(1'b0), .cfg_rom_mask, .cfg_save_enable, .cfg_save_mask, .pad1,
         .pad2(12'd0), .asset_start, .asset_channel, .asset_valid, .asset_ready,
         .asset_addr, .asset_data, .asset_last, .asset_busy, .asset_done, .asset_error,
-        .ipl_ready, .coeff_ready, .active, .stop_ack, .unsupported, .refresh_now(1'b0),
-        .memory_initialized, .memory_drained, .memory_hold, .refresh_busy,
+        .ipl_ready, .coeff_ready, .active, .stop_ack, .unsupported,
+        .memory_initialized, .memory_drained, .memory_hold, .refresh_busy, .refresh_forced,
         .request_inflight, .needs_data, .deadline_fault, .overrun_fault, .protocol_fault,
         .clock_permit, .core_step, .clk_core, .host_valid, .host_write, .host_addr,
         .host_wdata, .host_ready, .host_done, .host_rdata, .sd_a, .sd_ba, .sd_ras_n,
@@ -100,6 +100,7 @@ module tb_retro_snes_game;
     end
     always @(posedge service) if (run && active)
         assert (overrun_fault == 0 && !protocol_fault && (deadline_fault == 0 || nodl) &&
+                !refresh_forced &&
                 !memory_hold)
             else $fatal(1, "memory fault o=%b p=%b d=%b", overrun_fault,
                         protocol_fault, deadline_fault);
@@ -116,7 +117,7 @@ module tb_retro_snes_game;
         // Burst and interval limits are asserted by the board monitor; here the average:
         // 4096 per 64 ms (one per 1006 clocks).
         assert (mism == 0 && ref_n >= frame + 1 && master_edges == core_edges &&
-                board.refreshes >= board.refreshes_needed())
+                board.refresh_rate_ok())
             else $fatal(1, "FAIL");
         $display("PASS full-speed SNES game run, no clock holds");
         $finish;
