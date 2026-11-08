@@ -2,23 +2,26 @@
 // Real product top exercised through QSPI CSR/stream. Primitive clock models
 // are ideal; no board timing claim. Normal QSPI tests only observe internals.
 // +audio_only uses explicit console-boundary fixtures, not replacement CDC logic.
-// Compiled with RETRO_NO_NES+RETRO_NO_SNES the same bench checks the MD-only
-// image: caps, absent-system rejection, MD load/run/audio and direct SDRAM.
-// With RETRO_NO_NES+RETRO_NO_MD it checks the shipped SNES-only image: pad PHY with
-// IDELAY, 3:1 clocks and the SDRAM behind board delays (retro_sdram_board timing).
-`ifdef RETRO_NO_NES
-`ifdef RETRO_NO_MD
-`ifdef RETRO_NO_SNES
-`error "tb_retro_top: no console"
+// Three images (retro_top allows SNES only alone):
+//  RETRO_NO_SNES: combined NES+MD image, SNES BEGIN rejected.
+//  RETRO_NO_NES+RETRO_NO_SNES: MD-only image, direct SDRAM.
+//  RETRO_NO_NES+RETRO_NO_MD: SNES-only image, pad PHY with IDELAY, 3:1 clocks and
+//  the SDRAM behind board delays (retro_sdram_board timing).
+`ifndef RETRO_NO_SNES
+`ifndef RETRO_NO_NES
+`error "tb_retro_top: SNES is built only alone (RETRO_NO_NES+RETRO_NO_MD)"
+`endif
+`ifndef RETRO_NO_MD
+`error "tb_retro_top: SNES is built only alone (RETRO_NO_NES+RETRO_NO_MD)"
 `endif
 `define RETRO_TB_SNES_ONLY
 `define RETRO_TB_ONE
-`elsif RETRO_NO_SNES
+`elsif RETRO_NO_NES
+`ifdef RETRO_NO_MD
+`error "tb_retro_top: no console"
+`endif
 `define RETRO_TB_MD_ONLY
 `define RETRO_TB_ONE
-`else
-`error "tb_retro_top: MD+SNES image is not covered by this bench"
-`endif
 `elsif RETRO_NO_MD
 `error "tb_retro_top: NES images without MD are not covered by this bench"
 `endif
@@ -199,8 +202,7 @@ module tb_retro_top;
         default: ;
       endcase
       // SNES serial order B,Y,Select,Start,Up,Down,Left,Right,A,X,L,R.
-      assert(dut.md.pad1==first && dut.md.pad2==second &&
-             dut.snes.pad1==snes_order(first) && dut.snes.pad2==snes_order(second) &&
+      assert(dut.md.pad1==first && dut.md.pad2==second && dut.pad_snes==0 &&
              dut.njoy==nes_buttons)
         else $fatal(1,"QSPI pad bit %0d mapping",bit_index);
 `elsif RETRO_TB_MD_ONLY
@@ -220,14 +222,13 @@ module tb_retro_top;
     assert(dut.pad_bus==32'h0000000f) else $fatal(1,"partial PAD changed buttons");
     send_pad(0);
 `ifndef RETRO_TB_ONE
-    assert(dut.md.pad1==0 && dut.md.pad2==0 && dut.snes.pad1==0 &&
-           dut.snes.pad2==0 && dut.njoy==0) else $fatal(1,"PAD release lost");
+    assert(dut.md.pad1==0 && dut.md.pad2==0 && dut.njoy==0) else $fatal(1,"PAD release lost");
 `elsif RETRO_TB_MD_ONLY
     assert(dut.md.pad1==0 && dut.md.pad2==0) else $fatal(1,"PAD release lost");
 `else
     assert(dut.snes.pad1==0 && dut.snes.pad2==0) else $fatal(1,"PAD release lost");
 `endif
-    $display("ok QSPI PAD all32 bits, both MD/SNES ports, NES filter, partial frame, release");
+    $display("ok QSPI PAD all32 bits, both ports, NES filter, partial frame, release");
   endtask
   task automatic check_audio(input int system_id);
     int samples,packets;
@@ -660,13 +661,22 @@ module tb_retro_top;
     wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);#300us;
     assert(snes_writes>previous_writes) else $fatal(1,"SNES reload did not rerun CPU");
     command(32'h52540004);wait_status(32'h3b,0);
+    inject_interlace=1;
+    command(32'h52540001);wait_status(32'h2c,8);stream_snes_rom();
+    wait_status(32'h6c,32'h40);command(32'h52540002);
+    wait_status(32'h26,4);wait_status(32'h30,0);
+    assert(saw_interlace) else $fatal(1,"SETINI interlace fault not observed");
+    command(32'h52540004);wait_status(32'h3b,0);
+    read_csr(10,value);assert(value==3) else $fatal(1,"runtime fault lost asset coverage");
+    inject_interlace=0;
+    $display("ok SNES SETINI interlace -> backend ERROR -> safe stop -> ABORT, assets kept");
     assert(model.errors==0) else $fatal(1,"physical model errors %0d",model.errors);
     $display("ok SNES-only retro_top: pad PHY+IDELAY, board delays, load/COMMIT/RESET/reload");
     $finish;
 `endif
 `ifndef RETRO_TB_ONE
     read_csr(0,value);assert(value==32'h46524554) else $fatal(1,"FRET %h",value);
-    read_csr(16,value);assert(value==7) else $fatal(1,"combined CAPS %h",value);
+    read_csr(16,value);assert(value==3) else $fatal(1,"combined CAPS %h",value);
     check_pads();
     check_load_errors();
     check_config_snapshot();
@@ -697,8 +707,7 @@ module tb_retro_top;
       $display("ok strict NES QSPI load/COMMIT/RESET/ABORT/reload fresh CPU writes, errors=0");
       $finish;
     end
-    for(int sys=1;sys<=3;sys++) begin
-      if(sys==3) break; // SNES assets/CPU fixture is separate; no fake IPL boot.
+    for(int sys=1;sys<=2;sys++) begin
       command(32'h52540004);
       write_csr(5,32'(sys));write_csr(6,32'd16);write_csr(8,32'd16);
       command(32'h52540001);
@@ -725,37 +734,10 @@ module tb_retro_top;
     assert(model.mem[21'h100000][15:0]==16'h5aa5)
         else $fatal(1,"real MD CPU through SDRAM marker absent %h",model.mem[21'h100000]);
     $display("ok real MD canonical ROM through QSPI COMMIT CPU word write physical SDRAM");
-    program_assets();
-    read_csr(10,value);assert(value==3) else $fatal(1,"asset atoms coverage %h",value);
-    write_csr(5,3);write_csr(6,32768);write_csr(8,32768);write_csr(9,0);write_csr(7,0);
-    command(32'h52540001);wait_status(32'h2c,8);
-    read_csr(10,value);assert(value==3) else $fatal(1,"BEGIN lost assets %h",value);
-    stream_snes_rom();
-    wait_status(32'h6c,32'h40);command(32'h52540002);
-    wait_status(32'h26,2);
-    #500us;
-    assert(dut.snes_active) else $fatal(1,"SNES not actually active");
-    check_audio(3);
-    assert(snes_writes>0) else $fatal(1,"SNES initial CPU marker write absent");
-    previous_writes=snes_writes;
-    command(32'h52540008);wait_status(32'h26,2);
-    #200us;
-    assert(dut.snes_active) else $fatal(1,"running CONSOLE_RESET failed to resume");
-    assert(snes_writes>previous_writes) else $fatal(1,"SNES RESET did not rerun CPU");
-    check_locked_assets(3);
-    command(32'h52540004);wait_status(32'h3b,0);
-    assert(model.mem[21'h100000]==32'ha5a5a5a5)
-        else $fatal(1,"real SNES CPU through SDRAM marker absent");
-    read_csr(10,value);assert(value==3) else $fatal(1,"stop lost assets");
-    $display("ok real SNES authored assets+ROM through QSPI COMMIT CPU marker physical SDRAM");
-    inject_interlace=1;
-    command(32'h52540001);wait_status(32'h2c,8);stream_snes_rom();
-    wait_status(32'h6c,32'h40);command(32'h52540002);
-    wait_status(32'h26,4);wait_status(32'h30,0);
-    assert(saw_interlace) else $fatal(1,"SETINI interlace fault not observed");
-    command(32'h52540004);wait_status(32'h3b,0);
-    read_csr(10,value);assert(value==3) else $fatal(1,"runtime fault lost asset coverage");
-    $display("ok real SNES SETINI interlace -> selected backend ERROR -> safe stop -> ABORT");
+    // SNES lives in its own image: BEGIN fails ErrConfig, ABORT recovers.
+    write_csr(5,3);write_csr(6,32768);write_csr(8,32768);
+    command(32'h52540001);expect_load_error(2);
+    $display("ok combined NES+MD image rejects SNES BEGIN (ErrConfig)");
     write_csr(5,1);write_csr(6,16400);write_csr(8,16384);
     command(32'h52540001);wait_status(32'h2c,8);stream_nes_rom();
     wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);
@@ -777,7 +759,7 @@ module tb_retro_top;
     wait_status(32'h6c,32'h40);command(32'h52540002);wait_status(32'h26,2);#150us;
     assert(md_writes>previous_writes) else $fatal(1,"MD hot return did not rerun CPU");
     command(32'h52540004);wait_status(32'h3b,0);
-    $display("ok MD RESET and hot return after SNES/NES produced fresh physical CPU writes");
+    $display("ok MD RESET and hot return after NES produced fresh physical CPU writes");
     assert(model.errors==0) else $fatal(1,"physical model errors %d",model.errors);
     $display("ok real retro_top QSPI FRET BEGIN READY stream ABORT physical NES/MD handover");
     $finish;

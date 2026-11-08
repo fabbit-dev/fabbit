@@ -4,7 +4,8 @@
 set root [file normalize [file join [file dirname [info script]] ../..]]
 set gate [file join $root gateware]
 set retro_image [expr {[llength $argv] > 1 ? [lindex $argv 1] : "all"}]
-array set retro_image_systems {all 7 nes 1 md 2 snes 4}
+# all: the combined NES+MD image; SNES exists only as its own image (retro_top).
+array set retro_image_systems {all 3 nes 1 md 2 snes 4}
 if {![info exists retro_image_systems($retro_image)]} {
     error "Unknown retro image '$retro_image': expected all, nes, md or snes"
 }

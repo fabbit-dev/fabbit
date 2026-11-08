@@ -58,6 +58,12 @@ module retro_top #(
   if (Systems==0) begin : g_no_console
     $error("retro_top: at least one console must remain");
   end
+  // SNES needs its DQ registers in the pads on its own 3:1 service clock (write data
+  // held through WRITE, read captured at READ+3). Only the SNES-only image has that;
+  // a shared fabric DQ path cannot carry it, so SNES never shares an image.
+  if (Systems[2] && !Single) begin : g_snes_alone
+    $error("retro_top: SNES is built only as the SNES-only image (RETRO_NO_NES+RETRO_NO_MD)");
+  end
   wire bus_clk,bus_rst,csr_we,st_valid,pad_stb;
   wire [7:0] csr_waddr,csr_raddr,st_chan,st_data;
   wire [31:0] csr_wdata,pad_bus,csr_read;
@@ -500,8 +506,7 @@ module retro_top #(
     assign dq_in=0;
     assign md_dq_in=0;
   end else begin : g_fabric_dq
-    // Fabric DQ (multi-console image): SNES write data is not held after WRITE
-    // here; only the per-console SNES image (pad PHY) is a supported SNES target.
+    // Fabric DQ (NES+MD image): owner-gated through the fabric.
     retro_sdram_io physical_io (.dq_in,.dq_out,.dq_oe(dq_drive),.sd_dq(sdram_dq));
     assign md_dq_in=dq_in;
     assign snes_dq_in=dq_in;

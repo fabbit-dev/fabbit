@@ -77,7 +77,7 @@ static unsigned active_caps, installed;  // installed: bit per system has retro-
 static bool nes_installed, retro_installed = true, nes_active;
 static unsigned loaded_caps(const char *file)
 {
-    if (!strcmp(file, "retro")) return 7;
+    if (!strcmp(file, "retro")) return 3;  // combined NES+MD; SNES only in retro-snes
     if (!strcmp(file, "retro-nes")) return 1u << (ROM_NES - 1);
     if (!strcmp(file, "retro-md")) return 1u << (ROM_MD - 1);
     if (!strcmp(file, "retro-snes")) return 1u << (ROM_SNES - 1);
@@ -316,6 +316,12 @@ static void mixed_catalog(void)
         if (games[i].system == ROM_MD || games[i].system == ROM_SNES) assert(games[i].rom_bytes == 65536);
     }
     assert(systems == ((1 << ROM_NES) | (1 << ROM_MD) | (1 << ROM_SNES)));
+    // SNES has no combined fallback: without retro-snes.fbp the run fails before
+    // any pm_load, stop or reboot, even with the combined image installed.
+    installed = 0;
+    reset_calls(true, NULL);
+    assert(!run_locked(&game, progress, &calls, err, sizeof err) && strstr(err, "retro-snes"));
+    no_effects();
     char sidecar[100];
     assert(rom_sidecar("/data/roms/valid.gen", ".fbi", sidecar, sizeof sidecar));
     assert(!strcmp(sidecar, "/data/roms/valid.fbi"));
@@ -395,8 +401,8 @@ static void per_console_images(const lc_game_t *nes_game)
     assert(run_locked(nes_game, progress, &calls, err, sizeof err));
     assert(calls.stop == 1 && calls.reboot == 1 && calls.pm == 1 && calls.backend == 1);
     assert(active_caps == 1);
-    // Combined image remains valid for every console.
-    active_caps = 7;
+    // Combined image remains valid for NES and MD.
+    active_caps = 3;
     reset_calls(true, nes_game->path);
     assert(run_locked(nes_game, progress, &calls, err, sizeof err));
     assert(!calls.pm && !calls.stop && !calls.reboot && calls.backend == 1);
@@ -406,7 +412,7 @@ static void per_console_images(const lc_game_t *nes_game)
     expected_core = "retro";
     reset_calls(true, nes_game->path);
     assert(run_locked(nes_game, progress, &calls, err, sizeof err));
-    assert(calls.pm == 1 && active_caps == 7);
+    assert(calls.pm == 1 && active_caps == 3);
     active_caps = 0;
 }
 
@@ -442,7 +448,7 @@ static void standalone_nes(const lc_game_t *nes_game)
     retro_installed = true;
     reset_calls(true, nes_game->path);
     assert(run_locked(nes_game, progress, &calls, err, sizeof err));
-    assert(calls.pm == 1 && active_caps == 7);
+    assert(calls.pm == 1 && active_caps == 3);
     active_caps = 0;
     puts("ok standalone NES: nes.fbp without RETRO image, MD image left via golden");
 }
@@ -507,7 +513,7 @@ int main(void)
     // A bare console name must append .nes before the same preflight.
     rejected_entries("truncated");
     accepted_menu(&games[2]);
-    active_caps = 7;
+    active_caps = 3;
     reset_calls(true, games[2].path);
     char err[128] = "";
     assert(p_run(&games[2], progress, &calls, err, sizeof err));

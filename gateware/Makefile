@@ -159,9 +159,11 @@ sim_retro_integration_units: | build
 	  sim/tb_retro_session.sv > build/tb_retro_session.log 2>&1
 	build/tb_retro_session/Vtb_retro_session
 
+# Combined NES+MD image (SNES is built only as retro-snes, see retro_top).
 sim_retro_top: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps --no-assert-case \
 	  -Wno-fatal -Wno-BLKANDNBLK -j 4 --top-module tb_retro_top \
+	  +define+RETRO_NO_SNES \
 	  -Mdir $(CURDIR)/build/tb_retro_top -Iprofiles/retro/md/rtl/vdp \
 	  -Iprofiles/retro/snes/rtl -Iprofiles/retro/snes/rtl/spc700 \
 	  $(RETRO_TOP_SRC) sim/xilinx_stubs.sv sim/retro_clock_models.sv sim/sdram_model.sv sim/tb_retro_top.sv > build/tb_retro_top.log 2>&1
