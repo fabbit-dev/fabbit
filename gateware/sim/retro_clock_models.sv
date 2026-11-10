@@ -79,3 +79,25 @@ module MMCME2_BASE #(
   assign {CLKOUT2,CLKOUT2B,CLKOUT3,CLKOUT3B,CLKOUT4,CLKOUT5,CLKOUT6}=0;
   initial begin #1us;LOCKED=1;end
 endmodule
+// IDELAYE2: transport delay of the tap count, tap = 1 / (64 * REFCLK_FREQUENCY) (DS181).
+// FIXED uses IDELAY_VALUE; VAR_LOAD loads CNTVALUEIN on LD and steps on CE+INC at C.
+// No intrinsic insertion delay: the board model's DqInDelay carries the fixed part.
+module IDELAYE2 #(
+    parameter string IDELAY_TYPE="FIXED",parameter int IDELAY_VALUE=0,
+    parameter string DELAY_SRC="IDATAIN",parameter string HIGH_PERFORMANCE_MODE="TRUE",
+    parameter string SIGNAL_PATTERN="DATA",parameter real REFCLK_FREQUENCY=200.0,
+    parameter string CINVCTRL_SEL="FALSE",parameter string PIPE_SEL="FALSE"
+) (input wire IDATAIN,C,CE,INC,LD,LDPIPEEN,REGRST,CINVCTRL,DATAIN,
+   input wire [4:0] CNTVALUEIN,output logic DATAOUT=0,output logic [4:0] CNTVALUEOUT=5'(IDELAY_VALUE));
+  localparam realtime Tap=1us/(64.0*REFCLK_FREQUENCY);
+  initial assert(IDELAY_TYPE=="FIXED" || IDELAY_TYPE=="VAR_LOAD")
+    else $fatal(1,"IDELAYE2 model: FIXED or VAR_LOAD only");
+  always @(posedge C) if(IDELAY_TYPE=="VAR_LOAD") begin
+    if(LD) CNTVALUEOUT<=CNTVALUEIN;
+    else if(CE) CNTVALUEOUT<=INC ? CNTVALUEOUT+1'b1 : CNTVALUEOUT-1'b1;
+  end
+  always @(IDATAIN) DATAOUT<=#(CNTVALUEOUT*Tap) IDATAIN;
+endmodule
+module IDELAYCTRL(input wire REFCLK,RST,output logic RDY);
+  always @(posedge REFCLK or posedge RST) RDY<=!RST;
+endmodule

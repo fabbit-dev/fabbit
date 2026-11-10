@@ -33,8 +33,9 @@ static const char *TAG = "menu";
 
 #define ROMS "/data/roms"
 // RETRO profile ID 4: per-console images /data/retro-nes.fbp, retro-md.fbp,
-// retro-snes.fbp; the combined /data/retro.fbp is the fallback. Without either, NES
-// games run on the standalone NES profile /data/nes.fbp.
+// retro-snes.fbp; the combined NES+MD /data/retro.fbp is the fallback for NES and MD.
+// SNES runs only from retro-snes.fbp. Without a RETRO image, NES games run on the
+// standalone NES profile /data/nes.fbp.
 #define CORE "retro"
 #define NES_CORE "nes"
 #define POLL_MS 300
@@ -270,14 +271,15 @@ static void count_run(const lc_game_t *g, const rom_info_t *info)
     nvs_put("runs_v2", s_runs, sizeof s_runs);
 }
 
-// Per-console image if it is installed, else the combined core.
+// Per-console image if it is installed, else the combined NES+MD core. SNES has no
+// combined fallback: NULL when no image can run the console.
 static const char *core_for(rom_system_t system)
 {
     static const char *const image[] = {[ROM_NES] = CORE "-nes", [ROM_MD] = CORE "-md",
                                         [ROM_SNES] = CORE "-snes"};
     if (system > ROM_NONE && system <= ROM_SNES && pm_available(image[system]))
         return image[system];
-    return CORE;
+    return system == ROM_SNES ? NULL : CORE;
 }
 
 // NES game with no RETRO image installed: the standalone NES profile.
@@ -329,12 +331,16 @@ static bool run_locked(const lc_game_t *g, lc_progress_cb cb, void *ctx, char *e
     // A running image that has this console needs no IPROG. Another image is
     // drained and left through golden before the right one is loaded.
     if (!retro_supports(info.system)) {
+        const char *core = core_for(info.system);
+        if (!core) {
+            snprintf(err, n, "нет образа ПЛИС для этой консоли (retro-snes.fbp)");
+            return false;  // отказ до остановки текущего образа
+        }
         if (retro_present()) {
             e = retro_stop();
             if (e == ESP_OK) e = fl_reboot_golden();
             if (e == ESP_OK && !wait_golden(3000)) e = ESP_ERR_TIMEOUT;
         }
-        const char *core = core_for(info.system);
         ESP_LOGI(TAG, "%s: ядро %s", g->name, core);
         if (e == ESP_OK) e = pm_load_cb(core, false, pm_stage, &r);
         // The loaded image must really contain the console: never send its ROM blindly.

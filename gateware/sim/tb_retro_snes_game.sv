@@ -7,10 +7,8 @@
 // No ROM or SPC asset is bundled: the user supplies them as hex, one byte (IPL,
 // ROM) or one 12-bit value (gauss) per line: +rom= +rom_bytes= +ipl= +gauss=,
 // optional +hirom=1 +frames=N +start=F (Start held 3 frames) +ref=<file>.
-// Board model: commands/DQ out reach the chip at the edge, SDRAM clock = MMCM phase
-// output +SdDelay,
-// read data back into the FPGA pad after +DqInDelay (flight + I/O buffers).
-// Checks: SDRAM protocol (model), refresh interval, no deadline miss, no overrun,
+// Board, chip and SDRAM protocol monitor: retro_sdram_board.
+// Checks: SDRAM protocol, refresh interval, no deadline miss, no overrun,
 // frame-exact video/audio against the reference, master edges per frame = free.
 module tb_retro_snes_game;
     parameter realtime SdDelay = 0.5ns;   // board flight of the forwarded clock
@@ -35,9 +33,9 @@ module tb_retro_snes_game;
     wire [2:0] asset_error;
     wire ipl_ready, coeff_ready, active, stop_ack;
     wire [4:0] unsupported;
-    wire memory_initialized, memory_drained, memory_hold, refresh_busy;
-    wire [4:0] request_inflight;
-    wire [3:0] needs_data, deadline_fault, overrun_fault, max_latency;
+    wire memory_initialized, memory_drained, memory_hold, refresh_busy, refresh_forced;
+    wire [3:0] request_inflight, max_latency;
+    wire [2:0] needs_data, deadline_fault, overrun_fault;
     wire protocol_fault, clock_permit, core_step, clk_core;
     logic host_valid = 0, host_write = 0;
     logic [20:0] host_addr = 0;
@@ -48,7 +46,7 @@ module tb_retro_snes_game;
     wire [1:0] sd_ba;
     wire sd_ras_n, sd_cas_n, sd_we_n, sd_cs_n, sd_cke, sd_dq_oe, sd_dq_oe_next;
     wire [31:0] sd_dq_out;
-    logic [31:0] sd_dq_in;
+    wire [31:0] sd_dq_in;
     wire [14:0] rgb;
     wire pixel_ce, dotclk, hs, vs, hde, vde, highres, field, interlace, v224;
     wire [8:0] x, y;
@@ -60,8 +58,8 @@ module tb_retro_snes_game;
         .cfg_pal(1'b0), .cfg_rom_mask, .cfg_save_enable, .cfg_save_mask, .pad1,
         .pad2(12'd0), .asset_start, .asset_channel, .asset_valid, .asset_ready,
         .asset_addr, .asset_data, .asset_last, .asset_busy, .asset_done, .asset_error,
-        .ipl_ready, .coeff_ready, .active, .stop_ack, .unsupported, .refresh_now(1'b0),
-        .memory_initialized, .memory_drained, .memory_hold, .refresh_busy,
+        .ipl_ready, .coeff_ready, .active, .stop_ack, .unsupported,
+        .memory_initialized, .memory_drained, .memory_hold, .refresh_busy, .refresh_forced,
         .request_inflight, .needs_data, .deadline_fault, .overrun_fault, .protocol_fault,
         .clock_permit, .core_step, .clk_core, .host_valid, .host_write, .host_addr,
         .host_wdata, .host_ready, .host_done, .host_rdata, .sd_a, .sd_ba, .sd_ras_n,
@@ -69,72 +67,12 @@ module tb_retro_snes_game;
         .sd_dq_oe, .max_latency, .rgb, .pixel_ce, .dotclk, .hs, .vs, .hde, .vde, .highres,
         .field, .interlace, .v224, .x, .y, .audio_l, .audio_r, .audio_ready);
 
-    // Pad registers (retro_sdram_phy): ODDR data + tristate, IDDR Q1 capture.
-    logic [31:0] pad_out = 0, pad_in = 0;
-    logic pad_t = 1;
-    always @(posedge service) begin
-        pad_out <= sd_dq_out;
-        pad_t <= !sd_dq_oe_next;
-        sd_dq_in <= pad_in;
-    end
-    tri [31:0] chip_dq;
-    assign chip_dq = pad_t ? {32{1'bz}} : pad_out;
-    // Transport delay (every edge kept): chip data is valid only tOH..tSAC wide.
-    // Sample the chip side every 0.5 ns into a delay line (transport delay model).
-    localparam int Taps = 64;
-    logic [31:0] line [Taps];
-    initial begin
-        foreach (line[i]) line[i] = 0;
-        forever begin
-            #0.5ns;
-            for (int i = Taps-1; i > 0; i--) line[i] = line[i-1];
-            line[0] = chip_dq;
-            pad_in = line[int'(DqInDelay / 0.5ns) - 1];
-        end
-    end
     wire sd_clk;
-    assign #(SdDelay) sd_clk = memory_clock;
-    sdram_model #(.TAc(8ns), .TOh(2ns), .TRcd(21ns)) model (
-        .clk(sd_clk), .cke(sd_cke), .cs_n(sd_cs_n), .ras_n(sd_ras_n), .cas_n(sd_cas_n),
-        .we_n(sd_we_n), .ba(sd_ba), .a(sd_a), .dqm(4'b0000), .dq(chip_dq));
-
-    // Independent protocol monitor at chip clock (cycles of 15.52 ns).
-    int cyc = 0, last_ref = -1000, last_act [4] = '{-1000, -1000, -1000, -1000};
-    int last_col [4] = '{-1000, -1000, -1000, -1000}, last_wr [4], last_any_act = -1000;
-    bit ap [4] = '{0, 0, 0, 0};
-    int max_ref_gap = 0, refreshes = 0, first_ref = 0, burst = 0, max_burst = 0;
-    always @(posedge sd_clk) begin
-        cyc++;
-        if (!sd_cs_n) case ({sd_ras_n, sd_cas_n, sd_we_n})
-            3'b011: begin
-                assert (cyc - last_ref >= 5 && cyc - last_any_act >= 1 &&
-                        cyc - last_act[sd_ba] >= 5 &&
-                        cyc - last_col[sd_ba] >= (ap[sd_ba] ? 4 : 0))
-                    else $fatal(1, "ACT timing bank %0d", sd_ba);
-                last_act[sd_ba] = cyc; last_any_act = cyc;
-            end
-            3'b101, 3'b100: begin
-                assert (cyc - last_act[sd_ba] >= 2 && sd_a[10]) else $fatal(1, "column timing");
-                // tRAS 42 ns = 3 clk before the internal precharge (BL1 AP: +1 read, +2 write)
-                assert (cyc - last_act[sd_ba] + (sd_we_n ? 1 : 2) >= 3) else $fatal(1, "tRAS");
-                if (!sd_we_n) assert (chip_dq !== 'z) else $fatal(1, "write without DQ");
-                last_col[sd_ba] = cyc; ap[sd_ba] = 1;
-                if (!sd_we_n) last_col[sd_ba] = cyc + 1;   // tRDL 2 clk before tRP
-            end
-            3'b001: begin
-                for (int b = 0; b < 4; b++)
-                    assert (cyc - last_col[b] >= 4) else $fatal(1, "REF while bank busy");
-                assert (cyc - last_ref >= 5) else $fatal(1, "tRFC");
-                if (memory_initialized && last_ref > 0 && cyc - last_ref > max_ref_gap)
-                    max_ref_gap = cyc - last_ref;
-                burst = cyc - last_ref <= 6 ? burst + 1 : 1;
-                if (burst > max_burst) max_burst = burst;
-                if (first_ref == 0 && memory_initialized) first_ref = cyc;
-                last_ref = cyc; refreshes++;
-            end
-            default: ;
-        endcase
-    end
+    tri [31:0] chip_dq;
+    retro_sdram_board #(.SdDelay(SdDelay), .DqInDelay(DqInDelay)) board (
+        .clk_service(service), .memory_clock, .initialized(memory_initialized),
+        .sd_a, .sd_ba, .sd_ras_n, .sd_cas_n, .sd_we_n, .sd_cs_n, .sd_cke, .sd_dq_out,
+        .sd_dq_oe_next, .sd_dq_in, .sd_clk, .chip_dq);
 
     // Frame hashes, same as the ideal-memory reference bench.
     logic [31:0] fh = 32'h811c9dc5, ah = 32'h811c9dc5;
@@ -162,24 +100,24 @@ module tb_retro_snes_game;
     end
     always @(posedge service) if (run && active)
         assert (overrun_fault == 0 && !protocol_fault && (deadline_fault == 0 || nodl) &&
-                model.errors == 0 && !memory_hold)
-            else $fatal(1, "memory fault o=%b p=%b d=%b model=%0d", overrun_fault,
-                        protocol_fault, deadline_fault, model.errors);
+                !refresh_forced &&
+                !memory_hold)
+            else $fatal(1, "memory fault o=%b p=%b d=%b", overrun_fault,
+                        protocol_fault, deadline_fault);
 
     int startf, nodl;
     always @(posedge master) pad1 <= (frame >= startf && frame < startf + 3) ? 12'h008 : 12'h000;
     task automatic finish;
         $display("frames %0d mismatches %0d max_latency %0d max_ref_gap %0d refreshes %0d",
-                 frame + 1, mism, max_latency, max_ref_gap, refreshes);
-        $display("max refresh burst %0d, refreshes needed %0d", max_burst,
-                 (cyc - first_ref) / 1006);
+                 frame + 1, mism, max_latency, board.max_ref_gap, board.refreshes);
+        $display("max refresh burst %0d, refreshes needed %0d", board.max_burst,
+                 board.refreshes_needed());
         $display("master edges %0d core edges %0d stalls %0d", master_edges, core_edges,
                  master_edges - core_edges);
-        // ESMT: <= 8 consecutive AUTO REFRESH, any interval <= 8 x 15.6 us = 125 us
-        // (8054 clocks); 4096 per 64 ms on average (one per 1006 clocks).
+        // Burst and interval limits are asserted by the board monitor; here the average:
+        // 4096 per 64 ms (one per 1006 clocks).
         assert (mism == 0 && ref_n >= frame + 1 && master_edges == core_edges &&
-                max_ref_gap <= 8054 && max_burst <= 8 &&
-                real'(refreshes) >= real'(cyc - first_ref) / 1006.0)
+                board.refresh_rate_ok())
             else $fatal(1, "FAIL");
         $display("PASS full-speed SNES game run, no clock holds");
         $finish;
@@ -252,10 +190,10 @@ module tb_retro_snes_game;
         for (int i = 0; i < 256; i += 37)
             host_request(0, i, {rom[4*i+3], rom[4*i+2], rom[4*i+1], rom[4*i]});
         for (int i = 256; i < rom_bytes / 4; i++)
-            model.mem[21'(i)] = {rom[4*i+3], rom[4*i+2], rom[4*i+1], rom[4*i]};
+            board.model.mem[21'(i)] = {rom[4*i+3], rom[4*i+2], rom[4*i+1], rom[4*i]};
         // WRAM/ARAM zero, save FF, as in the reference.
-        for (int i = 0; i < 131072; i++) model.mem[21'h100000 + 21'(i)] = 0;
-        for (int i = 0; i < 2048; i++) model.mem[21'h120000 + 21'(i)] = 32'hffffffff;
+        for (int i = 0; i < 131072; i++) board.model.mem[21'h100000 + 21'(i)] = 0;
+        for (int i = 0; i < 2048; i++) board.model.mem[21'h120000 + 21'(i)] = 32'hffffffff;
         for (int i = 0; i < 65536; i++) dut.aram.ram[i] = 0;
         while (!memory_drained) tick();
         $display("[%0t] run", $time);

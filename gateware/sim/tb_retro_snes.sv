@@ -8,7 +8,7 @@
 module tb_retro_snes;
     parameter realtime SdDelay = 0.5ns;   // board flight of the forwarded clock
     parameter realtime DqInDelay = 5ns;   // board + input buffer + 2 ns IDELAY
-    parameter int unsigned RefreshInterval = 900;
+    parameter int unsigned RefreshInterval = 1006;
     logic source=0;
     always #23.28ns source=!source;
     wire clk_service, free_master, sd_clk_raw, clocks_locked, free_master_ce;
@@ -17,8 +17,6 @@ module tb_retro_snes;
         .master_ce(free_master_ce));
     logic [1:0] phase=0;
     always @(posedge clk_service) phase<=free_master_ce ? 2'd0 : phase==2 ? 2'd0 : phase+1'b1;
-    wire sd_clk;
-    assign #(SdDelay) sd_clk = sd_clk_raw;
     logic reset=1, console_reset=0, run=0, memory_reset=0;
     logic [1:0] cfg_map=0;
     logic [7:0] cfg_chip=0;
@@ -35,10 +33,9 @@ module tb_retro_snes;
     wire [2:0] asset_error;
     wire ipl_ready,coeff_ready,active,stop_ack;
     wire [4:0] unsupported;
-    logic refresh_now=0;
-    wire memory_initialized,memory_drained,memory_hold,refresh_busy;
-    wire [4:0] request_inflight;
-    wire [3:0] needs_data,deadline_fault,overrun_fault;
+    wire memory_initialized,memory_drained,memory_hold,refresh_busy,refresh_forced;
+    wire [3:0] request_inflight;
+    wire [2:0] needs_data,deadline_fault,overrun_fault;
     wire protocol_fault,clock_permit,core_step,clk_core;
     logic host_valid=0,host_write=0;
     logic [20:0] host_addr=0;
@@ -50,39 +47,22 @@ module tb_retro_snes;
     wire sd_ras_n,sd_cas_n,sd_we_n,sd_cs_n,sd_cke,sd_dq_oe,sd_dq_oe_next;
     wire [31:0] sd_dq_out;
     wire [3:0] max_latency;
-    logic [31:0] sd_dq_in=0;
-    // Pad registers (retro_sdram_phy) and board delays, as tb_retro_snes_game.
-    logic [31:0] pad_out=0,pad_in=0;
-    logic pad_t=1;
-    always @(posedge clk_service) begin
-        pad_out<=sd_dq_out; pad_t<=!sd_dq_oe_next; sd_dq_in<=pad_in;
-    end
-    tri [31:0] sd_dq;
-    assign sd_dq=pad_t ? {32{1'bz}} : pad_out;
-    logic [31:0] line [64];
-    initial begin
-        foreach (line[i]) line[i]=0;
-        forever begin
-            #0.5ns;
-            for (int i=63;i>0;i--) line[i]=line[i-1];
-            line[0]=sd_dq;
-            pad_in=line[int'(DqInDelay/0.5ns)-1];
-        end
-    end
+    wire [31:0] sd_dq_in;
     wire [14:0] rgb;
     wire pixel_ce,dotclk,hs,vs,hde,vde,highres,field,interlace,v224;
     wire [8:0] x,y;
     wire signed [15:0] audio_l,audio_r;
     wire audio_ready;
-    snes_system #(.InitCycles(20),.RefreshCycles(RefreshInterval)) dut (.*);
+    snes_system #(.InitCycles(20),.RefreshInterval(RefreshInterval)) dut (.*);
     always @(posedge clk_service) if (measuring)
-        assert (deadline_fault==0) else $fatal(1,"read deadline missed %b",deadline_fault);
-    // Conditional ESMT M12L64322A(2S)-7 CL2 bounds, Rev1.0 pp6-7.
-    // Ideal pins only: no PCB flight/skew or FPGA I/O timing signoff.
-    sdram_model #(.TAc(8ns),.TOh(2ns),.TRcd(21ns)) model (
-        .clk(sd_clk),.cke(sd_cke),.cs_n(sd_cs_n),
-        .ras_n(sd_ras_n),.cas_n(sd_cas_n),.we_n(sd_we_n),
-        .ba(sd_ba),.a(sd_a),.dqm(4'b0000),.dq(sd_dq));
+        assert (deadline_fault==0 && !refresh_forced)
+            else $fatal(1,"read deadline missed %b / refresh forced %b",deadline_fault,refresh_forced);
+    wire sd_clk;
+    tri [31:0] sd_dq;
+    retro_sdram_board #(.SdDelay(SdDelay), .DqInDelay(DqInDelay)) board (
+        .clk_service, .memory_clock(sd_clk_raw), .initialized(memory_initialized), .sd_a,
+        .sd_ba, .sd_ras_n, .sd_cas_n, .sd_we_n, .sd_cs_n, .sd_cke, .sd_dq_out,
+        .sd_dq_oe_next, .sd_dq_in, .sd_clk, .chip_dq(sd_dq));
 
     // Negedge-latched primitive model below is deliberately the only gating
     // logic. Product module instantiates BUFGCE, never a fabric clock AND.
@@ -139,13 +119,13 @@ module tb_retro_snes;
     // Independent consumption deadline monitor: a read sampled after a core edge
     // must be answered before the fourth following core edge (no clock holds).
     // Observe completion strobes, not the guard's own decision, and never drive RTL.
-    bit [3:0] proof_pending='0;
+    bit [2:0] proof_pending='0;
     int unsigned proof_launched[4];
     int unsigned proof_core_edges=0;
     always @(posedge clk_service) begin
         if (reset || !measuring) proof_pending='0;
         else begin
-            for (int p=0;p<4;p++) begin
+            for (int p=0;p<3;p++) begin
                 if (dut.memory.valid_read[p]) proof_pending[p]=0;
                 if (core_step && proof_pending[p])
                     assert (proof_core_edges-proof_launched[p]<3)
@@ -186,21 +166,21 @@ module tb_retro_snes;
                 last_rd[sd_ba]=sd_cycle;
             end
             3'b100: begin
-                assert (sd_cycle-last_act[sd_ba]>=2 && sd_a[10] && !model.dq_e &&
+                assert (sd_cycle-last_act[sd_ba]>=2 && sd_a[10] && !board.model.dq_e &&
                         sd_dq!==32'hzzzzzzzz) else $fatal(1,"WRITE timing/DQ contention");
                 busy_until[sd_ba]=sd_cycle+4;
                 if (busy_until[sd_ba]<last_act[sd_ba]+5) busy_until[sd_ba]=last_act[sd_ba]+5;
                 last_wr[sd_ba]=sd_cycle; last_any_wr=sd_cycle;
                 if (measuring) begin
                     commits++;
-                    case ({sd_ba,model.row[sd_ba],sd_a[7:0]})
+                    case ({sd_ba,board.model.row[sd_ba],sd_a[7:0]})
                         21'h100000: if (sd_dq==32'ha5a5a5a5) seen_wram=1;
                         21'h100001: if (sd_dq==32'h5a5a5a5a) seen_mailbox=1;
                         21'h120010: if (sd_dq==32'hc3c3c3c3) seen_save=1;
                         default: ;
                     endcase
                     for (int i=0;i<4;i++)
-                        if ({sd_ba,model.row[sd_ba],sd_a[7:0]}==21'h100100+21'(i) &&
+                        if ({sd_ba,board.model.row[sd_ba],sd_a[7:0]}==21'h100100+21'(i) &&
                             sd_dq=={4{8'(17*(i+1))}}) dma_seen[i]=1;
                 end
             end
@@ -245,9 +225,9 @@ module tb_retro_snes;
             previous_vs=vs;
         end
         if (measuring) begin
-            assert (overrun_fault==0 && !protocol_fault && model.errors==0)
+            assert (overrun_fault==0 && !protocol_fault && board.model.errors==0)
                 else $fatal(1,"real core memory fault o=%h p=%b model=%0d",
-                            overrun_fault,protocol_fault,model.errors);
+                            overrun_fault,protocol_fault,board.model.errors);
         end
     end
 
@@ -363,7 +343,7 @@ module tb_retro_snes;
         memory_reset=0;
         while (!stop_ack) tick();
         // Only the authored program range, DMA pattern and reset vector are
-        // written via actual host controller transactions, never model.mem poke.
+        // written via actual host controller transactions, never board.model.mem poke.
         for (int i=0;i<(program_bytes.size()+3)/4;i++)
             host_request(1,i,{rom_byte(i*4+3),rom_byte(i*4+2),rom_byte(i*4+1),rom_byte(i*4)});
         host_request(1,64,32'h44332211);
@@ -467,11 +447,6 @@ module tb_retro_snes;
                      "reset-clock handover");
             $finish;
         end
-        // Force extra refresh at different free-master phases in addition to
-        // periodic collisions, without moving the console's own ENABLE/reset.
-        for (int i=0;i<32;i++) begin
-            repeat (37+i%4) tick(); refresh_now=1; tick(); refresh_now=0;
-        end
         while (frames<2) tick();
         assert (seen_wram && seen_save && seen_aram && seen_mailbox && &dma_seen)
             else $fatal(1,"core path W/S/A/mail/DMA=%b%b%b%b/%b",
@@ -507,7 +482,7 @@ module tb_retro_snes;
         // the same CPU/APU/DMA path, not hidden retained state.
         boot();
         while (!(seen_wram && seen_save && seen_aram && seen_mailbox && &dma_seen)) tick();
-        assert (model.errors==0 && overrun_fault==0 && !protocol_fault &&
+        assert (board.model.errors==0 && overrun_fault==0 && !protocol_fault &&
                 core_edges_at_stop>100000) else $fatal(1,"reboot/fault proof");
         $display("PASS actual SNES->clock guard->SDRAM model Lo/Hi CPU/APU/DMA; reset reload");
         $display("3:1 full speed, no memory clock holds; synthetic program, no game claim");

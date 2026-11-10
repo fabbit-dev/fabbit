@@ -58,6 +58,12 @@ module retro_top #(
   if (Systems==0) begin : g_no_console
     $error("retro_top: at least one console must remain");
   end
+  // SNES needs its DQ registers in the pads on its own 3:1 service clock (write data
+  // held through WRITE, read captured at READ+3). Only the SNES-only image has that;
+  // a shared fabric DQ path cannot carry it, so SNES never shares an image.
+  if (Systems[2] && !Single) begin : g_snes_alone
+    $error("retro_top: SNES is built only as the SNES-only image (RETRO_NO_NES+RETRO_NO_MD)");
+  end
   wire bus_clk,bus_rst,csr_we,st_valid,pad_stb;
   wire [7:0] csr_waddr,csr_raddr,st_chan,st_data;
   wire [31:0] csr_wdata,pad_bus,csr_read;
@@ -343,11 +349,12 @@ module retro_top #(
   sync_bit sreset_sync (.clk(service),.d(controllers_reset || selected!=3),.q(controller_reset_s));
   wire snes_stop_s,snes_initialized_s,snes_active,snes_hold,snes_ipl,snes_coeff;
   wire [4:0] snes_unsupported;
-  wire [3:0] snes_overrun;
+  wire [2:0] snes_overrun,snes_deadline;
   wire snes_protocol,snes_failure_md;
-  // Deadline is a wall-clock diagnostic, not fatal under legitimate clock hold.
+  // No clock holds: a late read means the console consumed stale data. Fail closed.
   sync_bit snes_failure_sync (.clk(md_clk),
-      .d((|snes_unsupported) || (|snes_overrun) || snes_protocol),.q(snes_failure_md));
+      .d((|snes_unsupported) || (|snes_overrun) || (|snes_deadline) || snes_protocol),
+      .q(snes_failure_md));
   wire [4:0] snes_map_config;
   wire [41:0] snes_memory_config;
   cdc_word #(.Width(5)) snes_config_map (.sclk(md_clk),.stb(flush),.d(map_config),
@@ -410,9 +417,9 @@ module retro_top #(
       .asset_addr(asset_addr_s),.asset_data(asset_data_s),.asset_last(asset_last_s),
       .asset_busy(asset_busy_s),.asset_done(asset_done_s),.asset_error(asset_error_s),
       .ipl_ready(snes_ipl),.coeff_ready(snes_coeff),.active(snes_active),.stop_ack(snes_stop_s),
-      .unsupported(snes_unsupported),.refresh_now(1'b0),.memory_initialized(snes_initialized_s),
-      .memory_drained(),.memory_hold(snes_hold),.refresh_busy(),.request_inflight(),
-      .needs_data(),.deadline_fault(),.overrun_fault(snes_overrun),.protocol_fault(snes_protocol),
+      .unsupported(snes_unsupported),.memory_initialized(snes_initialized_s),
+      .memory_drained(),.memory_hold(snes_hold),.refresh_busy(),.refresh_forced(),
+      .request_inflight(),.needs_data(),.deadline_fault(snes_deadline),.overrun_fault(snes_overrun),.protocol_fault(snes_protocol),
       .clock_permit(),.core_step(),.clk_core(),.host_valid(host_valid_s),.host_write(host_write_s),
       .host_addr(host_addr_s),.host_wdata(host_data_s),.host_ready(host_ready_s),
       .host_done(host_done_s),.host_rdata(host_read_s),.sd_a(s_a),.sd_ba(s_ba),
@@ -499,8 +506,7 @@ module retro_top #(
     assign dq_in=0;
     assign md_dq_in=0;
   end else begin : g_fabric_dq
-    // Fabric DQ (multi-console image): SNES write data is not held after WRITE
-    // here; only the per-console SNES image (pad PHY) is a supported SNES target.
+    // Fabric DQ (NES+MD image): owner-gated through the fabric.
     retro_sdram_io physical_io (.dq_in,.dq_out,.dq_oe(dq_drive),.sd_dq(sdram_dq));
     assign md_dq_in=dq_in;
     assign snes_dq_in=dq_in;
