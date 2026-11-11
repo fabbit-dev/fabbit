@@ -231,6 +231,22 @@ foreach {retro_instance retro_system} {pads_nes 0 pads_snes 2} {
     } else {retro_cdc_absent $retro_instance}
 }
 
+# SDRAM calibration result (SNES image): retro_sdram_calibrate holds width/center/fail
+# static from before done rises; done crosses through sync_bit (2 flops) and only then
+# cal_capture loads the fields once. Bound the field paths by one bus period so the
+# capture still sees settled data, as a two-flop synchronizer would.
+if {[retro_has 2]} {
+    set retro_cal_dst [get_cells -quiet -hierarchical -regexp {^cal_capture_reg(\[[0-9]+\])?$}]
+    retro_cdc_count $retro_cal_dst 1 32 {calibration capture registers}
+    set retro_cal_src [get_cells -quiet -hierarchical -regexp \
+        {^snes/g_calibrate\.cal/(width|center|fail)_reg(\[[0-9]+\])?$}]
+    retro_cdc_count $retro_cal_src 3 32 {calibration result registers}
+    set retro_cal_period [retro_cdc_period $retro_cal_dst {calibration capture}]
+    set_max_delay -datapath_only $retro_cal_period -from [retro_cdc_pins $retro_cal_src C] \
+        -to [retro_cdc_pins $retro_cal_dst D]
+    puts "retro CDC calibration result: [llength $retro_cal_src] bits, $retro_cal_period ns"
+}
+
 # fifo_async.sv: Aw+1 Gray bits must reach stage 1 within the SHORTER of
 # launch/capture clock periods. Neither Gray stage is false-pathed; stage 1 ->
 # stage 2 retains ordinary timing. Bus skew is also bounded by that same period.

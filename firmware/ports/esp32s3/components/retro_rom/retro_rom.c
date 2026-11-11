@@ -10,6 +10,7 @@
 #include "freertos/task.h"
 
 #define COMMAND_US 2000000LL
+#define CALIBRATION_US 1000000LL  // 84 points x 5 passes x ~1 k clocks at 64 MHz: ~10 ms
 #define STREAM_US 30000000LL
 #define CHUNK 4096u
 #define FIFO_MARGIN 16u
@@ -140,11 +141,42 @@ static esp_err_t program_assets(const assets_t *a)
     return e;
 }
 
+static esp_err_t calibration_locked(uint32_t *cal)
+{
+    uint32_t v = 0;
+    int64_t end = esp_timer_get_time() + CALIBRATION_US;
+    esp_err_t e;
+    while ((e = fl_csr_read(RETRO_CAL, &v, 1)) == ESP_OK && !(v & RETRO_CAL_DONE)) {
+        if (esp_timer_get_time() >= end) { e = ESP_ERR_TIMEOUT; break; }
+        vTaskDelay(1);
+    }
+    if (cal) *cal = v;
+    if (e == ESP_OK && (v & RETRO_CAL_FAIL)) e = ESP_ERR_INVALID_RESPONSE;
+    return e;
+}
+
+esp_err_t retro_calibration(uint32_t *cal)
+{
+    if (cal) *cal = 0;
+    fl_lock();
+    esp_err_t e = check_profile(ROM_SNES);
+    if (e == ESP_OK) e = calibration_locked(cal);
+    fl_unlock();
+    return e;
+}
+
 static esp_err_t load_locked(FILE *f, const rom_info_t *info, const assets_t *a,
                              void (*progress)(void *, int), void *ctx)
 {
     esp_err_t e = check_profile(info->system);
     if (e != ESP_OK) return e;  // never send RETRO commands into another profile
+    // SNES: the memory is usable only after its clock phase calibration; a window under
+    // the minimum fails here, before any command, with a distinct error.
+    if (info->system == ROM_SNES) {
+        uint32_t cal;
+        e = calibration_locked(&cal);
+        if (e != ESP_OK) return e;
+    }
     e = abort_drain();
     uint8_t *buf = NULL;
     if (e == ESP_OK && info->system == ROM_SNES) e = program_assets(a);

@@ -16,8 +16,11 @@ module tb_retro_snes_game;
     logic source = 0;
     always #23.28ns source = !source;
     wire service, master, memory_clock, locked, master_ce;
+    wire ps_en, ps_incdec, ps_done, cal_done, cal_fail;
+    wire [9:0] cal_width;
+    wire signed [10:0] cal_center;
     retro_snes_clocks clocks (.clk_source(source), .reset(1'b0), .service, .master,
-        .memory_clock, .idelay_ref(), .locked, .master_ce);
+        .memory_clock, .idelay_ref(), .locked, .master_ce, .ps_en, .ps_incdec, .ps_done);
 
     logic reset = 1, run = 0, memory_reset = 0;
     logic [1:0] cfg_map = 0;
@@ -58,7 +61,8 @@ module tb_retro_snes_game;
         .cfg_pal(1'b0), .cfg_rom_mask, .cfg_save_enable, .cfg_save_mask, .pad1,
         .pad2(12'd0), .asset_start, .asset_channel, .asset_valid, .asset_ready,
         .asset_addr, .asset_data, .asset_last, .asset_busy, .asset_done, .asset_error,
-        .ipl_ready, .coeff_ready, .active, .stop_ack, .unsupported,
+        .ipl_ready, .coeff_ready, .active, .stop_ack, .unsupported, .ps_en, .ps_incdec, .ps_done,
+        .cal_done, .cal_fail, .cal_width, .cal_center,
         .memory_initialized, .memory_drained, .memory_hold, .refresh_busy, .refresh_forced,
         .request_inflight, .needs_data, .deadline_fault, .overrun_fault, .protocol_fault,
         .clock_permit, .core_step, .clk_core, .host_valid, .host_write, .host_addr,
@@ -108,6 +112,7 @@ module tb_retro_snes_game;
     int startf, nodl;
     always @(posedge master) pad1 <= (frame >= startf && frame < startf + 3) ? 12'h008 : 12'h000;
     task automatic finish;
+        $display("calibration width %0d center %0d steps", cal_width, cal_center);
         $display("frames %0d mismatches %0d max_latency %0d max_ref_gap %0d refreshes %0d",
                  frame + 1, mism, max_latency, board.max_ref_gap, board.refreshes);
         $display("max refresh burst %0d, refreshes needed %0d", board.max_burst,
@@ -183,7 +188,9 @@ module tb_retro_snes_game;
         load_asset(0); load_asset(1);
         $display("[%0t] assets ok", $time);
         while (!stop_ack) tick();
-        $display("[%0t] stop_ack, host load", $time);
+        assert (cal_done && !cal_fail) else $fatal(1, "SDRAM calibration failed");
+        $display("[%0t] stop_ack, calibration width %0d center %0d steps, host load", $time,
+                 cal_width, cal_center);
         // ROM through the real host path for the first 1 KiB, the rest preloaded.
         for (int i = 0; i < 256; i++)
             host_request(1, i, {rom[4*i+3], rom[4*i+2], rom[4*i+1], rom[4*i]});

@@ -30,6 +30,8 @@ gateware/profiles/retro/snes/snes_cart.sv
 gateware/profiles/retro/snes/snes_console.sv
 gateware/profiles/retro/snes/snes_aram.sv
 gateware/profiles/retro/snes/snes_memory.sv
+gateware/profiles/retro/retro_sdram_train.sv
+gateware/profiles/retro/retro_sdram_calibrate.sv
 gateware/profiles/retro/snes/snes_asset_loader.sv
 gateware/profiles/retro/snes/snes_clock_guard.sv
 gateware/profiles/retro/snes/snes_system.sv

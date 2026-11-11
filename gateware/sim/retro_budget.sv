@@ -154,7 +154,9 @@ module retro_budget (
       .sd_a(snmem_sd_a), .sd_ba(snmem_sd_ba), .sd_ras_n(snmem_sd_ras_n),
       .sd_cas_n(snmem_sd_cas_n), .sd_we_n(snmem_sd_we_n), .sd_cs_n(snmem_sd_cs_n),
       .sd_cke(snmem_sd_cke), .sd_dq_in(snmem_sd_dq_in),
-      .sd_dq_out(snmem_sd_dq_out), .sd_dq_oe_next(), .sd_dq_oe(snmem_sd_dq_oe));
+      .sd_dq_out(snmem_sd_dq_out), .sd_dq_oe_next(), .sd_dq_oe(snmem_sd_dq_oe),
+      .pin_override(1'b0), .ov_cmd(3'b111), .ov_a(11'd0), .ov_ba(2'd0), .ov_dq_out(32'd0),
+      .ov_dq_oe_next(1'b0));
 
   retro_clocks console_clocks (.clk_25m(clk_25m), .reset(reset), .clk_md(md_clk),
       .clk_z80(z80_clk), .clk_snes(snes_clk), .locked(clock_locks[0]));

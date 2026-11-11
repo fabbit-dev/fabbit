@@ -207,6 +207,24 @@ static int cmd_nesreset(int argc, char **argv)
     return e != ESP_OK;
 }
 
+// cal: калибровка фазы такта SDRAM в образе SNES (окно и выбранная фаза)
+static int cmd_cal(int argc, char **argv)
+{
+    uint32_t v;
+    esp_err_t e = retro_calibration(&v);
+    if (e == ESP_ERR_NOT_SUPPORTED || e == ESP_ERR_INVALID_STATE) {
+        printf("в ПЛИС не образ SNES\n");
+        return 1;
+    }
+    double step_ns = RETRO_CAL_PERIOD_PS / 1000.0 / RETRO_CAL_STEPS;
+    if (v & RETRO_CAL_DONE)
+        printf("SDRAM: окно %.2f нс из %.2f, фаза %+.2f нс от расчётной%s\n",
+               RETRO_CAL_WIDTH(v) * step_ns, RETRO_CAL_PERIOD_PS / 1000.0,
+               RETRO_CAL_CENTER(v) * step_ns, v & RETRO_CAL_FAIL ? ", ОКНО МАЛО" : "");
+    else printf("SDRAM: калибровка не закончена (%s)\n", esp_err_to_name(e));
+    return e != ESP_OK;
+}
+
 static void reg(const char *name, const char *help, esp_console_cmd_func_t f)
 {
     esp_console_cmd_t c = {.command = name, .help = help, .func = f};
@@ -219,6 +237,7 @@ void cmd_profile_register(void)
     reg("eye", "eye [шаг] [мс]: перебор фазы SDRAM (профиль sdram_eye), середина окна", cmd_eye);
     reg("soak", "soak [с]: тест SDRAM на текущей фазе (профиль sdram_eye)", cmd_soak);
     reg("rom", "rom <файл>: загрузить .nes в профиль NES (/data/roms/)", cmd_rom);
+    reg("cal", "калибровка фазы SDRAM образа SNES", cmd_cal);
     reg("joy", "joy [биты]: кнопки джойстика 1 профиля NES", cmd_joy);
     reg("nesreset", "сброс ядра NES", cmd_nesreset);
 }

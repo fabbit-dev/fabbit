@@ -29,7 +29,7 @@ static FILE *local_fopen(const char *path, const char *mode)
 #undef fopen
 
 static struct {
-    uint32_t st, rx, config[5], caps, assets;
+    uint32_t st, rx, config[5], caps, assets, cal;
     int locks, reads, writes, streams, begins, commits, aborts, progress;
     int busy, drain, ipl, coeff, fault;
     bool wrong_id;
@@ -59,6 +59,7 @@ esp_err_t fl_csr_read(uint8_t index, uint32_t *v, size_t n)
     case RETRO_ID: *v = RETRO_MAGIC; break;
     case RETRO_ABI: *v = 1; break;
     case RETRO_CAPS: *v = m.caps; break;
+    case RETRO_CAL: *v = m.cal; break;
     case RETRO_ASSETS: *v = m.fault == FAIL_ASSETS ? 1 : m.assets; break;
     case RETRO_FREE: *v = m.fault == FAIL_FREE ? 4097 : 4096; break;
     case RETRO_RX: *v = m.rx + (m.fault == FAIL_RX ? 1 : 0); break;
@@ -153,6 +154,7 @@ static void reset_mock(void)
     assert(!m.locks);
     memset(&m, 0, sizeof m);
     m.caps = 7;
+    m.cal = RETRO_CAL_DONE | 400;  // calibrated SNES image by default
 }
 static void write_file(const char *name, const void *data, size_t n)
 {
@@ -311,7 +313,27 @@ int main(void)
     assert(!m.reads && !m.writes);
     const char *files[] = {"cart.gen", "cart.smc", "cart.nes", "snes.ipl", "snes.gauss"};
     for (size_t i = 0; i < sizeof files / sizeof *files; i++) remove_file(files[i]);
+    // SDRAM calibration gates SNES loads: never done -> timeout, window too narrow ->
+    // INVALID_RESPONSE, both before any command; MD loads never read it.
+    fixture_snes(); assets();
+    reset_mock(); m.cal = 0;
+    assert(retro_load_file("/data/roms/cart.smc", NULL, NULL, &ms) == ESP_ERR_TIMEOUT);
+    assert(!m.writes && !m.locks && !m.begins);
+    reset_mock(); m.cal = RETRO_CAL_DONE | RETRO_CAL_FAIL | 100;
+    assert(retro_load_file("/data/roms/cart.smc", NULL, NULL, &ms) == ESP_ERR_INVALID_RESPONSE);
+    assert(!m.writes && !m.locks && !m.begins);
+    uint32_t cal;
+    assert(retro_calibration(&cal) == ESP_ERR_INVALID_RESPONSE && (cal & RETRO_CAL_FAIL));
+    fixture_md();
+    reset_mock(); m.cal = 0;
+    assert(retro_load_file("/data/roms/cart.gen", NULL, NULL, &ms) == ESP_OK);
+    reset_mock(); m.cal = RETRO_CAL_DONE | (0x7d8u << 10) | 400;  // center -40, width 400
+    assert(retro_calibration(&cal) == ESP_OK && !m.locks);
+    assert(RETRO_CAL_WIDTH(cal) == 400 && RETRO_CAL_CENTER(cal) == -40);
+    const char *more[] = {"cart.gen", "cart.smc", "snes.ipl", "snes.gauss"};
+    for (size_t i = 0; i < sizeof more / sizeof *more; i++) remove_file(more[i]);
     assert(!rmdir(directory));
+    puts("ok RETRO SDRAM calibration: SNES loads wait for it, narrow window fails early");
     puts("ok RETRO actual ABI: assets/coverage, exact STREAM, hot systems, deadlines, late ACK/permanent busy, abort/drain recovery, locks");
     return 0;
 }

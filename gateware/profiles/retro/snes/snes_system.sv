@@ -20,12 +20,18 @@
 // resets console and asserts stop_ack. Only after stop_ack may config/assets/
 // physical SDRAM ownership change. Global reset intentionally discards queued
 // requests (already issued physical writes cannot be undone); reload afterwards.
+// After reset the SDRAM clock phase is calibrated first (retro_sdram_calibrate with
+// retro_sdram_train driving the pins through snes_memory's own pin registers); the
+// memory stays in reset until it is done. memory_reset never recalibrates.
 // memory_reset is a SEPARATE stopped-only reinitialization of the physical memory
 // protocol. It never invalidates IPL/coefficient coverage. Host/run stay blocked
 // until memory initialization and the stop acknowledgement become true again.
 module snes_system #(
     parameter int unsigned InitCycles = 13000,
-    parameter int unsigned RefreshInterval = 1006   // 15.6 us at 64.43 MHz
+    parameter int unsigned RefreshInterval = 1006,  // 15.6 us at 64.43 MHz
+    // 0: no calibration, the memory clock keeps its start phase (core benches).
+    parameter bit Calibrate = 1'b1,
+    parameter int unsigned CalMinSteps = 216        // 5 ns of 15.52 ns (672 steps)
 ) (
     input wire clk_service, free_master, free_master_ce,
     input wire reset, console_reset, run,
@@ -53,6 +59,14 @@ module snes_system #(
     output wire stop_ack,
     output wire [4:0] unsupported,
     output wire memory_initialized, memory_drained, memory_hold, refresh_busy, refresh_forced,
+    // SDRAM clock fine phase shift (retro_snes_clocks), service domain.
+    output wire ps_en, ps_incdec,
+    input wire ps_done,
+    // Calibration result, static after cal_done: window width in phase steps, chosen
+    // phase relative to the start phase (signed steps), fail = window under CalMinSteps.
+    output wire cal_done, cal_fail,
+    output wire [9:0] cal_width,
+    output wire signed [10:0] cal_center,
     output wire [3:0] request_inflight,
     output wire [2:0] needs_data, deadline_fault, overrun_fault,
     output wire protocol_fault,
@@ -176,8 +190,31 @@ module snes_system #(
     );
     snes_aram aram (.clk(clk_core), .addr(aram_addr), .data(aram_data), .rd(aram_rd),
         .wr(aram_wr), .q(aram_q));
+    wire [10:0] ov_a;
+    wire [1:0] ov_ba;
+    wire ov_ras_n, ov_cas_n, ov_we_n, ov_dq_oe_next, train_run, train_idle, train_done, train_ok;
+    wire [31:0] ov_dq_out;
+    if (Calibrate) begin : g_calibrate
+        // The trainer's commands reach the pins one clock later (snes_memory registers
+        // the override), so its READ+3 pad capture is its own command edge +4.
+        retro_sdram_train #(.Words(256), .PinCapture(4), .InitCycles(InitCycles)) train (
+            .clk(clk_service), .reset, .run(train_run), .idle(train_idle),
+            .pass_done(train_done), .pass_ok(train_ok), .sd_a(ov_a), .sd_ba(ov_ba),
+            .sd_ras_n(ov_ras_n), .sd_cas_n(ov_cas_n), .sd_we_n(ov_we_n),
+            .sd_dq_out(ov_dq_out), .sd_dq_oe_next(ov_dq_oe_next), .sd_dq_in);
+        retro_sdram_calibrate #(.Period(672), .Step(8), .Passes(4), .MinSteps(CalMinSteps))
+            cal (
+            .clk(clk_service), .reset, .train_run, .train_idle, .train_done, .train_ok,
+            .ps_en, .ps_incdec, .ps_done, .done(cal_done), .fail(cal_fail),
+            .width(cal_width), .center(cal_center));
+    end else begin : g_no_calibrate
+        assign {ov_a, ov_ba, ov_ras_n, ov_cas_n, ov_we_n, ov_dq_out, ov_dq_oe_next} = '0;
+        assign {train_run, train_idle, train_done, train_ok, ps_en, ps_incdec} = '0;
+        assign {cal_fail, cal_width, cal_center} = '0;
+        assign cal_done = 1'b1;
+    end
     snes_memory #(.InitCycles(InitCycles), .RefreshInterval(RefreshInterval)) memory (
-        .clk(clk_service), .reset(reset || memory_reset), .master_ce(core_step),
+        .clk(clk_service), .reset(reset || memory_reset || !cal_done), .master_ce(core_step),
         .free_ce(free_master_ce), .max_latency,
         .enable(active), .cpu_refresh,
         .initialized(memory_initialized), .drained(memory_drained),
@@ -191,7 +228,9 @@ module snes_system #(
         .host_valid(host_valid && stop_ack), .host_write, .host_addr, .host_wdata,
         .host_ready(host_ready_internal), .host_done, .host_rdata,
         .sd_a, .sd_ba, .sd_ras_n, .sd_cas_n, .sd_we_n, .sd_cs_n, .sd_cke,
-        .sd_dq_in, .sd_dq_out, .sd_dq_oe_next, .sd_dq_oe
+        .sd_dq_in, .sd_dq_out, .sd_dq_oe_next, .sd_dq_oe,
+        .pin_override(!cal_done), .ov_cmd({ov_ras_n, ov_cas_n, ov_we_n}), .ov_a, .ov_ba,
+        .ov_dq_out, .ov_dq_oe_next
     );
 endmodule
 `default_nettype wire

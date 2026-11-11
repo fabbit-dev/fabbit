@@ -67,7 +67,9 @@ module retro_top #(
   wire bus_clk,bus_rst,csr_we,st_valid,pad_stb;
   wire [7:0] csr_waddr,csr_raddr,st_chan,st_data;
   wire [31:0] csr_wdata,pad_bus,csr_read;
-  wire [31:0] csr_rdata=csr_raddr==17 ? audio_bus : csr_read;
+  // CSR17 audio snapshot, CSR18 SDRAM calibration (retro_regs_pkg RegCal).
+  wire [31:0] cal_bus;
+  wire [31:0] csr_rdata=csr_raddr==17 ? audio_bus : csr_raddr==RegCal ? cal_bus : csr_read;
   profile_bus #(.ProfileId(16'h0004),.UseIcap(1'b1)) u_bus (
       .clk_25m(clk),.esp_sck,.esp_cs_n,.esp_d,.esp_irq,.clk_bus(bus_clk),.rst_bus(bus_rst),
       .csr_we,.csr_waddr,.csr_wdata,.csr_raddr,.csr_rdata,.st_valid,.st_chan,.st_data,
@@ -91,9 +93,11 @@ module retro_top #(
 `endif
 `ifndef RETRO_NO_SNES
   wire service,snes_master,snes_sd_clock,snes_idelay_ref,slocked,snes_master_ce;
+  wire snes_ps_en,snes_ps_incdec,snes_ps_done;
   retro_snes_clocks u_snesclk (.clk_source(snes_source),.reset(!md_locked),
       .service,.master(snes_master),.memory_clock(snes_sd_clock),.idelay_ref(snes_idelay_ref),
-      .locked(slocked),.master_ce(snes_master_ce));
+      .locked(slocked),.master_ce(snes_master_ce),.ps_en(snes_ps_en),
+      .ps_incdec(snes_ps_incdec),.ps_done(snes_ps_done));
 `else
   wire service=0,snes_master=0,snes_sd_clock=0,snes_idelay_ref=0,slocked=0,snes_master_ce=0;
 `endif
@@ -293,7 +297,8 @@ module retro_top #(
   assign backend_done=selected==1 ? nes_done_md && !byte_busy : writer_done;
   assign backend_fail=selected==1 ? nes_fail_md && received!=0 :
                       ((loading && writer_fail) || (selected==2 && md_fault)) ||
-                      (selected==3 && snes_failure_md && running);
+                      (selected==3 && snes_failure_md && running) ||
+                      (selected==3 && snes_cal_fail_md && (running || loading));
 
 `ifndef RETRO_NO_MD
   wire [1:0] fabric_ready,fabric_rsp;
@@ -355,6 +360,22 @@ module retro_top #(
   sync_bit snes_failure_sync (.clk(md_clk),
       .d((|snes_unsupported) || (|snes_overrun) || (|snes_deadline) || snes_protocol),
       .q(snes_failure_md));
+  // SDRAM calibration: static after done (memory held in reset until then). A window
+  // under the minimum fails every SNES load (ErrBackend) instead of corrupting data.
+  wire snes_cal_done,snes_cal_fail,snes_cal_fail_md;
+  wire [9:0] snes_cal_width;
+  wire signed [10:0] snes_cal_center;
+  sync_bit snes_cal_sync (.clk(md_clk),.d(snes_cal_done && snes_cal_fail),.q(snes_cal_fail_md));
+  // Bus domain: the fields are static once done is set (memory reset until then), so
+  // they are captured once after done crosses (sync_bit, 2 flops), never read live.
+  wire snes_cal_done_bus;
+  sync_bit snes_cal_done_sync (.clk(bus_clk),.d(snes_cal_done),.q(snes_cal_done_bus));
+  logic [31:0] cal_capture=0;
+  always_ff @(posedge bus_clk)
+    if (!snes_cal_done_bus) cal_capture<=0;
+    else if (!cal_capture[31])
+      cal_capture<={1'b1,snes_cal_fail,9'b0,snes_cal_center,snes_cal_width};
+  assign cal_bus=cal_capture;
   wire [4:0] snes_map_config;
   wire [41:0] snes_memory_config;
   cdc_word #(.Width(5)) snes_config_map (.sclk(md_clk),.stb(flush),.d(map_config),
@@ -418,6 +439,9 @@ module retro_top #(
       .asset_busy(asset_busy_s),.asset_done(asset_done_s),.asset_error(asset_error_s),
       .ipl_ready(snes_ipl),.coeff_ready(snes_coeff),.active(snes_active),.stop_ack(snes_stop_s),
       .unsupported(snes_unsupported),.memory_initialized(snes_initialized_s),
+      .ps_en(snes_ps_en),.ps_incdec(snes_ps_incdec),.ps_done(snes_ps_done),
+      .cal_done(snes_cal_done),.cal_fail(snes_cal_fail),.cal_width(snes_cal_width),
+      .cal_center(snes_cal_center),
       .memory_drained(),.memory_hold(snes_hold),.refresh_busy(),.refresh_forced(),
       .request_inflight(),.needs_data(),.deadline_fault(snes_deadline),.overrun_fault(snes_overrun),.protocol_fault(snes_protocol),
       .clock_permit(),.core_step(),.clk_core(),.host_valid(host_valid_s),.host_write(host_write_s),
@@ -435,6 +459,8 @@ module retro_top #(
   sync_bit coeff_sync (.clk(md_clk),.d(snes_coeff),.q(assets_md[1]));
 `else
   wire host_bridge_ready=0,host_bridge_rsp=0,host_bridge_idle=1,snes_failure_md=0;
+  wire snes_cal_fail_md=0;
+  assign cal_bus=0;
   wire [14:0] srgb=0;
   wire spixel=0,shde=0,svde=0,sinterlace=0,sv224=0;
   wire [8:0] sx=0,sy=0;

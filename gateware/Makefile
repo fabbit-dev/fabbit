@@ -75,7 +75,8 @@ sdram_eye_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.
 RETRO_EYE_SRC := common/cdc/sync_bit.sv common/cdc/reset_sync.sv common/qspi_slave.sv \
                  common/icap_ctrl.sv common/profile_shell.sv common/profile_bus.sv \
                  profiles/retro/retro_sdram.sv profiles/retro/retro_sdram_io.sv \
-                 profiles/retro/retro_sdram_phy.sv diag/retro_sdram_eye.sv
+                 profiles/retro/retro_sdram_phy.sv profiles/retro/retro_sdram_train.sv \
+                 diag/retro_sdram_eye.sv
 RETRO_EYE_XDC := constraints/base.xdc constraints/clk25.xdc constraints/esp_bus.xdc \
                  constraints/sdram.xdc constraints/retro_sdram_eye.xdc
 retro_sdram_eye_md_SRC := $(RETRO_EYE_SRC)
@@ -97,6 +98,10 @@ retro_sdram_eye_snes3_pad_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_snes3_pad_XDC := $(retro_sdram_eye_md_iob_XDC)
 retro_sdram_eye_snes3_prod_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_snes3_prod_XDC := $(retro_sdram_eye_md_iob_XDC)
+retro_sdram_eye_snes3_late_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_snes3_late_XDC := $(retro_sdram_eye_md_iob_XDC)
+retro_sdram_eye_snes3_train_SRC := $(RETRO_EYE_SRC)
+retro_sdram_eye_snes3_train_XDC := $(retro_sdram_eye_md_iob_XDC)
 retro_sdram_eye_md_iob_dq_SRC := $(RETRO_EYE_SRC)
 retro_sdram_eye_md_iob_dq_XDC := $(retro_sdram_eye_md_iob_XDC) constraints/retro_sdram_eye_iob_dq.xdc
 
@@ -464,6 +469,22 @@ sim_retro_snes: | build
 # Refresh 1.5 times as often (RefreshCycles 600 = 9.3 us), extra forced refreshes.
 # Refresh 1.44x faster than the datasheet needs (700 instead of 1006 cycles): 5.8 owed
 # per 4092-cycle S-CPU line, still below the debt limit of 7, so never forced.
+# SDRAM read-window trainer and phase calibration (ESMT model, held DQ bus, fine phase).
+sim_retro_sdram_train: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps -Wno-fatal \
+	  --top-module tb_retro_sdram_train -Mdir $(CURDIR)/build/tb_retro_sdram_train \
+	  profiles/retro/retro_sdram_train.sv sim/sdram_model.sv sim/tb_retro_sdram_train.sv \
+	  > build/tb_retro_sdram_train.log 2>&1
+	build/tb_retro_sdram_train/Vtb_retro_sdram_train
+
+sim_retro_sdram_calibrate: | build
+	verilator --binary --assert --timing --timescale 1ns/1ps -Wno-fatal \
+	  --top-module tb_retro_sdram_calibrate -Mdir $(CURDIR)/build/tb_retro_sdram_calibrate \
+	  profiles/retro/retro_sdram_train.sv profiles/retro/retro_sdram_calibrate.sv \
+	  sim/sdram_model.sv sim/tb_retro_sdram_calibrate.sv \
+	  > build/tb_retro_sdram_calibrate.log 2>&1
+	build/tb_retro_sdram_calibrate/Vtb_retro_sdram_calibrate
+
 sim_retro_snes_stress: | build
 	verilator --binary --assert --timing --timescale 1ns/1ps -j 4 -GRefreshInterval=700 \
 	  --top-module tb_retro_snes -Mdir $(CURDIR)/build/tb_retro_snes_stress \
@@ -559,6 +580,7 @@ clean:
         sim_retro_snes_assets sim_retro_snes_memory sim_retro_sdram_tras synth_retro_area \
         synth_retro_budget \
         sim_retro_snes_core sim_retro_snes sim_retro_snes_stress \
+        sim_retro_sdram_train sim_retro_sdram_calibrate \
         synth_retro_md synth_retro_snes sim_pad sim_shell sim_sdram sim_nes \
         sim_retro_snes_game sim_la_plane sim_la sim_la_loopback sim_la_loopback_serdes \
         sim_la_ring sim_la_sampler sim_la_ddr sim_la_ddr_qspi sim_la_serdes sim_la_serdes_qspi \

@@ -98,7 +98,16 @@ module snes_memory #(
     input wire [31:0] sd_dq_in,
     output wire [31:0] sd_dq_out,
     output wire sd_dq_oe_next,
-    output logic sd_dq_oe                    // registered copy for a fabric tristate
+    output logic sd_dq_oe,                   // registered copy for a fabric tristate
+    // Pin override (calibration, reset held): the command/address registers above load
+    // these instead, and the DQ outputs follow them one clock later, so the pins keep
+    // one register each (IOB) and an override user sees one extra clock of latency.
+    input wire pin_override,
+    input wire [2:0] ov_cmd,
+    input wire [10:0] ov_a,
+    input wire [1:0] ov_ba,
+    input wire [31:0] ov_dq_out,
+    input wire ov_dq_oe_next
 );
     localparam int P = 3;                    // CPU ports: 0 WRAM, 1 ROM, 2 save
     localparam int Host = 3;
@@ -274,11 +283,17 @@ module snes_memory #(
         owed = 5'(ref_owed) + 5'(refresh_left == 0) - 5'(issue_ref);
         owed_next = owed > 15 ? 4'hf : 4'(owed);
     end
-    assign sd_dq_oe_next = col_bank >= 0 && bwrite[col_bank] && !reset;
-    assign sd_dq_out = col_bank >= 0 ? bdata[col_bank] : 32'h0;
+    logic [31:0] ov_dq_q = '0;
+    logic ov_oe_q = 1'b0;
+    always_ff @(posedge clk) begin
+        ov_dq_q <= ov_dq_out;
+        ov_oe_q <= pin_override && ov_dq_oe_next;
+    end
+    assign sd_dq_oe_next = pin_override ? ov_oe_q : col_bank >= 0 && bwrite[col_bank] && !reset;
+    assign sd_dq_out = pin_override ? ov_dq_q : col_bank >= 0 ? bdata[col_bank] : 32'h0;
 
     assign {sd_ras_n, sd_cas_n, sd_we_n} = cmd;
-    assign sd_cs_n = reset;
+    assign sd_cs_n = reset && !pin_override;
     assign sd_cke = 1'b1;
     assign core_hold = 1'b0;
     assign initialized = configured && !reset;
@@ -477,6 +492,7 @@ module snes_memory #(
                 default: state <= PowerWait;
             endcase
         end
+        if (pin_override) begin cmd <= ov_cmd; sd_a <= ov_a; sd_ba <= ov_ba; end
     end
 endmodule
 `default_nettype wire

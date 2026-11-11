@@ -14,7 +14,11 @@ module tb_retro_snes;
     wire clk_service, free_master, sd_clk_raw, clocks_locked, free_master_ce;
     retro_snes_clocks clocks (.clk_source(source),.reset(1'b0),.service(clk_service),
         .master(free_master),.memory_clock(sd_clk_raw),.idelay_ref(),.locked(clocks_locked),
-        .master_ce(free_master_ce));
+        .master_ce(free_master_ce),.ps_en,.ps_incdec,.ps_done);
+    // Core bench: no calibration, the memory clock keeps its start phase.
+    wire ps_en,ps_incdec,ps_done,cal_done,cal_fail;
+    wire [9:0] cal_width;
+    wire signed [10:0] cal_center;
     logic [1:0] phase=0;
     always @(posedge clk_service) phase<=free_master_ce ? 2'd0 : phase==2 ? 2'd0 : phase+1'b1;
     logic reset=1, console_reset=0, run=0, memory_reset=0;
@@ -53,7 +57,7 @@ module tb_retro_snes;
     wire [8:0] x,y;
     wire signed [15:0] audio_l,audio_r;
     wire audio_ready;
-    snes_system #(.InitCycles(20),.RefreshInterval(RefreshInterval)) dut (.*);
+    snes_system #(.InitCycles(20),.RefreshInterval(RefreshInterval),.Calibrate(1'b0)) dut (.*);
     always @(posedge clk_service) if (measuring)
         assert (deadline_fault==0 && !refresh_forced)
             else $fatal(1,"read deadline missed %b / refresh forced %b",deadline_fault,refresh_forced);

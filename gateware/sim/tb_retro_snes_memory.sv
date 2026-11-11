@@ -17,7 +17,8 @@ module tb_retro_snes_memory;
     always #23.28ns source = !source;
     wire service, master, memory_clock, locked, master_ce;
     retro_snes_clocks clocks (.clk_source(source), .reset(1'b0), .service, .master,
-        .memory_clock, .idelay_ref(), .locked, .master_ce);
+        .memory_clock, .idelay_ref(), .locked, .master_ce, .ps_en(1'b0), .ps_incdec(1'b0),
+        .ps_done());
     logic reset = 1, enable = 0, cpu_refresh = 0;
     wire initialized, drained, core_hold, refresh_busy, refresh_forced, protocol_fault;
     wire [3:0] request_inflight, max_latency;
@@ -39,6 +40,11 @@ module tb_retro_snes_memory;
     wire sd_ras_n, sd_cas_n, sd_we_n, sd_cs_n, sd_cke, sd_dq_oe, sd_dq_oe_next;
     wire [31:0] sd_dq_out;
     wire [31:0] sd_dq_in;
+    wire pin_override = 1'b0, ov_dq_oe_next = 1'b0;
+    wire [2:0] ov_cmd = 3'b111;
+    wire [10:0] ov_a = '0;
+    wire [1:0] ov_ba = '0;
+    wire [31:0] ov_dq_out = '0;
     snes_memory #(.InitCycles(20)) dut (
         .clk(service), .master_ce, .free_ce(master_ce), .*);
 

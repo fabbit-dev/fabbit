@@ -51,9 +51,26 @@ module MMCME2_ADV #(
   // Negative phase = the same edge one period earlier: start at phase+360.
   localparam real Phase2=CLKOUT2_PHASE<0 ? CLKOUT2_PHASE+360.0 : CLKOUT2_PHASE;
   localparam real Phase3=CLKOUT3_PHASE<0 ? CLKOUT3_PHASE+360.0 : CLKOUT3_PHASE;
+  // Fine phase shift (CLKOUT2_USE_FINE_PS): VCO/56 per PSEN, PSDONE 12 PSCLK later.
+  realtime ps_pending=0;
+  logic ps_done_r=0;
+  int ps_count=-1;
+  always @(posedge PSCLK) begin
+    ps_done_r<=0;
+    if (PSEN) begin
+      assert(CLKOUT2_USE_FINE_PS=="TRUE" && ps_count<0) else $fatal(1,"MMCM PSEN");
+      ps_count<=12;
+      ps_pending+=PSINCDEC ? Vco/56.0 : -Vco/56.0;
+    end else if (ps_count>0) ps_count<=ps_count-1;
+    else if (ps_count==0) begin ps_done_r<=1;ps_count<=-1;end
+  end
   initial begin
     #(Vco*CLKOUT2_DIVIDE*Phase2/360.0);
-    forever #(Vco*CLKOUT2_DIVIDE/2) CLKOUT2=~CLKOUT2;
+    forever begin
+      automatic realtime extra=0;
+      if (CLKOUT2==0) begin extra=ps_pending;ps_pending=0;end
+      #(Vco*CLKOUT2_DIVIDE/2+extra) CLKOUT2=~CLKOUT2;
+    end
   end
   initial begin
     #(Vco*CLKOUT3_DIVIDE*Phase3/360.0);
@@ -61,7 +78,8 @@ module MMCME2_ADV #(
   end
   assign CLKFBOUT=CLKIN1;assign CLKFBOUTB=~CLKIN1;
   assign {CLKOUT0B,CLKOUT1B,CLKOUT2B,CLKOUT3B}={~CLKOUT0,~CLKOUT1,~CLKOUT2,~CLKOUT3};
-  assign {CLKOUT4,CLKOUT5,CLKOUT6,PSDONE,DO,DRDY,CLKINSTOPPED,CLKFBSTOPPED}=0;
+  assign PSDONE=ps_done_r;
+  assign {CLKOUT4,CLKOUT5,CLKOUT6,DO,DRDY,CLKINSTOPPED,CLKFBSTOPPED}=0;
   initial begin #1us;LOCKED=1;end
 endmodule
 module MMCME2_BASE #(

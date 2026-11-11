@@ -9,8 +9,16 @@
 enum {
     RETRO_ID, RETRO_CTRL, RETRO_STAT, RETRO_FREE, RETRO_RX, RETRO_SYSTEM,
     RETRO_LENGTH, RETRO_MAP, RETRO_SIZE, RETRO_SAVE_SIZE, RETRO_ASSETS,
-    RETRO_ERROR, RETRO_IPL, RETRO_COEFF, RETRO_RESERVED, RETRO_ABI, RETRO_CAPS
+    RETRO_ERROR, RETRO_IPL, RETRO_COEFF, RETRO_RESERVED, RETRO_ABI, RETRO_CAPS,
+    RETRO_AUDIO, RETRO_CAL
 };
+// RETRO_CAL (SNES image): SDRAM clock phase calibration at power-up.
+#define RETRO_CAL_DONE 0x80000000u
+#define RETRO_CAL_FAIL 0x40000000u
+#define RETRO_CAL_WIDTH(v) ((int)((v) & 0x3ffu))                              // phase steps
+#define RETRO_CAL_CENTER(v) ((int)(((v) >> 10) & 0x7ffu) - (((v) >> 20) & 1u ? 2048 : 0))
+#define RETRO_CAL_STEPS 672                                                   // per period
+#define RETRO_CAL_PERIOD_PS 15520
 // CSR5 reads ACTIVE system, not the editable shadow; BEGIN snapshots CSR5..9.
 enum {
     RETRO_BEGIN = 1, RETRO_COMMIT = 2, RETRO_ABORT = 4, RETRO_RESET = 8,
@@ -35,5 +43,8 @@ esp_err_t retro_preflight(const char *path, rom_info_t *info);
 // Requires active RETRO. Bounded heap chunk, recursive bus lock, abort/drain on failure.
 esp_err_t retro_load_file(const char *path, void (*progress)(void *, int), void *ctx, uint32_t *ms);
 esp_err_t retro_reset(void);
+// SNES image: wait for the SDRAM calibration (bounded). ESP_ERR_INVALID_RESPONSE when the
+// measured window is under the minimum. *cal gets RETRO_CAL (may be NULL).
+esp_err_t retro_calibration(uint32_t *cal);
 // Quiesce and drain before leaving the profile; no BOOT or flash access here.
 esp_err_t retro_stop(void);

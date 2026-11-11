@@ -7,7 +7,7 @@ package retro_regs_pkg;
   localparam logic [7:0] RegId=0, RegControl=1, RegStatus=2, RegFree=3, RegReceived=4;
   localparam logic [7:0] RegSystem=5, RegLength=6, RegMap=7, RegRomSize=8, RegSaveSize=9;
   localparam logic [7:0] RegAssets=10, RegError=11, RegIpl=12, RegCoeff=13;
-  localparam logic [7:0] RegAbi=15, RegCaps=16;
+  localparam logic [7:0] RegAbi=15, RegCaps=16, RegCal=18;
   localparam int BeginBit=0, CommitBit=1, AbortBit=2, ConsoleResetBit=3;
   localparam int ClearIplBit=8, ClearCoeffBit=9;
   localparam int LoadingBit=0, RunningBit=1, ErrorBit=2, ReadyBit=3;
@@ -27,4 +27,8 @@ package retro_regs_pkg;
   // MCU waits CMD_BUSY=0 before AND after each CSR1/12/13 write. CLEAR/atoms only
   // after ABORT acknowledgement; BEGIN preserves assets. STAT PAYLOAD_DONE means
   // exact byte count physically drained + native loader ready, not RUNNING.
+  // CSR17 audio snapshot. CSR18 SDRAM calibration (SNES image, else 0): bit31 done,
+  // bit30 fail (window under the minimum: SNES loads fail ErrBackend), [20:10] signed
+  // chosen phase relative to the start phase, [9:0] window width; both in clock phase
+  // steps of 1/672 period (23.09 ps at 64.43 MHz).
 endpackage

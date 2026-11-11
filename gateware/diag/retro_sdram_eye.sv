@@ -21,7 +21,14 @@ module retro_sdram_eye #(
     // SNES 3:1: memory clock 64,43 МГц = 3 × master (VCO 773 МГц /12), CL2, захват c+CAS+1.
     parameter bit Snes3 = 1'b0,
     // Product SNES image PHY: SDRAM clock -93.75 deg, 25-tap IDELAY (retro_top).
-    parameter bit Snes3Product = 1'b0
+    parameter bit Snes3Product = 1'b0,
+    // Extra capture clocks after the profile's capture edge (diagnosis: a capture after
+    // the chip released DQ shows whether the lines hold the last value).
+    parameter int CaptureLate = 0,
+    // 1: retro_sdram_train drives the pins instead of the tester: back-to-back reads of
+    // one row, a new word on DQ every clock. Registers 2/3 count its passes and failed
+    // passes. Requires PadPhy and Snes3.
+    parameter bit Train = 1'b0
 ) (
     input  wire        clk,
     output wire        led,
@@ -158,13 +165,35 @@ module retro_sdram_eye #(
       .InitCycles(Snes3 ? 13000 : Mode ? 18000 : 10740), .RefreshCycles(Mode ? 480 : 375),
       .Trcd(2), .Trp(2), .Trfc(Snes3 ? 5 : Mode ? 6 : 4), .Tras(Snes3 ? 3 : Mode ? 4 : 3),
       .Twr(2), .Tmrd(2), .Cas(CasOverride != 0 ? CasOverride : Mode ? 2 : 3), .PadPhy(PadPhy),
-      .CaptureExtra(Snes3 ? 1 : 0)
+      .CaptureExtra((Snes3 ? 1 : 0) + CaptureLate)
   ) u_mem (
       .clk(mclk), .rst(rst_mem), .initialized(init), .req_valid, .req_ready, .req_write,
       .req_addr, .req_wdata, .rsp_valid, .rsp_ready(1'b1), .rsp_rdata,
-      .sd_a(sdram_a), .sd_ba(sdram_ba), .sd_ras_n(sdram_ras_n), .sd_cas_n(sdram_cas_n),
-      .sd_we_n(sdram_we_n), .sd_dq_in(dq_in), .sd_dq_out(dq_out), .sd_dq_oe(dq_oe),
-      .sd_dq_oe_next(dq_oe_next));
+      .sd_a(m_a), .sd_ba(m_ba), .sd_ras_n(m_ras_n), .sd_cas_n(m_cas_n),
+      .sd_we_n(m_we_n), .sd_dq_in(dq_in), .sd_dq_out(m_dq_out), .sd_dq_oe(dq_oe),
+      .sd_dq_oe_next(m_dq_oe_next));
+  wire [10:0] m_a, t_a;
+  wire [1:0] m_ba, t_ba;
+  wire m_ras_n, m_cas_n, m_we_n, t_ras_n, t_cas_n, t_we_n, m_dq_oe_next, t_dq_oe_next;
+  wire [31:0] m_dq_out, t_dq_out;
+  wire t_idle, t_done, t_ok;
+  if (Train) begin : g_train
+    initial assert (PadPhy && Snes3) else $fatal(1, "Train needs PadPhy and Snes3");
+    retro_sdram_train #(.Words(256), .PinCapture(3 + CaptureLate)) u_train (
+        .clk(mclk), .reset(rst_mem), .run, .idle(t_idle), .pass_done(t_done),
+        .pass_ok(t_ok), .sd_a(t_a), .sd_ba(t_ba), .sd_ras_n(t_ras_n), .sd_cas_n(t_cas_n),
+        .sd_we_n(t_we_n), .sd_dq_out(t_dq_out), .sd_dq_oe_next(t_dq_oe_next),
+        .sd_dq_in(dq_in));
+  end else begin : g_no_train
+    assign {t_a, t_ba, t_ras_n, t_cas_n, t_we_n, t_dq_out, t_dq_oe_next} = '0;
+    assign {t_idle, t_done, t_ok} = '0;
+  end
+  assign sdram_a = Train ? t_a : m_a;
+  assign sdram_ba = Train ? t_ba : m_ba;
+  assign {sdram_ras_n, sdram_cas_n, sdram_we_n} =
+      Train ? {t_ras_n, t_cas_n, t_we_n} : {m_ras_n, m_cas_n, m_we_n};
+  assign dq_out = Train ? t_dq_out : m_dq_out;
+  assign dq_oe_next = Train ? t_dq_oe_next : m_dq_oe_next;
   if (PadPhy) begin : g_pad
     retro_sdram_phy #(.InDelayTaps(Snes3Product ? 25 : 0), .RefMhz(193.3)) u_phy (
         .clk(mclk), .dq_out, .dq_oe_d(dq_oe_next), .dq_in, .sd_dq(sdram_dq));
@@ -194,6 +223,11 @@ module retro_sdram_eye #(
       waiting <= 1'b0;
       passes <= '0;
       errors <= '0;
+    end else if (Train) begin
+      if (t_done) begin
+        passes <= passes + 1'b1;
+        if (!t_ok && errors != '1) errors <= errors + 1'b1;
+      end
     end else begin
       if (req_valid && req_ready) begin
         req_valid <= 1'b0;
@@ -245,8 +279,8 @@ module retro_sdram_eye #(
     end
 
   wire idle, busy;
-  sync_bit u_idle (.clk(clk_bus), .d(phase == Idle && !run), .q(idle));
-  sync_bit u_busy (.clk(clk_bus), .d(!init), .q(busy));
+  sync_bit u_idle (.clk(clk_bus), .d(Train ? t_idle : phase == Idle && !run), .q(idle));
+  sync_bit u_busy (.clk(clk_bus), .d(Train ? 1'b0 : !init), .q(busy));
   always_comb
     case (csr_raddr)
       8'd0: csr_rdata = "SDRE";
@@ -377,5 +411,29 @@ module retro_sdram_eye_snes3_prod (
     inout wire [31:0] sdram_dq
 );
   retro_sdram_eye #(.Mode(1'b1),.PadPhy(1'b1),.Snes3(1'b1),.Snes3Product(1'b1)) u (.*);
+endmodule
+`default_nettype wire
+`default_nettype none
+// Diagnosis: product SNES PHY, capture one clock later (READ+4), after the chip released DQ.
+module retro_sdram_eye_snes3_late (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b1),.PadPhy(1'b1),.Snes3(1'b1),.Snes3Product(1'b1),
+      .CaptureLate(1)) u (.*);
+endmodule
+`default_nettype wire
+`default_nettype none
+// Product SNES PHY with the trainer (retro_sdram_train): real read window on the board.
+module retro_sdram_eye_snes3_train (
+    input wire clk, output wire led, uart_tx, input wire esp_sck, esp_cs_n,
+    inout wire [3:0] esp_d, output wire esp_irq, sdram_clk, output wire [10:0] sdram_a,
+    output wire [1:0] sdram_ba, output wire sdram_ras_n, sdram_cas_n, sdram_we_n,
+    inout wire [31:0] sdram_dq
+);
+  retro_sdram_eye #(.Mode(1'b1),.PadPhy(1'b1),.Snes3(1'b1),.Snes3Product(1'b1),
+      .Train(1'b1)) u (.*);
 endmodule
 `default_nettype wire

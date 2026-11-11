@@ -630,6 +630,10 @@ module tb_retro_top;
 `ifdef RETRO_TB_SNES_ONLY
     read_csr(0,value);assert(value==32'h46524554) else $fatal(1,"FRET %h",value);
     read_csr(16,value);assert(value==4) else $fatal(1,"SNES-only CAPS %h",value);
+    do read_csr(18,value); while(!value[31]);
+    assert(!value[30] && value[9:0]>=216) else $fatal(1,"SDRAM calibration %h",value);
+    $display("ok SNES SDRAM calibration: window %0d steps (%0.2f ns), center %0d steps",
+             value[9:0],real'(value[9:0])*15.52/672.0,$signed(value[20:10]));
     check_pads();
     // Absent systems: BEGIN fails ErrConfig, ABORT recovers.
     write_csr(5,1);write_csr(6,16400);write_csr(8,16384);
