@@ -1581,7 +1581,7 @@
 				)
 			)
 		)
-		(property "Value" "22uF 6.3V X5R 0805"
+		(property "Value" "22uF 25V X5R 0805"
 			(at 36.83 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2627,7 +2627,7 @@
 				)
 			)
 		)
-		(property "Value" "10uF 10V X5R 0603"
+		(property "Value" "10uF 25V X5R 0805"
 			(at 26.67 43.18 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2794,6 +2794,40 @@
 			)
 		)
 	)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	(wire
 		(pts (xy 104.14 25.4) (xy 110.49 25.4))
 		(stroke (width 0) (type solid))
