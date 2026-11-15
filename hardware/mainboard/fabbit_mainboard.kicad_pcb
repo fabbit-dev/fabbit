@@ -53,8 +53,8 @@
 				(color "FR4 natural")
 				(thickness 0.115)
 				(material "2116")
-				(epsilon_r 4.2)
-				(loss_tangent 0.02)
+				(epsilon_r 4.4)
+				(loss_tangent 0.016)
 			)
 			(layer "In1.Cu"
 				(type "copper")
@@ -66,7 +66,7 @@
 				(thickness 0.51)
 				(material "FR4 TG150")
 				(epsilon_r 4.4)
-				(loss_tangent 0.02)
+				(loss_tangent 0.016)
 			)
 			(layer "In2.Cu"
 				(type "copper")
@@ -77,8 +77,8 @@
 				(color "FR4 natural")
 				(thickness 0.115)
 				(material "2116")
-				(epsilon_r 4.2)
-				(loss_tangent 0.02)
+				(epsilon_r 4.4)
+				(loss_tangent 0.016)
 			)
 			(layer "In3.Cu"
 				(type "copper")
@@ -90,7 +90,7 @@
 				(thickness 0.51)
 				(material "FR4 TG150")
 				(epsilon_r 4.4)
-				(loss_tangent 0.02)
+				(loss_tangent 0.016)
 			)
 			(layer "In4.Cu"
 				(type "copper")
@@ -101,8 +101,8 @@
 				(color "FR4 natural")
 				(thickness 0.115)
 				(material "2116")
-				(epsilon_r 4.2)
-				(loss_tangent 0.02)
+				(epsilon_r 4.4)
+				(loss_tangent 0.016)
 			)
 			(layer "B.Cu"
 				(type "copper")
