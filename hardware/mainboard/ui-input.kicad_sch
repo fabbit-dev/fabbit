@@ -7171,7 +7171,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 119.38 251.46 0)
 			(hide yes)
 			(show_name no)
@@ -7249,7 +7249,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 121.92 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -7783,7 +7783,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 170.18 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -7872,7 +7872,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 129.54 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -8050,7 +8050,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 180.34 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -8822,7 +8822,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 101.6 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -8989,7 +8989,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_PW0024A"
 			(at 63.5 276.86 0)
 			(hide yes)
 			(show_name no)
@@ -9416,7 +9416,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 200.66 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -9594,7 +9594,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 223.52 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -10262,7 +10262,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 220.98 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -10351,7 +10351,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 274.32 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -10429,7 +10429,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 210.82 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -10607,7 +10607,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_PW0024A"
 			(at 167.64 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -10882,7 +10882,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 142.24 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -11241,7 +11241,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 314.96 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -11471,7 +11471,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 139.7 266.7 0)
 			(hide yes)
 			(show_name no)
@@ -11560,7 +11560,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 254 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -11836,7 +11836,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 284.48 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -12142,7 +12142,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 243.84 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -12220,7 +12220,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 190.5 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -12309,7 +12309,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 116.84 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -12552,7 +12552,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 132.08 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -12782,7 +12782,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 233.68 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -12860,7 +12860,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 149.86 264.16 0)
 			(hide yes)
 			(show_name no)
@@ -14484,7 +14484,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 111.76 134.62 0)
 			(hide yes)
 			(show_name no)
@@ -14562,7 +14562,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 325.12 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -14640,7 +14640,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_PW0024A"
 			(at 63.5 66.04 0)
 			(hide yes)
 			(show_name no)
@@ -14839,7 +14839,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 160.02 264.16 0)
 			(hide yes)
 			(show_name no)

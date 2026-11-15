@@ -1726,7 +1726,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 33.02 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -1967,7 +1967,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 147.32 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -2342,7 +2342,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 264.16 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -2697,7 +2697,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 137.16 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -2797,7 +2797,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 22.86 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -3245,7 +3245,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 254 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -3389,7 +3389,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 22.86 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -3478,7 +3478,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 43.18 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -3643,7 +3643,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 243.84 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -3787,7 +3787,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 157.48 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -3876,7 +3876,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 33.02 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -4324,7 +4324,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 63.5 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -4457,7 +4457,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 53.34 43.18 0)
 			(hide yes)
 			(show_name no)
