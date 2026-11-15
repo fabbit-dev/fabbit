@@ -2132,7 +2132,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Mag:L_Murata_DFE201612E"
 			(at 43.18 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -4666,7 +4666,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Mag:L_Murata_DFE201612E"
 			(at 233.68 38.1 0)
 			(hide yes)
 			(show_name no)

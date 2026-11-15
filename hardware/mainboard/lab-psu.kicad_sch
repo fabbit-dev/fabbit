@@ -31973,7 +31973,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DWV0008A"
 			(at 843.28 314.96 0)
 			(hide yes)
 			(show_name no)
@@ -38390,7 +38390,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_Vishay_IHLP-2525"
 			(at 464.82 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -40354,7 +40354,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Mag:L_TDK_VLS3012HBX"
 			(at 1008.38 127 0)
 			(hide yes)
 			(show_name no)

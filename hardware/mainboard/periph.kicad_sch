@@ -3641,7 +3641,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Sensor_Audio:Knowles_LGA-5_3.5x2.65mm"
 			(at 30.48 104.14 0)
 			(hide yes)
 			(show_name no)
