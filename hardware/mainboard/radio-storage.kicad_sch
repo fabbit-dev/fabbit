@@ -8953,7 +8953,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:Fuse_Bourns_MF-PSMF_0805"
 			(at 104.14 238.76 0)
 			(hide yes)
 			(show_name no)

@@ -20075,7 +20075,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 764.54 294.64 0)
 			(hide yes)
 			(show_name no)
@@ -21033,7 +21033,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 363.22 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -22093,7 +22093,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
 			(at 627.38 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -27179,7 +27179,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 784.86 294.64 0)
 			(hide yes)
 			(show_name no)
@@ -27868,7 +27868,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_WSL2512_7m-500m"
 			(at 342.9 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -29229,7 +29229,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Bourns_CRM2512"
 			(at 353.06 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -40487,7 +40487,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 774.7 294.64 0)
 			(hide yes)
 			(show_name no)
@@ -45417,7 +45417,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 795.02 294.64 0)
 			(hide yes)
 			(show_name no)
