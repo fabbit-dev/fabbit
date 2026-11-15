@@ -31122,7 +31122,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 756.92 25.4 0)
 			(hide yes)
 			(show_name no)
@@ -37150,7 +37150,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Diode_SMD:D_SMB"
 			(at 101.6 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -39879,7 +39879,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 822.96 25.4 0)
 			(hide yes)
 			(show_name no)
@@ -40809,7 +40809,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Diode_SMD:D_SOD-123"
 			(at 1036.32 114.3 0)
 			(hide yes)
 			(show_name no)
@@ -41517,7 +41517,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Diode_SMD:D_SMB"
 			(at 142.24 193.04 0)
 			(hide yes)
 			(show_name no)

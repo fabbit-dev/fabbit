@@ -9912,7 +9912,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Diode_SMD:D_SOD-323"
 			(at 276.86 22.86 0)
 			(hide yes)
 			(show_name no)
