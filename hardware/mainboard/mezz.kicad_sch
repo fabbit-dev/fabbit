@@ -6681,7 +6681,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:Amphenol_BergStak_61082-08xx_2x40_P0.8mm_Receptacle"
 			(at 58.42 71.12 0)
 			(hide yes)
 			(show_name no)

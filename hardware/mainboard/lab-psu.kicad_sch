@@ -19170,7 +19170,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:Fuse_LUTE_2920L"
 			(at 76.2 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -38090,7 +38090,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:Converter_DCDC_EVISUN_B_XT-1WR3_SMD"
 			(at 914.4 271.78 0)
 			(hide yes)
 			(show_name no)

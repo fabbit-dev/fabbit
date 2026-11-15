@@ -19812,7 +19812,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_1.27mm:PinHeader_2x10_P1.27mm_Horizontal"
+		(property "Footprint" "Fabbit_Conn:Samtec_FTSH-110-01-x-DH-A_2x10_P1.27mm_Horizontal_SMD"
 			(at 1028.7 93.98 0)
 			(hide yes)
 			(show_name no)

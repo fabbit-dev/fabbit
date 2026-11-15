@@ -5341,7 +5341,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:L_APV_PNR4020"
 			(at 81.28 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -10162,7 +10162,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:L_APV_PNR4020"
 			(at 91.44 38.1 0)
 			(hide yes)
 			(show_name no)
