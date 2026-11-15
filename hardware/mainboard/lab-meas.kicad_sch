@@ -12838,7 +12838,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0005A"
 			(at 596.9 114.3 0)
 			(hide yes)
 			(show_name no)
@@ -14855,7 +14855,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0005A"
 			(at 424.18 114.3 0)
 			(hide yes)
 			(show_name no)
@@ -24004,7 +24004,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DDC0006A"
 			(at 294.64 121.92 0)
 			(hide yes)
 			(show_name no)
