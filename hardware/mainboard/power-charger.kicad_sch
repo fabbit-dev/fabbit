@@ -5358,7 +5358,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_CSD_SON-8_3.3x3.3_Q3"
 			(at 134.62 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -9175,7 +9175,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SON:Texas_DQK"
 			(at 91.44 297.18 0)
 			(hide yes)
 			(show_name no)

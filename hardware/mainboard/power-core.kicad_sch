@@ -2087,7 +2087,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_Sunlord_SWPA3015S"
 			(at 43.18 43.18 0)
 			(hide yes)
 			(show_name no)

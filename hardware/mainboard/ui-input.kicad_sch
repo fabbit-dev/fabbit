@@ -13702,7 +13702,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm"
 			(at 58.42 144.78 0)
 			(hide yes)
 			(show_name no)

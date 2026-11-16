@@ -5208,7 +5208,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D"
 			(at 53.34 165.1 0)
 			(hide yes)
 			(show_name no)

@@ -2072,7 +2072,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_LGA:LGA-14_3x2.5mm_P0.5mm_LayoutBorder3x4y"
 			(at 132.08 53.34 0)
 			(hide yes)
 			(show_name no)

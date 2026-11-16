@@ -5166,7 +5166,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DFN_QFN:TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm"
 			(at 68.58 45.72 0)
 			(hide yes)
 			(show_name no)

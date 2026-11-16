@@ -10824,7 +10824,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5"
 			(at 172.72 177.8 0)
 			(hide yes)
 			(show_name no)
@@ -13631,7 +13631,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:Texas_R-PDSO-N5_DRL-5"
 			(at 86.36 223.52 0)
 			(hide yes)
 			(show_name no)
@@ -15429,7 +15429,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal"
 			(at 48.26 226.06 0)
 			(hide yes)
 			(show_name no)

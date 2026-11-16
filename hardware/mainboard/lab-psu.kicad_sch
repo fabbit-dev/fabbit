@@ -25437,7 +25437,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_RYQ0021A"
 			(at 411.48 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -33978,7 +33978,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_2x02_P2.54mm_Horizontal"
 			(at 45.72 193.04 0)
 			(hide yes)
 			(show_name no)

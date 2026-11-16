@@ -13655,7 +13655,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Crystal:Crystal_SMD_SeikoEpson_MC306-4Pin_8.0x3.2mm"
 			(at 53.34 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -13827,7 +13827,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm"
 			(at 485.14 96.52 0)
 			(hide yes)
 			(show_name no)
