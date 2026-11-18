@@ -23950,7 +23950,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Pogo_YTC1P-2510_1x04_P2.54mm"
 			(at 53.34 81.28 0)
 			(hide yes)
 			(show_name no)

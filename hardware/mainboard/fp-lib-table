@@ -7,4 +7,5 @@
   (lib (name "Fabbit_Shunt") (type "KiCad") (uri "${KIPRJMOD}/fabbit_shunt.pretty") (options "") (descr "Manufacturer land patterns: shunts, PTC"))
   (lib (name "Fabbit_Mag") (type "KiCad") (uri "${KIPRJMOD}/fabbit_mag.pretty") (options "") (descr "Manufacturer land patterns: inductors"))
   (lib (name "Fabbit_IC") (type "KiCad") (uri "${KIPRJMOD}/fabbit_ic.pretty") (options "") (descr "Manufacturer land patterns: ICs, modules, discretes"))
+  (lib (name "Fabbit_UI") (type "KiCad") (uri "${KIPRJMOD}/fabbit_ui.pretty") (options "") (descr "Project land patterns: buttons, dome contacts, encoder, pogo"))
 )

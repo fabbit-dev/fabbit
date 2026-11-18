@@ -7961,7 +7961,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 327.66 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -8747,7 +8747,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 271.78 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -8900,7 +8900,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 281.94 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -9505,7 +9505,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 45.72 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -9672,7 +9672,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 93.98 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -9761,7 +9761,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 172.72 134.62 0)
 			(hide yes)
 			(show_name no)
@@ -10518,7 +10518,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 480.06 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -10960,7 +10960,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 309.88 124.46 0)
 			(hide yes)
 			(show_name no)
@@ -11152,7 +11152,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 528.32 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -11725,7 +11725,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_SMD:SW_Push_1P1T_XKB_TS-1187A"
 			(at 139.7 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -12387,7 +12387,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_SMD:SW_Push_SPST_NO_Alps_SKRK"
 			(at 203.2 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -13177,7 +13177,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 223.52 134.62 0)
 			(hide yes)
 			(show_name no)
@@ -13252,7 +13252,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 193.04 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -13417,7 +13417,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Encoder_Mitsumi_SIQ-02FVS3"
 			(at 43.18 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -13537,7 +13537,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 142.24 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -13878,7 +13878,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:SW_Alps_SKRTLAE010_SidePush"
 			(at 96.52 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -13989,7 +13989,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 238.76 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -14230,7 +14230,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 373.38 182.88 0)
 			(hide yes)
 			(show_name no)
@@ -14319,7 +14319,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Dome_Contact_D3.8mm"
 			(at 424.18 182.88 0)
 			(hide yes)
 			(show_name no)
