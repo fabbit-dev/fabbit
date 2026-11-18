@@ -10246,7 +10246,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:HDMI_A_G-Switch_GT-HD002A_MidMount"
 			(at 218.44 73.66 0)
 			(hide yes)
 			(show_name no)
@@ -14708,7 +14708,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:FPC_BXCONN_FC-05B54P21H20_1x54_P0.5mm"
 			(at 45.72 345.44 0)
 			(hide yes)
 			(show_name no)

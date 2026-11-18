@@ -13862,7 +13862,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 406.4 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -14954,7 +14954,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 50.8 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -17231,7 +17231,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 127 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -20331,7 +20331,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 213.36 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -22958,7 +22958,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 304.8 45.72 0)
 			(hide yes)
 			(show_name no)
