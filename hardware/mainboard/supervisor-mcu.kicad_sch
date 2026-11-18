@@ -7484,7 +7484,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 287.02 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -11394,7 +11394,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 340.36 109.22 0)
 			(hide yes)
 			(show_name no)
@@ -12446,7 +12446,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 88.9 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -14396,7 +14396,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 187.96 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -16050,7 +16050,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 236.22 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -16730,7 +16730,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 403.86 124.46 0)
 			(hide yes)
 			(show_name no)
@@ -18238,7 +18238,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 139.7 111.76 0)
 			(hide yes)
 			(show_name no)
@@ -19529,7 +19529,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:WCH_QFN-128-1EP_12.3x12.3mm_P0.35mm_EP9x9mm"
 			(at 449.58 101.6 0)
 			(hide yes)
 			(show_name no)
