@@ -18639,7 +18639,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 254 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -20539,7 +20539,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 1064.26 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -21942,7 +21942,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 314.96 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -23764,7 +23764,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 627.38 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -26178,7 +26178,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:AOS_DFN-8-1EP_3x3mm_P0.65mm_AONR"
 			(at 279.4 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -29690,7 +29690,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 530.86 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -30655,7 +30655,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 1008.38 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -30806,7 +30806,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 58.42 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -31377,7 +31377,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 127 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -31604,7 +31604,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 114.3 139.7 0)
 			(hide yes)
 			(show_name no)
@@ -35431,7 +35431,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 739.14 292.1 0)
 			(hide yes)
 			(show_name no)
@@ -36988,7 +36988,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 901.7 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -40127,7 +40127,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 769.62 137.16 0)
 			(hide yes)
 			(show_name no)

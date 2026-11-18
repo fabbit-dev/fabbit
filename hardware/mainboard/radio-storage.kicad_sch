@@ -8178,7 +8178,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:ESP32-C5-MINI-1"
 			(at 86.36 93.98 0)
 			(hide yes)
 			(show_name no)

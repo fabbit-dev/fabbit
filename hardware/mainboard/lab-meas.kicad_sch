@@ -20012,7 +20012,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:ADI_CP-10-16_LFCSP-10_3x2mm_P0.5mm"
 			(at 716.28 124.46 0)
 			(hide yes)
 			(show_name no)

@@ -11035,7 +11035,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:LiteOn_LTST-C155_3.2x2.7mm"
 			(at 246.38 193.04 0)
 			(hide yes)
 			(show_name no)

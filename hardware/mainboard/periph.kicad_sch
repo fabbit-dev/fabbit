@@ -4299,7 +4299,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Vishay_VSMB2943SLX01"
 			(at 43.18 251.46 0)
 			(hide yes)
 			(show_name no)
@@ -5737,7 +5737,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Vishay_TSOP752_SMD-4"
 			(at 27.94 218.44 0)
 			(hide yes)
 			(show_name no)
