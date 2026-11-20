@@ -7098,7 +7098,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 73.66 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -8009,7 +8009,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -8164,7 +8164,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 195.58 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -8319,7 +8319,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 104.14 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -8705,7 +8705,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 266.7 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -8770,7 +8770,7 @@
 				)
 			)
 		)
-		(property "Qualification" "Provisional 15pF C0G +/-5%,minimum16V,0603 proposed; exact MPN/rating proof,Cstray/drive/startup PENDING."
+		(property "Qualification" "Provisional 15pF C0G +/-5%,minimum16V,0402 proposed; exact MPN/rating proof,Cstray/drive/startup PENDING."
 			(at 266.7 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -9001,7 +9001,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 317.5 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -9066,7 +9066,7 @@
 				)
 			)
 		)
-		(property "Qualification" "Proposed10kOhm +/-1%,0603,min0.063W. 3V3_AON to PE15 recovery only; exact MPN/rating PENDING. NOT NRST/ARM/ROMstrap."
+		(property "Qualification" "Proposed10kOhm +/-1%,0402,min0.063W. 3V3_AON to PE15 recovery only; exact MPN/rating PENDING. NOT NRST/ARM/ROMstrap."
 			(at 317.5 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -9297,7 +9297,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 114.3 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -9683,7 +9683,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 154.94 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -9838,7 +9838,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 276.86 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -9903,7 +9903,7 @@
 				)
 			)
 		)
-		(property "Qualification" "Provisional 15pF C0G +/-5%,minimum16V,0603 proposed; exact MPN/rating proof,Cstray/drive/startup PENDING."
+		(property "Qualification" "Provisional 15pF C0G +/-5%,minimum16V,0402 proposed; exact MPN/rating proof,Cstray/drive/startup PENDING."
 			(at 276.86 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -10492,7 +10492,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 33.02 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -10788,7 +10788,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 83.82 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -11095,7 +11095,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 43.18 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -11250,7 +11250,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 327.66 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -11315,7 +11315,7 @@
 				)
 			)
 		)
-		(property "Qualification" "1kOhm +/-1%,0603,min0.063W. RECOVERY_CONTACT_N connected to SW913 and U1.60 PE15 through R402; firmware recovery input, not established ROM boot strap. Exact switch MPN/mechanics and resistor MPN/rating pending."
+		(property "Qualification" "1kOhm +/-1%,0402,min0.063W. RECOVERY_CONTACT_N connected to SW913 and U1.60 PE15 through R402; firmware recovery input, not established ROM boot strap. Exact switch MPN/mechanics and resistor MPN/rating pending."
 			(at 327.66 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -12136,7 +12136,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 175.26 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -12291,7 +12291,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 165.1 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -12971,7 +12971,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 93.98 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -13435,7 +13435,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 307.34 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -13500,7 +13500,7 @@
 				)
 			)
 		)
-		(property "Qualification" "WCH DS111-112 optional0.1uF NRST filter;100nF X7R +/-10%,minimum16V,0603 proposed; final MPN/rating PENDING. Internal30-55k pullup to VDDIO; NOT independent POR or guaranteed delay."
+		(property "Qualification" "WCH DS111-112 optional0.1uF NRST filter;100nF X7R +/-10%,minimum16V,0402 proposed; final MPN/rating PENDING. Internal30-55k pullup to VDDIO; NOT independent POR or guaranteed delay."
 			(at 307.34 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -14010,7 +14010,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 124.46 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -14165,7 +14165,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 185.42 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -14921,7 +14921,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 53.34 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -15752,7 +15752,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 287.02 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -15817,7 +15817,7 @@
 				)
 			)
 		)
-		(property "Qualification" "Corrected provisional 15pF NOT18pF,C0G +/-5%,minimum16V,0603 proposed; exact MPN/Cstray/drive/startup PENDING."
+		(property "Qualification" "Corrected provisional 15pF NOT18pF,C0G +/-5%,minimum16V,0402 proposed; exact MPN/Cstray/drive/startup PENDING."
 			(at 287.02 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -15886,7 +15886,7 @@
 				)
 			)
 		)
-		(property "Value" "10R 1% 0603"
+		(property "Value" "10R 1% 0402"
 			(at 22.86 222.25 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15896,7 +15896,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 22.86 218.44 0)
 			(hide yes)
 			(show_name no)
@@ -16575,7 +16575,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 144.78 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -17255,7 +17255,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 297.18 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -17320,7 +17320,7 @@
 				)
 			)
 		)
-		(property "Qualification" "Corrected provisional 15pF NOT18pF,C0G +/-5%,minimum16V,0603 proposed; exact MPN/Cstray/drive/startup PENDING."
+		(property "Qualification" "Corrected provisional 15pF NOT18pF,C0G +/-5%,minimum16V,0402 proposed; exact MPN/Cstray/drive/startup PENDING."
 			(at 297.18 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -17703,7 +17703,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 134.62 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -18915,7 +18915,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 63.5 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -19222,7 +19222,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 205.74 43.18 0)
 			(hide yes)
 			(show_name no)

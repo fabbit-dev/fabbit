@@ -1769,7 +1769,7 @@
 				)
 			)
 		)
-		(property "Value" "6.8pF 50V C0G 0603"
+		(property "Value" "6.8pF 50V C0G 0402"
 			(at 133.35 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1779,7 +1779,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 129.54 63.5 0)
 			(hide yes)
 			(show_name no)

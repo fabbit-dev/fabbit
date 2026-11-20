@@ -3165,7 +3165,7 @@
 				)
 			)
 		)
-		(property "Value" "100k 1% 0603"
+		(property "Value" "100k 1% 0402"
 			(at 91.44 118.11 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3175,7 +3175,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 91.44 114.3 0)
 			(hide yes)
 			(show_name no)
@@ -3321,7 +3321,7 @@
 				)
 			)
 		)
-		(property "Value" "100k 1% 0603"
+		(property "Value" "100k 1% 0402"
 			(at 127 273.05 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3331,7 +3331,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 127 269.24 0)
 			(hide yes)
 			(show_name no)
@@ -3903,7 +3903,7 @@
 				)
 			)
 		)
-		(property "Value" "100R 1% 0603"
+		(property "Value" "100R 1% 0402"
 			(at 58.42 217.17 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3913,7 +3913,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 58.42 213.36 0)
 			(hide yes)
 			(show_name no)
@@ -5996,7 +5996,7 @@
 				)
 			)
 		)
-		(property "Value" "634k 1% 0603"
+		(property "Value" "634k 1% 0402"
 			(at 121.92 57.15 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6006,7 +6006,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 121.92 53.34 0)
 			(hide yes)
 			(show_name no)
@@ -6228,7 +6228,7 @@
 				)
 			)
 		)
-		(property "Value" "1.2k 1% 0603"
+		(property "Value" "1.2k 1% 0402"
 			(at 124.46 173.99 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6238,7 +6238,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 124.46 170.18 0)
 			(hide yes)
 			(show_name no)
@@ -6382,7 +6382,7 @@
 				)
 			)
 		)
-		(property "Value" "100nF 16V X7R 0603"
+		(property "Value" "100nF 16V X7R 0402"
 			(at 111.76 41.91 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6392,7 +6392,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
 			(at 111.76 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -6658,7 +6658,7 @@
 				)
 			)
 		)
-		(property "Value" "100R 1% 0603"
+		(property "Value" "100R 1% 0402"
 			(at 116.84 270.51 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6668,7 +6668,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
 			(at 116.84 266.7 0)
 			(hide yes)
 			(show_name no)
