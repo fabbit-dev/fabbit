@@ -18639,7 +18639,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 254 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -20075,7 +20075,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 764.54 294.64 0)
 			(hide yes)
 			(show_name no)
@@ -20397,7 +20397,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0005A"
 			(at 259.08 297.18 0)
 			(hide yes)
 			(show_name no)
@@ -20539,7 +20539,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 1064.26 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -21033,7 +21033,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 363.22 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -21942,7 +21942,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 314.96 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -22093,7 +22093,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric"
 			(at 627.38 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -23764,7 +23764,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 627.38 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -25437,7 +25437,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_RYQ0021A"
 			(at 411.48 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -26178,7 +26178,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:AOS_DFN-8-1EP_3x3mm_P0.65mm_AONR"
 			(at 279.4 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -27179,7 +27179,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 784.86 294.64 0)
 			(hide yes)
 			(show_name no)
@@ -27868,7 +27868,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_WSL2512_7m-500m"
 			(at 342.9 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -29229,7 +29229,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Bourns_CRM2512"
 			(at 353.06 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -29690,7 +29690,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 530.86 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -30655,7 +30655,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 1008.38 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -30806,7 +30806,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 58.42 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -31122,7 +31122,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 756.92 25.4 0)
 			(hide yes)
 			(show_name no)
@@ -31377,7 +31377,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 127 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -31604,7 +31604,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 114.3 139.7 0)
 			(hide yes)
 			(show_name no)
@@ -31973,7 +31973,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DWV0008A"
 			(at 843.28 314.96 0)
 			(hide yes)
 			(show_name no)
@@ -33287,7 +33287,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0005A"
 			(at 662.94 302.26 0)
 			(hide yes)
 			(show_name no)
@@ -33978,7 +33978,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_2x02_P2.54mm_Horizontal"
 			(at 45.72 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -35431,7 +35431,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 739.14 292.1 0)
 			(hide yes)
 			(show_name no)
@@ -36988,7 +36988,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 901.7 147.32 0)
 			(hide yes)
 			(show_name no)
@@ -37150,7 +37150,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Diode_SMD:D_SMB"
 			(at 101.6 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -38390,7 +38390,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_Vishay_IHLP-2525"
 			(at 464.82 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -39879,7 +39879,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 822.96 25.4 0)
 			(hide yes)
 			(show_name no)
@@ -40127,7 +40127,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Nexperia_MLPAK33_SOT8002-1"
 			(at 769.62 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -40354,7 +40354,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Mag:L_TDK_VLS3012HBX"
 			(at 1008.38 127 0)
 			(hide yes)
 			(show_name no)
@@ -40487,7 +40487,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 774.7 294.64 0)
 			(hide yes)
 			(show_name no)
@@ -40809,7 +40809,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Diode_SMD:D_SOD-123"
 			(at 1036.32 114.3 0)
 			(hide yes)
 			(show_name no)
@@ -41517,7 +41517,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Diode_SMD:D_SMB"
 			(at 142.24 193.04 0)
 			(hide yes)
 			(show_name no)
@@ -44945,7 +44945,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0005A"
 			(at 452.12 297.18 0)
 			(hide yes)
 			(show_name no)
@@ -45417,7 +45417,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:R_Vishay_CRCW2512-HP"
 			(at 795.02 294.64 0)
 			(hide yes)
 			(show_name no)

@@ -8871,7 +8871,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:USB_C_HCTL_HC-TYPE-C-24P-MM0.8-5A"
 			(at 48.26 60.96 0)
 			(hide yes)
 			(show_name no)

@@ -5208,7 +5208,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D"
 			(at 53.34 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -6058,7 +6058,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 152.4 332.74 0)
 			(hide yes)
 			(show_name no)
@@ -10382,7 +10382,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 198.12 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -12304,7 +12304,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 142.24 332.74 0)
 			(hide yes)
 			(show_name no)

@@ -13595,7 +13595,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 200.66 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -13862,7 +13862,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 406.4 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -14689,7 +14689,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D"
 			(at 63.5 297.18 0)
 			(hide yes)
 			(show_name no)
@@ -14789,7 +14789,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 160.02 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -14954,7 +14954,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 50.8 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -15692,7 +15692,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 180.34 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -16187,7 +16187,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0005A"
 			(at 45.72 378.46 0)
 			(hide yes)
 			(show_name no)
@@ -16932,7 +16932,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 190.5 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -17231,7 +17231,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 127 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -17969,7 +17969,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 220.98 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -18147,7 +18147,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 139.7 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -18236,7 +18236,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 119.38 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -18325,7 +18325,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 231.14 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -18909,7 +18909,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 149.86 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -19087,7 +19087,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 210.82 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -19176,7 +19176,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 241.3 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -20077,7 +20077,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 251.46 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -20331,7 +20331,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 213.36 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -21145,7 +21145,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 170.18 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -21323,7 +21323,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 129.54 398.78 0)
 			(hide yes)
 			(show_name no)
@@ -22958,7 +22958,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Conn:SODIMM_TE_1473005-4_200P_P0.6mm"
 			(at 304.8 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -23950,7 +23950,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_UI:Pogo_YTC1P-2510_1x04_P2.54mm"
 			(at 53.34 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -24230,7 +24230,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 109.22 398.78 0)
 			(hide yes)
 			(show_name no)

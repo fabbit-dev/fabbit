@@ -1361,7 +1361,7 @@
 				)
 			)
 		)
-		(property "Description" "N-MOSFET 12 V, TI NexFET SON 2x2 (SLPS313A p1 top view: D 1, D 2, G 3, S 4, D 5, D 6; centre pads 7/8 drain per p1/p8-9 drawing, to verify)"
+		(property "Description" "N-MOSFET 12 V, TI NexFET SON 2x2 (SLPS313A p1 top view: D 1, D 2, G 3, S 4, D 5, D 6; p9 land pattern: pad 7 = centre source (bottom, 0.75x0.3, joins S), pad 8 = drain pad 1.0x0.95)"
 			(at 0 -10.16 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1495,7 +1495,7 @@
 			(pin passive line
 				(at 3.81 12.7 270)
 				(length 2.54)
-				(name "D"
+				(name "S"
 					(effects
 						(font
 							(size 1.27 1.27)

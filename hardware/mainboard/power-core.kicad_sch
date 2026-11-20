@@ -1262,7 +1262,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 53.34 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -1591,7 +1591,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 33.02 63.5 0)
 			(hide yes)
 			(show_name no)
@@ -1879,7 +1879,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0005A"
 			(at 96.52 27.94 0)
 			(hide yes)
 			(show_name no)
@@ -2087,7 +2087,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Inductor_SMD:L_Sunlord_SWPA3015S"
 			(at 43.18 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -2384,7 +2384,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 63.5 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -2637,7 +2637,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
 			(at 22.86 43.18 0)
 			(hide yes)
 			(show_name no)

@@ -3641,7 +3641,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Sensor_Audio:Knowles_LGA-5_3.5x2.65mm"
 			(at 30.48 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -4299,7 +4299,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Vishay_VSMB2943SLX01"
 			(at 43.18 251.46 0)
 			(hide yes)
 			(show_name no)
@@ -4640,7 +4640,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DGS0010A"
 			(at 66.04 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -5166,7 +5166,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DFN_QFN:TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm"
 			(at 68.58 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -5550,7 +5550,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_Wire:SolderWire-0.1sqmm_1x02_P3.6mm_D0.4mm_OD1mm"
 			(at 149.86 137.16 0)
 			(hide yes)
 			(show_name no)
@@ -5737,7 +5737,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:Vishay_TSOP752_SMD-4"
 			(at 27.94 218.44 0)
 			(hide yes)
 			(show_name no)
@@ -6546,7 +6546,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_Wire:SolderWire-0.1sqmm_1x02_P3.6mm_D0.4mm_OD1mm"
 			(at 149.86 22.86 0)
 			(hide yes)
 			(show_name no)
@@ -6746,7 +6746,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
 			(at 104.14 271.78 0)
 			(hide yes)
 			(show_name no)

@@ -7260,7 +7260,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 421.64 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -7873,7 +7873,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 472.44 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -8178,7 +8178,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_IC:ESP32-C5-MINI-1"
 			(at 86.36 93.98 0)
 			(hide yes)
 			(show_name no)
@@ -8953,7 +8953,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_Shunt:Fuse_Bourns_MF-PSMF_0805"
 			(at 104.14 238.76 0)
 			(hide yes)
 			(show_name no)
@@ -9590,7 +9590,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 510.54 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -10824,7 +10824,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5"
 			(at 172.72 177.8 0)
 			(hide yes)
 			(show_name no)
@@ -12746,7 +12746,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Fabbit_TI:TI_DBV0006A"
 			(at 50.8 177.8 0)
 			(hide yes)
 			(show_name no)
@@ -13631,7 +13631,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:Texas_R-PDSO-N5_DRL-5"
 			(at 86.36 223.52 0)
 			(hide yes)
 			(show_name no)
@@ -15201,7 +15201,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 363.22 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -15276,7 +15276,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 251.46 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -15429,7 +15429,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal"
 			(at 48.26 226.06 0)
 			(hide yes)
 			(show_name no)
@@ -16175,7 +16175,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 307.34 45.72 0)
 			(hide yes)
 			(show_name no)
