@@ -10244,7 +10244,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SON:Texas_S-PDSO-N12"
+		(property "Footprint" "Fabbit_TI:TI_DRZ0012A_VSON-12_NoVia"
 			(at 60.96 231.14 0)
 			(hide yes)
 			(show_name no)

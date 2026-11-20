@@ -11879,7 +11879,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:Texas_REF0038A_WQFN-38-2EP_6x4mm_P0.4"
+		(property "Footprint" "Fabbit_TI:TI_REF0038A_WQFN-38-2EP_NoVia"
 			(at 78.74 205.74 0)
 			(hide yes)
 			(show_name no)
