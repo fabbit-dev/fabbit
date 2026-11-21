@@ -2262,30 +2262,20 @@
 		)
 	)
 	(no_connect
-		(at 66.04 43.18)
-		(uuid "0c54a0c5-f29d-434b-8358-56281ca57c6f")
-	)
-	(no_connect
 		(at 66.04 50.8)
-		(uuid "106c27ee-b873-48bd-8a3a-45e68041b57a")
+		(uuid "03d9b1df-9651-4793-bbf3-a97346efb82e")
 	)
 	(no_connect
-		(at 66.04 45.72)
-		(uuid "44bea2eb-f9c4-47ae-8cf3-84cda6daa596")
+		(at 66.04 43.18)
+		(uuid "6e5849bf-3c4d-479f-a9c6-2eba62618ea0")
 	)
 	(no_connect
 		(at 66.04 53.34)
-		(uuid "5f865267-5419-4b1b-a75f-f38e24f53423")
+		(uuid "adcf1d27-0b48-4fbe-969f-291010b5b62f")
 	)
-	(wire
-		(pts
-			(xy 88.9 41.91) (xy 88.9 46.99)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "1120b36e-1a1e-4974-95bd-61c716d61a9b")
+	(no_connect
+		(at 66.04 45.72)
+		(uuid "c16e1e44-1001-4609-a0ea-a2d4f6eaedbb")
 	)
 	(wire
 		(pts
@@ -2295,167 +2285,7 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "11d77159-4f59-427d-91c3-653f78ea9bcc")
-	)
-	(wire
-		(pts
-			(xy 58.42 58.42) (xy 58.42 63.5)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "11f2a8a8-78bd-4901-afe4-5859abc5b354")
-	)
-	(wire
-		(pts
-			(xy 38.1 147.32) (xy 45.72 147.32)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "12fff449-b12c-49b6-853f-320eb84198ca")
-	)
-	(wire
-		(pts
-			(xy 24.13 96.52) (xy 30.48 96.52)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "137f0bfb-7596-4d01-9cbc-79715e5a5d1f")
-	)
-	(wire
-		(pts
-			(xy 144.78 260.35) (xy 144.78 265.43)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "1822ec6f-4214-46d2-82ce-163d18ee3b9e")
-	)
-	(wire
-		(pts
-			(xy 116.84 156.21) (xy 116.84 161.29)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "18cec309-0457-48e4-bdd9-c460ff4f33aa")
-	)
-	(wire
-		(pts
-			(xy 58.42 137.16) (xy 58.42 142.24)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "1acb4ff3-4c06-4f1e-9deb-aec053bb7629")
-	)
-	(wire
-		(pts
-			(xy 73.66 242.57) (xy 73.66 247.65)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "1c162bcf-b045-48ce-8a6d-195bfcd1fb2a")
-	)
-	(wire
-		(pts
-			(xy 71.12 149.86) (xy 76.2 149.86)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "1d17da11-51d8-4abd-89b9-2a00c2a639fc")
-	)
-	(wire
-		(pts
-			(xy 66.04 91.44) (xy 66.04 97.79)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "1ff9a67b-5943-4dce-b1f1-b9cb14045561")
-	)
-	(wire
-		(pts
-			(xy 106.68 236.22) (xy 113.03 236.22)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "20633ebd-a1fe-451b-8906-d83df99f3f1e")
-	)
-	(wire
-		(pts
-			(xy 116.84 142.24) (xy 116.84 148.59)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "20d9a64b-3b6a-46fe-8695-ad9ac10efc7e")
-	)
-	(wire
-		(pts
-			(xy 36.83 38.1) (xy 43.18 38.1)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "21b9afce-fb78-42b3-b533-a5fbde06c356")
-	)
-	(wire
-		(pts
-			(xy 38.1 50.8) (xy 43.18 50.8)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "2efd7d12-107f-4a53-adbf-e2275250a70f")
-	)
-	(wire
-		(pts
-			(xy 68.58 201.93) (xy 68.58 207.01)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "31081413-3c1a-4fea-bf54-0fb616070bd8")
-	)
-	(wire
-		(pts
-			(xy 55.88 27.94) (xy 55.88 33.02)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "372430a4-a847-4759-b964-6386903d40d8")
-	)
-	(wire
-		(pts
-			(xy 53.34 58.42) (xy 53.34 63.5)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "38f1e2a6-14b9-4e14-8768-97016890adb3")
+		(uuid "051819c2-32af-4708-8d21-0c8994296a07")
 	)
 	(wire
 		(pts
@@ -2465,157 +2295,27 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "3fdd7936-b655-4b88-bcf2-946f994c79b8")
+		(uuid "07305ded-5dc2-436b-9616-66d9aff031a1")
 	)
 	(wire
 		(pts
-			(xy 40.64 186.69) (xy 40.64 191.77)
+			(xy 106.68 236.22) (xy 113.03 236.22)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "45a19d5e-9117-4b2f-a49a-2a4345c1f95a")
+		(uuid "0869f620-30ef-4453-9f29-643186adf74b")
 	)
 	(wire
 		(pts
-			(xy 76.2 91.44) (xy 76.2 97.79)
+			(xy 55.88 27.94) (xy 55.88 33.02)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "45c02201-1aa4-4dc0-9dbe-9f5ce7885511")
-	)
-	(wire
-		(pts
-			(xy 144.78 246.38) (xy 144.78 252.73)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "4aa2c3ff-5175-4066-bd2b-73e01e4ca153")
-	)
-	(wire
-		(pts
-			(xy 134.62 255.27) (xy 134.62 261.62)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "4cb22831-2fc0-4e59-b6b9-7c726d61f40a")
-	)
-	(wire
-		(pts
-			(xy 106.68 246.38) (xy 111.76 246.38)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "4efbecad-baef-4e1b-bb9f-4d80ec0631fc")
-	)
-	(wire
-		(pts
-			(xy 40.64 101.6) (xy 45.72 101.6)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "51872e2c-2460-4da5-a37a-772f722b9377")
-	)
-	(wire
-		(pts
-			(xy 106.68 153.67) (xy 106.68 158.75)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "5206e890-9e5b-4a8d-9aab-af6851795d56")
-	)
-	(wire
-		(pts
-			(xy 48.26 204.47) (xy 53.34 204.47)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "586b5e2c-5032-45e2-a0cd-41807340044d")
-	)
-	(wire
-		(pts
-			(xy 124.46 22.86) (xy 129.54 22.86)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "59958454-bd4a-44d5-ad88-06e5790dfdad")
-	)
-	(wire
-		(pts
-			(xy 134.62 242.57) (xy 134.62 247.65)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "67101a76-8add-4700-b51d-bbc834277b3a")
-	)
-	(wire
-		(pts
-			(xy 78.74 199.39) (xy 78.74 204.47)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "681dfddc-57b1-4605-bb32-3827086675f0")
-	)
-	(wire
-		(pts
-			(xy 40.64 106.68) (xy 46.99 106.68)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "6d51d9b5-20c5-4fc8-b299-48e2b654ce94")
-	)
-	(wire
-		(pts
-			(xy 109.22 57.15) (xy 109.22 63.5)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "72d50afb-532d-4466-a36a-1fb3438dfdc8")
-	)
-	(wire
-		(pts
-			(xy 154.94 242.57) (xy 154.94 247.65)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "75a96b83-239d-474d-a1a2-64c71a1daef2")
-	)
-	(wire
-		(pts
-			(xy 36.83 48.26) (xy 43.18 48.26)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "7c9160f5-111c-4774-b3c6-76798365a013")
+		(uuid "0a7b923b-be50-470d-8189-27e0217e6372")
 	)
 	(wire
 		(pts
@@ -2625,167 +2325,17 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "7cd9377d-4656-4e9f-8ff9-6d8899b8bf4a")
+		(uuid "0ee0d73d-6867-4514-b91b-38a9f3570fa0")
 	)
 	(wire
 		(pts
-			(xy 78.74 186.69) (xy 78.74 191.77)
+			(xy 116.84 156.21) (xy 116.84 161.29)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "7cec06af-74ca-4b11-843c-0da31cd59dfb")
-	)
-	(wire
-		(pts
-			(xy 36.83 40.64) (xy 43.18 40.64)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "7e9ce6da-d050-4835-9b40-11324fd4f122")
-	)
-	(wire
-		(pts
-			(xy 92.71 241.3) (xy 99.06 241.3)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "810fc7b7-013e-4614-9092-f89326f6512e")
-	)
-	(wire
-		(pts
-			(xy 33.02 238.76) (xy 39.37 238.76)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "83334170-1aba-4bd0-8731-63f6b1d94718")
-	)
-	(wire
-		(pts
-			(xy 71.12 157.48) (xy 77.47 157.48)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "87bd2263-8c1f-4bc9-9719-89bc48242eb7")
-	)
-	(wire
-		(pts
-			(xy 132.08 132.08) (xy 137.16 132.08)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "8ce75a33-e2f8-471b-84ab-489076c26dc9")
-	)
-	(wire
-		(pts
-			(xy 132.08 134.62) (xy 137.16 134.62)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "9156b5e8-e3d1-4a87-bdfe-c55446b4df53")
-	)
-	(wire
-		(pts
-			(xy 46.99 238.76) (xy 53.34 238.76)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "91ad12f2-bfd2-4452-8334-0ff8d91c3bd3")
-	)
-	(wire
-		(pts
-			(xy 36.83 43.18) (xy 43.18 43.18)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "93f1a741-e4e1-4ea7-a1a6-c3707ea0c773")
-	)
-	(wire
-		(pts
-			(xy 96.52 148.59) (xy 96.52 153.67)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "97302e65-cb18-4999-93a2-9988cc1ee221")
-	)
-	(wire
-		(pts
-			(xy 68.58 40.64) (xy 73.66 40.64)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "9fddcf64-b269-4d71-84f6-4a7420a38354")
-	)
-	(wire
-		(pts
-			(xy 55.88 137.16) (xy 55.88 142.24)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "a6c386b4-c9d9-4979-b5ec-661b689bc1d7")
-	)
-	(wire
-		(pts
-			(xy 106.68 139.7) (xy 106.68 146.05)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "a6f84644-4904-4ae5-b554-649d4d53aabf")
-	)
-	(wire
-		(pts
-			(xy 99.06 29.21) (xy 99.06 34.29)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "a720cdd3-9ea4-413d-9341-689bde9d01f8")
-	)
-	(wire
-		(pts
-			(xy 71.12 147.32) (xy 76.2 147.32)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "ab4016be-6d21-43a5-9fb8-cba7a1c9112f")
-	)
-	(wire
-		(pts
-			(xy 96.52 135.89) (xy 96.52 140.97)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "b7ca36c9-365a-4186-93b8-7acb4744b7af")
+		(uuid "0f7b64ba-a908-4c25-87ad-748d382b9f8d")
 	)
 	(wire
 		(pts
@@ -2795,107 +2345,7 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "beefd49b-5005-4637-8b41-cc6fb89020f8")
-	)
-	(wire
-		(pts
-			(xy 99.06 41.91) (xy 99.06 46.99)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "c1abb6bd-1dd8-4c3e-8a4b-e2815838d329")
-	)
-	(wire
-		(pts
-			(xy 39.37 154.94) (xy 45.72 154.94)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "c95119de-a5e8-4823-aec0-2533e9cc2deb")
-	)
-	(wire
-		(pts
-			(xy 73.66 255.27) (xy 73.66 261.62)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "d2251916-18bb-433f-aba7-e1fe239555c2")
-	)
-	(wire
-		(pts
-			(xy 40.64 104.14) (xy 46.99 104.14)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "d49ee58b-792e-4030-87d0-f3f04395d6e3")
-	)
-	(wire
-		(pts
-			(xy 88.9 29.21) (xy 88.9 34.29)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "d865342b-1bfe-466b-a318-6e5a4c5576c3")
-	)
-	(wire
-		(pts
-			(xy 25.4 111.76) (xy 30.48 111.76)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "d8b8cef6-9902-46cf-9fc5-5f76f0052051")
-	)
-	(wire
-		(pts
-			(xy 34.29 219.71) (xy 39.37 219.71)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "dc2801a8-70f8-4f40-ba64-5887bff95af5")
-	)
-	(wire
-		(pts
-			(xy 38.1 157.48) (xy 45.72 157.48)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "e6d8b0d7-e918-4c5d-8920-78ec495f290c")
-	)
-	(wire
-		(pts
-			(xy 124.46 25.4) (xy 129.54 25.4)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "e73ee6a5-6247-44e0-a0a8-ccaffa4c6c31")
-	)
-	(wire
-		(pts
-			(xy 68.58 38.1) (xy 73.66 38.1)
-		)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(uuid "ed476963-f12e-4329-8ccd-7664ebdf8693")
+		(uuid "1cb2bfa6-e112-4305-a852-5848dc32c7fd")
 	)
 	(wire
 		(pts
@@ -2905,27 +2355,177 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "f89ea580-fc8a-487a-94ca-7040464cf854")
+		(uuid "1f6ee1ef-1676-401f-a3ed-b78c9ba7df68")
 	)
 	(wire
 		(pts
-			(xy 66.04 105.41) (xy 66.04 110.49)
+			(xy 34.29 219.71) (xy 39.37 219.71)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "f9100552-53c2-4284-aa6e-5b42bf96d067")
+		(uuid "2174484d-388d-4566-804d-5181373a319d")
 	)
 	(wire
 		(pts
-			(xy 41.91 219.71) (xy 41.91 224.79)
+			(xy 68.58 40.64) (xy 73.66 40.64)
 		)
 		(stroke
 			(width 0)
 			(type solid)
 		)
-		(uuid "f9eaf0d3-a035-44f8-823c-4fb8190dd227")
+		(uuid "236094ff-53a6-4b2f-a7b4-70462595d519")
+	)
+	(wire
+		(pts
+			(xy 106.68 139.7) (xy 106.68 146.05)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "23750bf8-2dd0-44a5-b892-12e92ba3a234")
+	)
+	(wire
+		(pts
+			(xy 106.68 153.67) (xy 106.68 158.75)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "24d1ee49-928d-4801-b5ac-f9e979d8e42c")
+	)
+	(wire
+		(pts
+			(xy 116.84 142.24) (xy 116.84 148.59)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "29a1ce47-d6b0-438b-b1bd-8b13252b1376")
+	)
+	(wire
+		(pts
+			(xy 53.34 58.42) (xy 53.34 63.5)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "2dae4e2a-cbe8-44ce-bd88-ec13b7420cb4")
+	)
+	(wire
+		(pts
+			(xy 76.2 91.44) (xy 76.2 97.79)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "33ab2718-16ee-4ca3-a087-84427344577f")
+	)
+	(wire
+		(pts
+			(xy 38.1 50.8) (xy 43.18 50.8)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "3661491b-8e3d-4c55-8bab-228a64cde600")
+	)
+	(wire
+		(pts
+			(xy 96.52 148.59) (xy 96.52 153.67)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "37a7f88b-1cce-456c-9872-1bb5d1c84fce")
+	)
+	(wire
+		(pts
+			(xy 39.37 154.94) (xy 45.72 154.94)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "3a281297-b80f-4c41-918f-721b91663b93")
+	)
+	(wire
+		(pts
+			(xy 48.26 204.47) (xy 53.34 204.47)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "44dfa3b5-5199-4510-adcb-7e53910fea3a")
+	)
+	(wire
+		(pts
+			(xy 144.78 246.38) (xy 144.78 252.73)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "4c1c1903-f06b-442c-80d5-0b647853e4fb")
+	)
+	(wire
+		(pts
+			(xy 36.83 43.18) (xy 43.18 43.18)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "4c82f5ee-9718-47d2-82aa-62e226526a21")
+	)
+	(wire
+		(pts
+			(xy 25.4 111.76) (xy 30.48 111.76)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "4fe9ce0b-5296-445f-9386-70ee1f55a920")
+	)
+	(wire
+		(pts
+			(xy 88.9 41.91) (xy 88.9 46.99)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "50e3a82a-7753-47bb-bf4f-05dad566e193")
+	)
+	(wire
+		(pts
+			(xy 40.64 104.14) (xy 46.99 104.14)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "51f24510-5937-445b-9f5b-fd37ccd0b060")
+	)
+	(wire
+		(pts
+			(xy 78.74 186.69) (xy 78.74 191.77)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "5428754a-789b-4790-ae28-b537ee7e5cb6")
 	)
 	(wire
 		(pts
@@ -2935,43 +2535,407 @@
 			(width 0)
 			(type solid)
 		)
-		(uuid "fecc5e0b-aa3c-4fa6-8cac-172a3319f4b7")
+		(uuid "5812b284-b6d1-4480-b2e5-89a62fe5c0e9")
 	)
-	(label "DRV_REG"
-		(at 106.68 139.7 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
+	(wire
+		(pts
+			(xy 73.66 242.57) (xy 73.66 247.65)
 		)
-		(uuid "02a5954c-6f3a-495f-bb7e-3aa7a5bc2634")
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "5df9b8bf-7b7c-46bd-b6d8-41b1f4fc20e7")
 	)
-	(label "LRA_N"
-		(at 132.08 134.62 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
+	(wire
+		(pts
+			(xy 33.02 238.76) (xy 39.37 238.76)
 		)
-		(uuid "06035b72-f20b-4bff-b267-21565a72062c")
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "638613fb-5075-4555-93c9-e3509f5305e8")
 	)
-	(label "LRA_P"
-		(at 132.08 132.08 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
+	(wire
+		(pts
+			(xy 99.06 41.91) (xy 99.06 46.99)
 		)
-		(uuid "145b0228-1749-4198-a321-7c7ac6f1c67e")
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "6755ae57-47f5-4e31-a60b-9f2d26d6d5ee")
 	)
-	(label "IR_VS"
-		(at 40.64 186.69 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
+	(wire
+		(pts
+			(xy 66.04 91.44) (xy 66.04 97.79)
 		)
-		(uuid "1874bd63-486d-4c86-8883-0cfc2650d929")
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "6ac6a14c-10a8-4d13-ac68-d6a0b5c71af6")
+	)
+	(wire
+		(pts
+			(xy 88.9 29.21) (xy 88.9 34.29)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "6c6928bb-7e60-46f1-bce5-88e1fc28c1ed")
+	)
+	(wire
+		(pts
+			(xy 134.62 242.57) (xy 134.62 247.65)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "6d99555b-7ec7-490d-8e95-01c789ad2078")
+	)
+	(wire
+		(pts
+			(xy 106.68 246.38) (xy 111.76 246.38)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "723b813a-a2bd-423d-a2e7-6ff224ee069c")
+	)
+	(wire
+		(pts
+			(xy 38.1 157.48) (xy 45.72 157.48)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "7376bf05-38ab-4ba0-99a7-7cccdba9e9f4")
+	)
+	(wire
+		(pts
+			(xy 38.1 147.32) (xy 45.72 147.32)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "7ee82908-35c5-4e3c-b7f3-4869ffa27032")
+	)
+	(wire
+		(pts
+			(xy 71.12 149.86) (xy 76.2 149.86)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "80cdf1db-34f9-4037-b926-62a35c1ad05d")
+	)
+	(wire
+		(pts
+			(xy 134.62 255.27) (xy 134.62 261.62)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "83e764e6-fa5c-4c64-80f0-33074950a945")
+	)
+	(wire
+		(pts
+			(xy 40.64 186.69) (xy 40.64 191.77)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "8f7a5070-8b23-4087-8a8e-08121cf9a4ca")
+	)
+	(wire
+		(pts
+			(xy 132.08 134.62) (xy 137.16 134.62)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "95b69da5-a2ae-497e-aecc-1405a5ea7b5b")
+	)
+	(wire
+		(pts
+			(xy 71.12 157.48) (xy 77.47 157.48)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "9e9e6a22-49c1-47d5-a340-849b84646590")
+	)
+	(wire
+		(pts
+			(xy 73.66 255.27) (xy 73.66 261.62)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "a5288b73-d3e8-4c7a-a249-bb7eff86eccb")
+	)
+	(wire
+		(pts
+			(xy 92.71 241.3) (xy 99.06 241.3)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "a7e37897-6bd1-4b84-9d45-c66832aa2edb")
+	)
+	(wire
+		(pts
+			(xy 58.42 58.42) (xy 58.42 63.5)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "a96b5e05-77fc-43f7-b6de-a7e20286438c")
+	)
+	(wire
+		(pts
+			(xy 40.64 101.6) (xy 45.72 101.6)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ab195b0e-261f-4427-ac72-608e722a58ef")
+	)
+	(wire
+		(pts
+			(xy 132.08 132.08) (xy 137.16 132.08)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ad92df44-c4ba-41aa-a841-54cf780adf02")
+	)
+	(wire
+		(pts
+			(xy 99.06 29.21) (xy 99.06 34.29)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "afec9c8f-46f1-46cc-aea7-3f95951d74c0")
+	)
+	(wire
+		(pts
+			(xy 78.74 199.39) (xy 78.74 204.47)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "b9ad22c4-3e51-41b1-8dd7-24bd611978b1")
+	)
+	(wire
+		(pts
+			(xy 71.12 147.32) (xy 76.2 147.32)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ba1a237c-4c97-47fe-b502-1730479ba6ac")
+	)
+	(wire
+		(pts
+			(xy 40.64 106.68) (xy 46.99 106.68)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "bbe9632c-f40e-44ce-9f1b-4166b923d858")
+	)
+	(wire
+		(pts
+			(xy 124.46 25.4) (xy 129.54 25.4)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "bd5b4f95-baa2-4291-b141-3d0ed97cbae8")
+	)
+	(wire
+		(pts
+			(xy 41.91 219.71) (xy 41.91 224.79)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "c463b222-bab8-4b65-978e-4a8424e22e79")
+	)
+	(wire
+		(pts
+			(xy 55.88 137.16) (xy 55.88 142.24)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "cad1c77b-edcb-48d9-8316-2e13a9174834")
+	)
+	(wire
+		(pts
+			(xy 36.83 38.1) (xy 43.18 38.1)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "caea70ae-ea62-4b3a-a7ff-4c4e9a85b7f9")
+	)
+	(wire
+		(pts
+			(xy 68.58 38.1) (xy 73.66 38.1)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "cbc6df10-4311-444e-9567-67854c5cb48e")
+	)
+	(wire
+		(pts
+			(xy 36.83 48.26) (xy 43.18 48.26)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "d42eaca6-e1b9-42af-b927-2981d6066eb4")
+	)
+	(wire
+		(pts
+			(xy 66.04 105.41) (xy 66.04 110.49)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "d583466f-0a8c-4484-861d-6b79968aaa7f")
+	)
+	(wire
+		(pts
+			(xy 154.94 242.57) (xy 154.94 247.65)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "d93084b4-75bd-413d-bf7d-9a0ad42d429a")
+	)
+	(wire
+		(pts
+			(xy 96.52 135.89) (xy 96.52 140.97)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "d9d8893d-aab5-4e4e-9e3e-99274804e1ef")
+	)
+	(wire
+		(pts
+			(xy 144.78 260.35) (xy 144.78 265.43)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "e83be0da-8f76-4ae7-927a-9f42bf5c0a43")
+	)
+	(wire
+		(pts
+			(xy 36.83 40.64) (xy 43.18 40.64)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "e8479985-b9a0-48da-9301-622a49a0912e")
+	)
+	(wire
+		(pts
+			(xy 58.42 137.16) (xy 58.42 142.24)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ea450f93-fe9e-45bc-9e5c-b30297657f4f")
+	)
+	(wire
+		(pts
+			(xy 68.58 201.93) (xy 68.58 207.01)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ebe759b9-e6fc-4193-9796-fa40bc2a227c")
+	)
+	(wire
+		(pts
+			(xy 24.13 96.52) (xy 30.48 96.52)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ee82ec45-e542-464f-afb0-86a1517fb6c6")
+	)
+	(wire
+		(pts
+			(xy 46.99 238.76) (xy 53.34 238.76)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ef779c80-49b5-4cfe-b981-9ea137ed1d2e")
+	)
+	(wire
+		(pts
+			(xy 124.46 22.86) (xy 129.54 22.86)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "fa87d06c-9e30-4cc3-bf53-20f5932c0319")
+	)
+	(wire
+		(pts
+			(xy 109.22 57.15) (xy 109.22 63.5)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "fc327dca-3ce7-476e-8d29-6732f4e98e8d")
 	)
 	(label "SPK_N"
 		(at 73.66 40.64 0)
@@ -2980,124 +2944,7 @@
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "1c0f481f-a8c8-4813-ba20-0d1483c9ece0")
-	)
-	(label "IR_GATE"
-		(at 144.78 246.38 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "20d5ca37-f2dc-48e8-8e59-44e4ca9dd2a7")
-	)
-	(label "IR_VS"
-		(at 68.58 207.01 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "2704e50c-13f9-4efd-a482-3992f9677bfa")
-	)
-	(label "LRA_P"
-		(at 76.2 147.32 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "313248aa-ad3c-443f-a1a8-60b47309c008")
-	)
-	(label "IR_LED_K"
-		(at 33.02 238.76 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "3796a7ac-2f07-48a0-bb03-860d7e8b2ad1")
-	)
-	(label "DRV_REG"
-		(at 77.47 157.48 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "4ce6bb7d-0402-41b0-99a8-caa09b71a6a6")
-	)
-	(label "LRA_N"
-		(at 76.2 149.86 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "5c54a737-5fd6-4e37-b97e-395a8c1fdbd6")
-	)
-	(label "SPK_P"
-		(at 124.46 22.86 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "6b0c3bcc-8115-4c7c-86da-27ba795eb575")
-	)
-	(label "IR_LED_A"
-		(at 53.34 238.76 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "73902fd7-9b41-4a8f-b16d-9312e7f93d18")
-	)
-	(label "IR_VS"
-		(at 50.8 300.99 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "98350853-95ec-4236-a0a8-60be900751e3")
-	)
-	(label "AUDIO_SD"
-		(at 36.83 48.26 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "9a2a1575-3a81-4bb9-ac39-e2d7fa9f350a")
-	)
-	(label "SPK_P"
-		(at 73.66 38.1 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "ad9d4604-56fb-491d-99d3-84caab83e80a")
-	)
-	(label "IR_GATE"
-		(at 92.71 241.3 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "b45e109c-6a21-4eb4-aec5-37c69f7739cf")
-	)
-	(label "IR_VS"
-		(at 78.74 186.69 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-		)
-		(uuid "b80dda5c-ae63-4bdc-ba00-6d97f8f95b71")
+		(uuid "02861ac0-64f5-485a-ac2a-e26f4e8ef4fb")
 	)
 	(label "IR_LED_K"
 		(at 113.03 236.22 0)
@@ -3106,25 +2953,34 @@
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "d19fd2e8-02e7-463e-ab01-3ef36ec85a27")
+		(uuid "0e6c9663-2c41-4451-b504-579accb4305e")
 	)
-	(label "SPK_N"
-		(at 124.46 25.4 0)
+	(label "DRV_REG"
+		(at 77.47 157.48 0)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "ef883d23-da9d-4ff3-b389-c14ca437961f")
+		(uuid "158d6ae4-909f-49de-b6d9-10bf4e095d95")
 	)
-	(label "IR_GATE"
-		(at 134.62 261.62 90)
+	(label "AUDIO_SD"
+		(at 36.83 48.26 0)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "f1e22d73-db41-4ef4-8fd1-e448c59566ed")
+		(uuid "28885934-f4e1-4749-bf48-8b53b427de1f")
+	)
+	(label "IR_LED_K"
+		(at 33.02 238.76 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "39472cdf-8514-484b-94fb-52bfd46bddc1")
 	)
 	(label "AUDIO_SD"
 		(at 109.22 63.5 90)
@@ -3133,7 +2989,43 @@
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "f4fa2e1e-d46e-4bf3-8666-1a8bb804c0ed")
+		(uuid "39b8526a-8b52-43bc-935c-d39c59a0c5de")
+	)
+	(label "IR_VS"
+		(at 50.8 300.99 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "4365f166-5c1f-4370-82bb-e0fa47485a79")
+	)
+	(label "SPK_P"
+		(at 124.46 22.86 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "505c9701-6f6c-4fc4-b118-1a0d26d2d25a")
+	)
+	(label "IR_GATE"
+		(at 144.78 246.38 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "520de970-f330-43c8-81af-73bfb890f3bc")
+	)
+	(label "LRA_N"
+		(at 76.2 149.86 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "64e42902-76b0-4bfa-a06f-84dd7f4ae964")
 	)
 	(label "IR_LED_A"
 		(at 73.66 261.62 90)
@@ -3142,51 +3034,115 @@
 				(size 1.524 1.524)
 			)
 		)
-		(uuid "fa039d79-efe8-437a-a174-eecaf764a3fc")
+		(uuid "79655f5f-e1c6-4607-8df8-a3b15b7ccf23")
 	)
-	(global_label "I2C_SYS_SDA"
-		(shape bidirectional)
-		(at 38.1 147.32 180)
+	(label "IR_VS"
+		(at 40.64 186.69 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
-			(justify right)
 		)
-		(uuid "05b3adb7-7b83-4320-8987-8f5097ec097d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 38.1 147.32 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "7b0773e4-ae38-4a63-9e1c-7ac418108db7")
 	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 99.06 29.21 90)
+	(label "LRA_P"
+		(at 76.2 147.32 0)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
-			(justify bottom)
 		)
-		(uuid "09a45fc0-87da-46ad-8693-cf97b9b933d6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.06 29.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
+		(uuid "7be2ff5c-3859-461c-82ac-8e20940ca58d")
+	)
+	(label "LRA_P"
+		(at 132.08 132.08 0)
+		(effects
+			(font
+				(size 1.524 1.524)
 			)
 		)
+		(uuid "7fa00224-52a0-4e72-b28d-dbbcffdc766f")
+	)
+	(label "IR_VS"
+		(at 78.74 186.69 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "8148efe5-b6a0-4da9-abc9-c26c3bd27531")
+	)
+	(label "SPK_N"
+		(at 124.46 25.4 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "8b90f550-272a-4122-9c1c-8018c2a88dfd")
+	)
+	(label "IR_GATE"
+		(at 134.62 261.62 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "91d8132b-890d-4eb5-82fe-ce5da9e8b123")
+	)
+	(label "IR_LED_A"
+		(at 53.34 238.76 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "9a8a02f2-3c8b-4241-8622-54117af5257d")
+	)
+	(label "SPK_P"
+		(at 73.66 38.1 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "a2ac66e9-2845-459f-a225-51f9b3473730")
+	)
+	(label "LRA_N"
+		(at 132.08 134.62 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "baf77f73-ec2d-463d-ae8e-f387500d284a")
+	)
+	(label "IR_VS"
+		(at 68.58 207.01 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "cf75d3c1-ef49-40e1-8732-306069679185")
+	)
+	(label "IR_GATE"
+		(at 92.71 241.3 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "f060b04b-10f9-477c-881e-7e084f1ff1a0")
+	)
+	(label "DRV_REG"
+		(at 106.68 139.7 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+		)
+		(uuid "ffa8dbf7-3c01-4ddf-ba59-cc3c6ceebca2")
 	)
 	(global_label "AUDIO_SD_MODE"
 		(shape bidirectional)
@@ -3197,405 +3153,9 @@
 			)
 			(justify bottom)
 		)
-		(uuid "0ead1e21-8400-47fa-bb9a-30e6a70dfe08")
+		(uuid "0c5ee2b7-9d4b-4607-97f3-23318ef9cdc2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 109.22 40.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "IR_TX"
-		(shape bidirectional)
-		(at 134.62 242.57 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "3c1de4d6-0fe1-42c0-989f-b7e3e9c707a7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 134.62 242.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "I2S_DIN"
-		(shape bidirectional)
-		(at 36.83 38.1 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "47522a78-ed3b-43dc-8ed6-5a1a11b8418d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 36.83 38.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VIB_TRIG"
-		(shape bidirectional)
-		(at 116.84 142.24 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "4e944c2d-3a68-4364-83be-6463877b473e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 116.84 142.24 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 55.88 137.16 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "4ff65fef-e6de-4492-a14e-a4fc0656adf4")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 55.88 137.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 55.88 27.94 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "6ec6bc94-97b6-4916-9687-04f56f19f677")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 55.88 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 73.66 242.57 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "7667491c-db14-4faa-9ced-474f9bb4d91c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 73.66 242.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "IR_RX"
-		(shape bidirectional)
-		(at 53.34 204.47 0)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify left)
-		)
-		(uuid "77bb147a-f8ef-422f-9080-69d5b0d7d4c1")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 53.34 204.47 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 58.42 137.16 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "77be9671-94d9-49d1-bed3-b5eaddc42eb2")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 58.42 137.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 154.94 242.57 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "7dfe2f04-c829-40cc-8845-55cf7ab85a68")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 154.94 242.57 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "I2S_BCLK"
-		(shape bidirectional)
-		(at 36.83 40.64 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "9465ebd6-13f8-4193-95dc-82aa236d0748")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 36.83 40.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 55.88 27.94 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "99ffed74-a872-4d01-a4af-5c918ed40b0a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 55.88 27.94 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "3V3_AON"
-		(shape bidirectional)
-		(at 66.04 91.44 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "9c32c731-d846-41c9-b1fd-e6436a789022")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 66.04 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "PDM_CLK"
-		(shape bidirectional)
-		(at 76.2 91.44 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "9cb75206-dff6-4e04-a2e9-2b3d7ae6fdc2")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 76.2 91.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "3V3_AON"
-		(shape bidirectional)
-		(at 68.58 187.96 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "9d597ba1-1e47-4ef2-928b-37be0c0b3c4e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 68.58 187.96 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "I2S_LRCLK"
-		(shape bidirectional)
-		(at 36.83 43.18 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "9e5173e0-c54c-4399-ab52-f31b38fd77ef")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 36.83 43.18 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "3V3_AON"
-		(shape bidirectional)
-		(at 24.13 96.52 180)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify right)
-		)
-		(uuid "a9768556-9e72-43df-be0f-09ed0adcdaf6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 24.13 96.52 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 96.52 135.89 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "ab55df1d-a3d3-4cc9-ada1-3f750caeaef9")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 96.52 135.89 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 88.9 29.21 90)
-		(effects
-			(font
-				(size 1.524 1.524)
-			)
-			(justify bottom)
-		)
-		(uuid "ac79f8fa-fcb4-440c-9d57-785410eed533")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 88.9 29.21 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3615,7 +3175,7 @@
 			)
 			(justify left)
 		)
-		(uuid "b82c134f-91a2-405f-a3a0-5d4419b9796c")
+		(uuid "14700ca2-d88d-49ca-897f-4483ef5a4002")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 46.99 106.68 0)
 			(hide yes)
@@ -3637,9 +3197,53 @@
 			)
 			(justify right)
 		)
-		(uuid "c0a4e89a-85a1-4afb-bc31-8a1b0ffbc660")
+		(uuid "170557ee-1ac9-46ea-b1b1-98bfc2c93471")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 39.37 154.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 58.42 137.16 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "203bc881-431a-453b-96ea-e11269e3860b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 58.42 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "3V3_AON"
+		(shape bidirectional)
+		(at 24.13 96.52 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "289963c7-6c8e-49a4-b523-d53e611ca80e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 24.13 96.52 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3659,9 +3263,383 @@
 			)
 			(justify right)
 		)
-		(uuid "c2b8ec0d-eea7-4108-978e-a6194712d1b1")
+		(uuid "2ece79ea-80f5-40c1-82b4-fcefb59ca4b8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 38.1 50.8 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "IR_RX"
+		(shape bidirectional)
+		(at 53.34 204.47 0)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify left)
+		)
+		(uuid "3a216cfb-bb15-4434-a57c-86db906438de")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 53.34 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2C_SYS_SCL"
+		(shape bidirectional)
+		(at 38.1 149.86 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "51ba2ccf-55ea-4e19-97e2-3bf7d27ffaaa")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 38.1 149.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 55.88 137.16 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "54682f88-063b-4b27-8fe3-4e4889c51921")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 55.88 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2C_SYS_SDA"
+		(shape bidirectional)
+		(at 38.1 147.32 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "5fb6e7ba-908d-45ed-9969-01f0eb33f947")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 38.1 147.32 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 88.9 29.21 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "616c80c5-7767-48fc-aa84-2ac0cefc4971")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 88.9 29.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 99.06 29.21 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "64dfc163-a2b0-45a7-9ed2-7fd423c28c1b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 99.06 29.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 55.88 27.94 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "6b890acc-5fc5-4011-a689-419f266d5dfc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 55.88 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2S_BCLK"
+		(shape bidirectional)
+		(at 36.83 40.64 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "8422d60e-3fbf-4b22-a448-01e2be712304")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 36.83 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 55.88 27.94 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "92790740-7798-48a9-8e45-4e6a8ce5f0b4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 55.88 27.94 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2S_DIN"
+		(shape bidirectional)
+		(at 36.83 38.1 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "a03703e3-96c7-4de7-b24a-615365ed5ca9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 36.83 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 96.52 135.89 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "a548a48d-ae35-4041-81fb-0f20e5e5f8a6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 96.52 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "IR_TX"
+		(shape bidirectional)
+		(at 134.62 242.57 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "a5895f50-769f-409e-ae2c-81bcafd67264")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 134.62 242.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "PDM_CLK"
+		(shape bidirectional)
+		(at 76.2 91.44 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "a7c5c555-1552-43fc-81c0-e8e9af5beaf0")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 76.2 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "3V3_AON"
+		(shape bidirectional)
+		(at 68.58 187.96 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "abd03071-1bd5-4975-ad0f-82c3106b3532")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 68.58 187.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "I2S_LRCLK"
+		(shape bidirectional)
+		(at 36.83 43.18 180)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify right)
+		)
+		(uuid "b1fee65b-d85d-423f-9421-46fbd91fabc5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 36.83 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VIB_TRIG"
+		(shape bidirectional)
+		(at 116.84 142.24 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "cdd8ba1f-c42a-4b8a-884f-85b29c1cbe60")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 116.84 142.24 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "3V3_AON"
+		(shape bidirectional)
+		(at 66.04 91.44 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "de777477-b939-4ebe-aa95-dfff7e90a2b8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 66.04 91.44 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3681,7 +3659,7 @@
 			)
 			(justify right)
 		)
-		(uuid "efacbfeb-58b0-41e9-ae8d-dec15c4d3e68")
+		(uuid "ea8c0a1e-9ddb-4a2f-96c0-65ec49ca24fd")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 38.1 157.48 0)
 			(hide yes)
@@ -3703,7 +3681,7 @@
 			)
 			(justify left)
 		)
-		(uuid "f0ba9dcc-e474-4867-b670-9322eb1418a0")
+		(uuid "ebf39742-f338-44d2-8c01-d00365b97843")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 46.99 104.14 0)
 			(hide yes)
@@ -3716,18 +3694,40 @@
 			)
 		)
 	)
-	(global_label "I2C_SYS_SCL"
+	(global_label "VSYS"
 		(shape bidirectional)
-		(at 38.1 149.86 180)
+		(at 73.66 242.57 90)
 		(effects
 			(font
 				(size 1.524 1.524)
 			)
-			(justify right)
+			(justify bottom)
 		)
-		(uuid "f39c1a44-08fc-4de0-8a23-6c114e6fa5ef")
+		(uuid "f45199d8-4dc5-4ec8-8592-1c964640bfe6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 38.1 149.86 0)
+			(at 73.66 242.57 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "VSYS"
+		(shape bidirectional)
+		(at 154.94 242.57 90)
+		(effects
+			(font
+				(size 1.524 1.524)
+			)
+			(justify bottom)
+		)
+		(uuid "fcc94e34-7c44-4421-abbc-d689ae05ed3b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 154.94 242.57 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3739,8 +3739,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 106.68 158.75 0)
+		(lib_id "Device:R")
+		(at 68.58 198.12 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3748,10 +3748,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "0ffe2f0b-75ac-4cd1-989f-e32e621272e4")
-		(property "Reference" "#PWR12013"
-			(at 106.68 165.1 0)
-			(hide yes)
+		(uuid "0536b3bf-3b6f-4a4a-be6a-31ea9c21d38a")
+		(property "Reference" "R1204"
+			(at 68.58 194.31 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3760,8 +3759,8 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 106.68 163.83 0)
+		(property "Value" "100R 1% 0402"
+			(at 68.58 201.93 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3770,8 +3769,8 @@
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 106.68 158.75 0)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 68.58 198.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3782,7 +3781,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 106.68 158.75 0)
+			(at 68.58 198.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3793,7 +3792,40 @@
 			)
 		)
 		(property "Description" ""
-			(at 106.68 158.75 0)
+			(at 68.58 198.12 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "0402WGF1000TCE"
+			(at 68.58 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25076"
+			(at 68.58 198.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 68.58 198.12 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3803,12 +3835,1445 @@
 			)
 		)
 		(pin "1"
-			(uuid "ca07119b-9aec-4982-ba25-e69293df055e")
+			(uuid "e5842ec5-da82-47d1-8a86-b4c27baffbc8")
+		)
+		(pin "2"
+			(uuid "565a2e05-af19-4857-9047-b173738da27f")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12013")
+					(reference "R1204")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 134.62 251.46 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0b8ca33c-f844-494c-83c7-e5492914efeb")
+		(property "Reference" "R1206"
+			(at 134.62 247.65 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100R 1% 0402"
+			(at 134.62 255.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 134.62 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 134.62 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 134.62 251.46 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "0402WGF1000TCE"
+			(at 134.62 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25076"
+			(at 134.62 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 134.62 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "465229db-6b5d-4563-9a59-24fec85ff5f6")
+		)
+		(pin "2"
+			(uuid "838b34fc-f6d2-478b-a95b-931314b30737")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "R1206")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 66.04 101.6 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0fccd252-6f55-4517-8bd9-6759dcad8f4b")
+		(property "Reference" "C1203"
+			(at 66.04 97.79 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100nF 50V C0G 1206"
+			(at 66.04 105.41 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
+			(at 66.04 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 66.04 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 66.04 101.6 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "1206N104J500CT"
+			(at 66.04 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C170182"
+			(at 66.04 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Walsin"
+			(at 66.04 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "870d9e13-450b-4f99-bb23-1bc9496d5052")
+		)
+		(pin "1"
+			(uuid "5f42c696-f647-425b-8f03-7ec1c2d6448a")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "C1203")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 41.91 224.79 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1356b158-c8cf-4106-928e-de28c66e7369")
+		(property "Reference" "#PWR12016"
+			(at 41.91 231.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 41.91 229.87 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 41.91 224.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 41.91 224.79 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 41.91 224.79 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5d1c4f7a-8702-4cd6-a449-5fe0fc5c9fbd")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12016")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 50.8 300.99 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "19922510-84ad-409f-a64c-9ddb8ad07cbd")
+		(property "Reference" "#FLG1201"
+			(at 50.8 294.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 50.8 295.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 50.8 300.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 50.8 300.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 50.8 300.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7b1e6b94-81f4-444d-b84b-d4bb62eba5f1")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#FLG1201")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Audio:MAX98357A")
+		(at 55.88 45.72 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1e0efd26-55bc-4f7c-a60d-5a582f5fb713")
+		(property "Reference" "U1201"
+			(at 55.88 41.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "MAX98357AETE+T"
+			(at 55.88 49.53 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_DFN_QFN:TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm"
+			(at 55.88 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX98357A-MAX98357B.pdf"
+			(at 55.88 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.88 45.72 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "MAX98357AETE+T"
+			(at 55.88 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C910544"
+			(at 55.88 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Analog Devices (Maxim)"
+			(at 55.88 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "13"
+			(uuid "30133eae-ac9c-4e09-af4e-33d28bee58cd")
+		)
+		(pin "10"
+			(uuid "84a846c2-29b6-4fd9-b66c-c60a7738ce31")
+		)
+		(pin "17"
+			(uuid "476749ce-2212-4662-8360-c08a45da09f7")
+		)
+		(pin "1"
+			(uuid "f6794f1a-0a5f-4546-9899-a7cbc7741590")
+		)
+		(pin "4"
+			(uuid "7a6cb80e-8e82-4abf-b3e3-361bde67a5ef")
+		)
+		(pin "2"
+			(uuid "01bc9d88-33f7-4854-9332-3b0bb211bc3b")
+		)
+		(pin "9"
+			(uuid "5777ff54-d24e-4201-9b42-cb85a27ef61f")
+		)
+		(pin "5"
+			(uuid "6bdc73d0-f701-4688-8e79-b7a0da32af22")
+		)
+		(pin "3"
+			(uuid "1f1e1341-a839-46ef-a29c-0173d88ce2ff")
+		)
+		(pin "6"
+			(uuid "fa92e79f-d659-45e6-acd2-4bdcaf7e78b1")
+		)
+		(pin "7"
+			(uuid "edd159ad-4657-4962-92a2-75b2f45e31fe")
+		)
+		(pin "16"
+			(uuid "f6aaf846-b134-4051-840a-d24af06a0af3")
+		)
+		(pin "14"
+			(uuid "3b6f2b91-d01e-4dba-9e85-17cde2f78e16")
+		)
+		(pin "12"
+			(uuid "449da53c-377c-456b-9a38-513a7c596b1e")
+		)
+		(pin "11"
+			(uuid "435e57b9-3304-4ab5-8b99-899efd5aabce")
+		)
+		(pin "15"
+			(uuid "7944e7b9-3f67-48b2-b800-62df54ef5a62")
+		)
+		(pin "8"
+			(uuid "f407a8e9-1d56-4915-a258-6e3c9f6ca290")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "U1201")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 88.9 46.99 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "257537d8-0002-47c1-9192-c882398c166f")
+		(property "Reference" "#PWR12005"
+			(at 88.9 53.34 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 88.9 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 88.9 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 88.9 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 88.9 46.99 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "8cb39f0b-35d5-4934-95e3-9a48e1a82211")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12005")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 96.52 144.78 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2eda9c1f-0177-446b-8d1c-85ad121beab6")
+		(property "Reference" "C1204"
+			(at 96.52 140.97 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1uF 10V X5R 0603"
+			(at 96.52 148.59 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 96.52 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 96.52 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 96.52 144.78 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10A105KO8NNNC"
+			(at 96.52 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C1592"
+			(at 96.52 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 96.52 144.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "fcd6f5ea-3b37-405d-8a71-ba67e50dd428")
+		)
+		(pin "1"
+			(uuid "abb06d97-1e48-4b31-afa1-972c0fe45b61")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "C1204")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Driver:DRV2605LDGS")
+		(at 58.42 152.4 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2fe7cc65-ae14-4d0e-815b-2057fea21fc9")
+		(property "Reference" "U1203"
+			(at 58.42 148.59 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "DRV2605LDGSR"
+			(at 58.42 156.21 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Fabbit_TI:TI_DGS0010A"
+			(at 58.42 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.ti.com/lit/gpn/drv2605l"
+			(at 58.42 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 58.42 152.4 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "DRV2605LDGSR"
+			(at 58.42 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C527464"
+			(at 58.42 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "TI"
+			(at 58.42 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Address" "0x5A"
+			(at 58.42 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9f68debb-5d11-43bd-a01d-63bf8ae1ace2")
+		)
+		(pin "8"
+			(uuid "c0d261f6-01c5-493d-893c-2e142535d2e1")
+		)
+		(pin "4"
+			(uuid "57cf96ad-fcc3-4639-b291-d1c6b39e0ddc")
+		)
+		(pin "5"
+			(uuid "73586c24-7b4f-4808-8e32-b2d6ac257aa2")
+		)
+		(pin "2"
+			(uuid "810749d8-75a8-49ef-aff9-c16712f03d8f")
+		)
+		(pin "6"
+			(uuid "2647da66-11b7-4097-aab9-b6594a5386b8")
+		)
+		(pin "9"
+			(uuid "8fd9f9ad-f0d6-4622-8b50-55b7505232fe")
+		)
+		(pin "3"
+			(uuid "7775e8c9-cbe6-4ef7-9a8b-34e233893440")
+		)
+		(pin "10"
+			(uuid "af5caa74-180f-41a9-a4f7-db2ea72ee3d3")
+		)
+		(pin "7"
+			(uuid "4e251c95-1496-4d1e-932e-666952dd3ad3")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "U1203")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Fabbit:TSOP75238TR")
+		(at 40.64 205.74 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "310e88c9-eb1f-4e9e-9384-17ce95a005c0")
+		(property "Reference" "U1204"
+			(at 40.64 201.93 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TSOP75238TR"
+			(at 40.64 209.55 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Fabbit_IC:Vishay_TSOP752_SMD-4"
+			(at 40.64 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.vishay.com/docs/82494/tsop752.pdf"
+			(at 40.64 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 40.64 205.74 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "TSOP75238TR"
+			(at 40.64 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C511498"
+			(at 40.64 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Vishay"
+			(at 40.64 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "c78359a1-d8c5-4f80-aeb6-37f98a0445f1")
+		)
+		(pin "2"
+			(uuid "1214eb7b-b7a9-446e-8a2f-1fb4e849bd95")
+		)
+		(pin "3"
+			(uuid "533fe877-4791-4b64-ad8f-0ef91968b158")
+		)
+		(pin "4"
+			(uuid "f1ed0a34-6023-4d80-9637-b214be0f05bb")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "U1204")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 154.94 251.46 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3b6294c2-ca6d-47e1-afdd-7af1033cee25")
+		(property "Reference" "C1207"
+			(at 154.94 247.65 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10uF 10V X5R 0805"
+			(at 154.94 255.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 154.94 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 154.94 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 154.94 251.46 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL21A106KAYNNNE"
+			(at 154.94 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C15850"
+			(at 154.94 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 154.94 251.46 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bbf2b3ed-39c1-42e7-be62-96f050a4e240")
+		)
+		(pin "2"
+			(uuid "3fd8cd64-c142-4ba4-a29c-5f8be3efd534")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "C1207")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 116.84 161.29 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "400230d4-09ed-4061-bb91-91dffe912097")
+		(property "Reference" "#PWR12014"
+			(at 116.84 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 116.84 166.37 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 116.84 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 116.84 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 116.84 161.29 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "423b9827-ac16-46f5-808d-4c3e910eb54a")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12014")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 76.2 110.49 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "41b3adac-433a-46ed-ba8f-4636002b00be")
+		(property "Reference" "#PWR12010"
+			(at 76.2 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 76.2 115.57 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 76.2 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 76.2 110.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2005d5d4-6475-4e01-85a0-d96b57c1aa5b")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12010")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 53.34 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "481d7344-f2a6-4643-9749-07d8515be443")
+		(property "Reference" "#PWR12002"
+			(at 53.34 69.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 53.34 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 53.34 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "9de0a1c7-8b60-467f-9de9-5b0358cbd987")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12002")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 142.24 132.08 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5cb08431-9a1c-4719-92d2-9a3be6633d17")
+		(property "Reference" "J1202"
+			(at 142.24 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LRA"
+			(at 142.24 135.89 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_Wire:SolderWire-0.1sqmm_1x02_P3.6mm_D0.4mm_OD1mm"
+			(at 142.24 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 142.24 132.08 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "0619 (AAC)"
+			(at 142.24 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "AAC"
+			(at 142.24 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Note" "wire pads, LRA on leads; part identity D4"
+			(at 142.24 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "0d461742-5737-482b-a60e-8900f4cdfd21")
+		)
+		(pin "1"
+			(uuid "6bc6c4ee-6d04-4f5f-8be2-14c10f7cc9bd")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "J1202")
 					(unit 1)
 				)
 			)
@@ -3824,7 +5289,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "15f28f78-651c-4486-a8cb-fb3d4928a90a")
+		(uuid "662b96b0-c4ba-4f32-b392-016d4b9ca970")
 		(property "Reference" "C1205"
 			(at 106.68 146.05 0)
 			(show_name no)
@@ -3910,16 +5375,1006 @@
 				)
 			)
 		)
-		(pin "2"
-			(uuid "b0f4a8ba-c478-4baf-a114-5220e21db44a")
-		)
 		(pin "1"
-			(uuid "af8abe81-5b17-49e4-99b6-e597d87a6ab4")
+			(uuid "efcddc00-729d-404f-98be-ed5c784808f5")
+		)
+		(pin "2"
+			(uuid "fd446ce9-819d-495b-af5f-8cf336923a5e")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
 					(reference "C1205")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 106.68 158.75 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6b1429e7-cd28-4e65-9bd6-e69bad60858e")
+		(property "Reference" "#PWR12013"
+			(at 106.68 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 106.68 163.83 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 106.68 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 106.68 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 106.68 158.75 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "45a3b853-a036-4614-8d37-bbf451026b4f")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 144.78 265.43 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6b29b73f-92dd-471b-839a-c41dcc7b1eb3")
+		(property "Reference" "#PWR12019"
+			(at 144.78 271.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 144.78 270.51 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 144.78 265.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 144.78 265.43 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 144.78 265.43 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "606c87ee-bbe0-4d0f-9202-7defe5bec14c")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12019")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 34.29 219.71 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6cc22949-59c6-4371-9a93-c8e3dce4d3ad")
+		(property "Reference" "#PWR12015"
+			(at 34.29 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 34.29 224.79 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 34.29 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 34.29 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 34.29 219.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "860eecdc-9a5f-4e56-b85f-41e29f1f25d5")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12015")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:AO3400A")
+		(at 104.14 241.3 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6e756cad-9caf-48f5-844b-502d69c25ea8")
+		(property "Reference" "Q1201"
+			(at 104.14 237.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AO3400A"
+			(at 104.14 245.11 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+			(at 104.14 241.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf"
+			(at 104.14 241.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 104.14 241.3 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "AO3400A"
+			(at 104.14 241.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C20917"
+			(at 104.14 241.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Alpha & Omega"
+			(at 104.14 241.3 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "3"
+			(uuid "054c467b-53e8-4202-870a-446102d53ebf")
+		)
+		(pin "1"
+			(uuid "ac53444b-a6f4-43f0-b635-ddcde3ace45d")
+		)
+		(pin "2"
+			(uuid "9c81f944-a629-48c5-b022-d3da5773e82f")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "Q1201")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 78.74 204.47 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7bfcfae7-0927-4a68-96ce-dacc503b4d96")
+		(property "Reference" "#PWR12017"
+			(at 78.74 210.82 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 78.74 209.55 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 78.74 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 78.74 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 78.74 204.47 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "556d6a35-028b-4fb1-96b0-082f894eeba2")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12017")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 25.4 111.76 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "806af4b3-9f89-4cc9-8e26-9f9975c87f1e")
+		(property "Reference" "#PWR12007"
+			(at 25.4 118.11 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 25.4 116.84 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 25.4 111.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 25.4 111.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 25.4 111.76 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f4a2921b-49e6-46a1-ab3a-46e3171d3cc2")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12007")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 99.06 38.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "85b72c53-1b5f-4edb-a7a4-7702484e7f7a")
+		(property "Reference" "C1202"
+			(at 99.06 34.29 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100nF 16V X7R 0402"
+			(at 99.06 41.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 99.06 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 99.06 38.1 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL05B104KO5NNNC"
+			(at 99.06 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C1525"
+			(at 99.06 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 99.06 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b3fdafad-bb80-424b-a7dc-180bfe375573")
+		)
+		(pin "2"
+			(uuid "e64dd1bf-3350-45f5-b427-955173670b7c")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "C1202")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 43.18 238.76 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8aea0ded-34b0-4f9c-ab97-b28290c1c0cf")
+		(property "Reference" "D1201"
+			(at 43.18 234.95 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VSMB2943SLX01"
+			(at 43.18 242.57 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Fabbit_IC:Vishay_VSMB2943SLX01"
+			(at 43.18 238.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.vishay.com/docs/83479/vsmb2943slx01.pdf"
+			(at 43.18 238.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 43.18 238.76 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "VSMB2943SLX01"
+			(at 43.18 238.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C511094"
+			(at 43.18 238.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Vishay"
+			(at 43.18 238.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "8dc1542f-d98f-4155-8811-fc1a36d0efc6")
+		)
+		(pin "1"
+			(uuid "7ddb3f52-0c89-40ed-864f-67ef959eadfc")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "D1201")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 58.42 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "96d75f24-25cf-42a3-8b0e-38dee278d625")
+		(property "Reference" "#PWR12004"
+			(at 58.42 69.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 58.42 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 58.42 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 58.42 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 58.42 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "0324a367-9d05-4e91-a139-5d7ff6887eff")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12004")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 58.42 167.64 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "9b32c329-79bf-44e3-89ed-f10056e2383e")
+		(property "Reference" "#PWR12011"
+			(at 58.42 173.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 58.42 172.72 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 58.42 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 58.42 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 58.42 167.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "7b78e435-00c3-4aee-aaa0-4abddb51ac60")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 116.84 152.4 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "9ccea471-871c-4f55-a784-3b8d64ee7bf5")
+		(property "Reference" "R1203"
+			(at 116.84 148.59 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1.2k 1% 0402"
+			(at 116.84 156.21 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 116.84 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 116.84 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 116.84 152.4 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Purpose" "VIB_TRIG pull-down: FPGA config pull-up 330uA max x 1.2k = 0.40V < VIL 0.5V DRV2605L (DS181 p3, SLOS854 p6)"
+			(at 116.84 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "0402WGF1201TCE"
+			(at 116.84 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25862"
+			(at 116.84 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 116.84 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "9e9ba182-c6bb-4fa6-a1d3-d683fa343ec4")
+		)
+		(pin "1"
+			(uuid "76d36157-2817-4152-8df0-c049fc1a8a97")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "R1203")
 					(unit 1)
 				)
 			)
@@ -3935,7 +6390,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "164221ee-a249-4fc7-9574-9c14dd248254")
+		(uuid "a1ce5c03-e5c7-4cfb-9313-cb8e9443285d")
 		(property "Reference" "J1201"
 			(at 134.62 19.05 0)
 			(show_name no)
@@ -4033,10 +6488,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "406705cd-4706-4eb3-bd7d-25989e601f9a")
+			(uuid "39d339f6-6ce2-4c89-9768-68a1ba84eccf")
 		)
 		(pin "2"
-			(uuid "831ddb25-1e23-4b87-bbf5-a08ed270cf68")
+			(uuid "00a4c1e6-3210-43c6-b32b-1a3d15be7075")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -4048,8 +6503,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 144.78 265.43 0)
+		(lib_id "Device:R")
+		(at 144.78 256.54 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4057,10 +6512,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "167e8081-bad6-4b3d-8cb4-b3119d208691")
-		(property "Reference" "#PWR12019"
-			(at 144.78 271.78 0)
-			(hide yes)
+		(uuid "aea7ebea-24d8-40d6-9129-17db698c9f12")
+		(property "Reference" "R1207"
+			(at 144.78 252.73 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4069,8 +6523,8 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 144.78 270.51 0)
+		(property "Value" "100k 1% 0402"
+			(at 144.78 260.35 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4079,8 +6533,8 @@
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 144.78 265.43 0)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 144.78 256.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4091,7 +6545,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 144.78 265.43 0)
+			(at 144.78 256.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4102,7 +6556,40 @@
 			)
 		)
 		(property "Description" ""
-			(at 144.78 265.43 0)
+			(at 144.78 256.54 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "0402WGF1003TCE"
+			(at 144.78 256.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25741"
+			(at 144.78 256.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 144.78 256.54 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4112,12 +6599,15 @@
 			)
 		)
 		(pin "1"
-			(uuid "0bc5c4ca-9b15-41f1-974f-8488a0d41ffb")
+			(uuid "b2b0e623-d983-4387-b514-c60589025a7c")
+		)
+		(pin "2"
+			(uuid "82892406-4f07-4c2f-8f11-36ffc508e3ce")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12019")
+					(reference "R1207")
 					(unit 1)
 				)
 			)
@@ -4125,7 +6615,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 111.76 246.38 0)
+		(at 154.94 260.35 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4133,9 +6623,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "1b400b47-5928-4e41-93c6-3a7dac48293e")
-		(property "Reference" "#PWR12018"
-			(at 111.76 252.73 0)
+		(uuid "b734a33f-bb3f-4cbb-9077-b2c618c62515")
+		(property "Reference" "#PWR12020"
+			(at 154.94 266.7 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4146,7 +6636,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 111.76 251.46 0)
+			(at 154.94 265.43 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4156,7 +6646,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 111.76 246.38 0)
+			(at 154.94 260.35 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4167,7 +6657,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 111.76 246.38 0)
+			(at 154.94 260.35 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4178,7 +6668,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 111.76 246.38 0)
+			(at 154.94 260.35 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4188,12 +6678,123 @@
 			)
 		)
 		(pin "1"
-			(uuid "d4ab4255-d9bd-4a63-9cb3-3f6e55cdbe17")
+			(uuid "49e5d12e-a414-4e5f-900c-bfef050174d0")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12018")
+					(reference "#PWR12020")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 78.74 195.58 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bbcce693-3d5e-4b8b-83ef-b965ef51f651")
+		(property "Reference" "C1206"
+			(at 78.74 191.77 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7uF 10V X5R 0603"
+			(at 78.74 199.39 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 78.74 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 78.74 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 78.74 195.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10A475KO8NNNC"
+			(at 78.74 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C19666"
+			(at 78.74 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 78.74 195.58 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "12a7bd35-853c-4c20-9005-2a746c6b21de")
+		)
+		(pin "1"
+			(uuid "ccb7a639-4f12-4652-9d72-2f5b53cadba0")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "C1206")
 					(unit 1)
 				)
 			)
@@ -4209,7 +6810,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "1cdcdb6a-2dca-4ede-81e5-999ef5de4ec7")
+		(uuid "be06f141-7197-440d-a14a-d7c46b596703")
 		(property "Reference" "R1202"
 			(at 76.2 97.79 0)
 			(show_name no)
@@ -4295,11 +6896,11 @@
 				)
 			)
 		)
-		(pin "2"
-			(uuid "034f7dbd-258b-4880-bf17-c9021a16b79c")
-		)
 		(pin "1"
-			(uuid "56b7ffaa-a561-4729-a179-352547ff29c1")
+			(uuid "ca7d9d8a-13b3-480a-8d80-d97a6616308d")
+		)
+		(pin "2"
+			(uuid "57b14cff-3e04-4157-8e29-6495c2953895")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -4312,7 +6913,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 68.58 198.12 0)
+		(at 109.22 53.34 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4320,9 +6921,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "1e0bdee1-ea12-4634-801d-586d451133c7")
-		(property "Reference" "R1204"
-			(at 68.58 194.31 0)
+		(uuid "c398aa9e-560e-4a52-a4b8-b7324b8111b3")
+		(property "Reference" "R1201"
+			(at 109.22 49.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4331,8 +6932,8 @@
 				)
 			)
 		)
-		(property "Value" "100R 1% 0402"
-			(at 68.58 201.93 0)
+		(property "Value" "634k 1% 0402"
+			(at 109.22 57.15 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4342,7 +6943,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 68.58 198.12 0)
+			(at 109.22 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4353,7 +6954,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 68.58 198.12 0)
+			(at 109.22 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4364,7 +6965,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 68.58 198.12 0)
+			(at 109.22 53.34 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4373,8 +6974,8 @@
 				)
 			)
 		)
-		(property "MPN" "0402WGF1000TCE"
-			(at 68.58 198.12 0)
+		(property "MPN" "CRCW0402634KFKED"
+			(at 109.22 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4384,8 +6985,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C25076"
-			(at 68.58 198.12 0)
+		(property "LCSC" "C3007567"
+			(at 109.22 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4395,8 +6996,8 @@
 				)
 			)
 		)
-		(property "Manufacturer" "UNI-ROYAL"
-			(at 68.58 198.12 0)
+		(property "Manufacturer" "Vishay"
+			(at 109.22 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4405,25 +7006,25 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(pin "2"
-			(uuid "6a39d4eb-15c3-4a9a-9169-44e66ba0b050")
 		)
 		(pin "1"
-			(uuid "cd6c2b5b-b90e-4a65-af39-810992922967")
+			(uuid "85a1796d-64b6-48ca-9940-66b5860166bf")
+		)
+		(pin "2"
+			(uuid "29ddf0ac-495b-48e2-9ae6-6efc68365b1a")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "R1204")
+					(reference "R1201")
 					(unit 1)
 				)
 			)
 		)
 	)
 	(symbol
-		(lib_id "Sensor_Audio:SPH0641LU4H-1")
-		(at 30.48 104.14 0)
+		(lib_id "power:GND")
+		(at 99.06 46.99 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4431,29 +7032,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "1f5afe28-8062-4bcb-afb6-74aeaa98f621")
-		(property "Reference" "U1202"
-			(at 30.48 100.33 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SPH0641LU4H-1"
-			(at 30.48 107.95 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Sensor_Audio:Knowles_LGA-5_3.5x2.65mm"
-			(at 30.48 104.14 0)
+		(uuid "c4cd1816-b39c-4623-bc7c-d0c84c463f77")
+		(property "Reference" "#PWR12006"
+			(at 99.06 53.34 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4463,9 +7044,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.knowles.com/docs/default-source/default-document-library/sph0641lu4h-1-revb.pdf"
-			(at 30.48 104.14 0)
-			(hide yes)
+		(property "Value" "GND"
+			(at 99.06 52.07 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4474,106 +7054,8 @@
 				)
 			)
 		)
-		(property "Description" ""
-			(at 30.48 104.14 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "SPH0641LU4H-1"
-			(at 30.48 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C2879853"
-			(at 30.48 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Knowles"
-			(at 30.48 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "3d5adae4-1c7a-450d-81f6-c556ffdc3d9e")
-		)
-		(pin "4"
-			(uuid "372066c9-8c50-40cc-9290-b7e758ad5812")
-		)
-		(pin "1"
-			(uuid "ebdbf976-c1e7-4578-91bc-df0a8901302e")
-		)
-		(pin "3"
-			(uuid "e5316065-3fb9-4c97-978e-ac18eea3fb6d")
-		)
-		(pin "5"
-			(uuid "28f51308-dcd3-4c11-9e39-92e40ecbfdf2")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "U1202")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 96.52 144.78 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "2e424924-2098-4939-ab96-b2d7255515f0")
-		(property "Reference" "C1204"
-			(at 96.52 140.97 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "1uF 10V X5R 0603"
-			(at 96.52 148.59 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 96.52 144.78 0)
+		(property "Footprint" ""
+			(at 99.06 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4584,7 +7066,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 96.52 144.78 0)
+			(at 99.06 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4595,40 +7077,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 96.52 144.78 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "CL10A105KO8NNNC"
-			(at 96.52 144.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C1592"
-			(at 96.52 144.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 96.52 144.78 0)
-			(hide yes)
+			(at 99.06 46.99 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4638,23 +7087,20 @@
 			)
 		)
 		(pin "1"
-			(uuid "28cdb53a-3eb2-4371-875f-07a7c321b860")
-		)
-		(pin "2"
-			(uuid "aa50761e-0513-41b3-a1b4-a89268d2a048")
+			(uuid "23387df2-ed77-4568-b17f-f055dd0c6bba")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "C1204")
+					(reference "#PWR12006")
 					(unit 1)
 				)
 			)
 		)
 	)
 	(symbol
-		(lib_id "Device:C")
-		(at 154.94 251.46 0)
+		(lib_id "power:GND")
+		(at 45.72 101.6 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4662,9 +7108,10 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "3f3cb77d-07ce-4887-92a6-22d82bd7091b")
-		(property "Reference" "C1207"
-			(at 154.94 247.65 0)
+		(uuid "cdce3d57-f923-43a6-b36a-f33d8656733c")
+		(property "Reference" "#PWR12008"
+			(at 45.72 107.95 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4673,8 +7120,8 @@
 				)
 			)
 		)
-		(property "Value" "10uF 10V X5R 0805"
-			(at 154.94 255.27 0)
+		(property "Value" "GND"
+			(at 45.72 106.68 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4683,8 +7130,8 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 154.94 251.46 0)
+		(property "Footprint" ""
+			(at 45.72 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4695,7 +7142,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 154.94 251.46 0)
+			(at 45.72 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4706,7 +7153,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 154.94 251.46 0)
+			(at 45.72 101.6 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4714,58 +7161,22 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(property "MPN" "CL21A106KAYNNNE"
-			(at 154.94 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C15850"
-			(at 154.94 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 154.94 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "b02b4e84-4534-46ff-b9c2-c064a639e9ae")
 		)
 		(pin "1"
-			(uuid "e80b7392-ae69-49ae-b73f-106fc09c1082")
+			(uuid "c24dfec7-c62c-4fb5-aa65-7d0b25eaa920")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "C1207")
+					(reference "#PWR12008")
 					(unit 1)
 				)
 			)
 		)
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x02")
-		(at 142.24 132.08 0)
+		(lib_id "power:GND")
+		(at 66.04 110.49 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4773,9 +7184,10 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "433cc950-f11e-4c72-a9d5-c8e6c0a2b3f7")
-		(property "Reference" "J1202"
-			(at 142.24 128.27 0)
+		(uuid "d0d5c8f3-84eb-4d8a-b667-d09a35cfd6a0")
+		(property "Reference" "#PWR12009"
+			(at 66.04 116.84 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4784,8 +7196,8 @@
 				)
 			)
 		)
-		(property "Value" "LRA"
-			(at 142.24 135.89 0)
+		(property "Value" "GND"
+			(at 66.04 115.57 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4794,8 +7206,8 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_Wire:SolderWire-0.1sqmm_1x02_P3.6mm_D0.4mm_OD1mm"
-			(at 142.24 132.08 0)
+		(property "Footprint" ""
+			(at 66.04 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4806,7 +7218,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 142.24 132.08 0)
+			(at 66.04 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4817,40 +7229,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 142.24 132.08 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "0619 (AAC)"
-			(at 142.24 132.08 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "AAC"
-			(at 142.24 132.08 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Note" "wire pads, LRA on leads; part identity D4"
-			(at 142.24 132.08 0)
-			(hide yes)
+			(at 66.04 110.49 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4860,93 +7239,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "fedffe74-89b3-419d-8c33-19d381526f0f")
-		)
-		(pin "2"
-			(uuid "27d7f9b0-0496-42a1-968d-38371f020fed")
+			(uuid "813b092d-410d-4ca0-950e-ae3887ada91d")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "J1202")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 66.04 101.6 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "4754755f-b34c-4a09-89fc-55943ade523a")
-		(property "Reference" "C1203"
-			(at 66.04 97.79 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100nF 16V C0G 0805"
-			(at 66.04 105.41 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 66.04 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 66.04 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 66.04 101.6 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "a4ad6ece-15f9-411d-abed-fc029f676b78")
-		)
-		(pin "2"
-			(uuid "72e34e08-d4c4-4fb8-a75c-695c113a397d")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "C1203")
+					(reference "#PWR12009")
 					(unit 1)
 				)
 			)
@@ -4962,7 +7260,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "4b812e51-8ce8-4a3e-b75b-d6885cbad4c8")
+		(uuid "dd262549-367b-4679-8873-5bdd81f0a33d")
 		(property "Reference" "C1201"
 			(at 88.9 34.29 0)
 			(show_name no)
@@ -5049,10 +7347,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "84fe4c5e-fd51-4fdf-b86f-93655d3e9af0")
+			(uuid "78a3d8ac-68f6-499c-80e7-8be92c483217")
 		)
 		(pin "2"
-			(uuid "0a6bc50c-3a61-4b28-9171-1ddb788d7c4d")
+			(uuid "1ce8cee3-3544-4f27-ac9b-0607f1f0626b")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -5064,8 +7362,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Audio:MAX98357A")
-		(at 55.88 45.72 0)
+		(lib_id "power:GND")
+		(at 53.34 63.5 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5073,29 +7371,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "4daf6657-782b-4278-9260-5bf3468d7274")
-		(property "Reference" "U1201"
-			(at 55.88 41.91 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "MAX98357AETE+T"
-			(at 55.88 49.53 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_DFN_QFN:TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm"
-			(at 55.88 45.72 0)
+		(uuid "e468e609-6f2c-45fd-ad34-1811db7e5a2c")
+		(property "Reference" "#PWR12003"
+			(at 53.34 69.85 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5105,8 +7383,29 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX98357A-MAX98357B.pdf"
-			(at 55.88 45.72 0)
+		(property "Value" "GND"
+			(at 53.34 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 53.34 63.5 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5117,7 +7416,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 55.88 45.72 0)
+			(at 53.34 63.5 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5125,95 +7424,286 @@
 					(size 1.27 1.27)
 				)
 			)
-		)
-		(property "MPN" "MAX98357AETE+T"
-			(at 55.88 45.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C910544"
-			(at 55.88 45.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Analog Devices (Maxim)"
-			(at 55.88 45.72 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "8"
-			(uuid "c58f9721-8f6e-4b7c-9d45-88a6505ba912")
-		)
-		(pin "6"
-			(uuid "7151aa68-0522-4540-9f15-7b2af9f96f1d")
-		)
-		(pin "10"
-			(uuid "9aed6539-963b-4f27-8244-f52e289a2dd1")
-		)
-		(pin "14"
-			(uuid "8ab9ff1f-3a0f-4590-bde1-8959d0337305")
-		)
-		(pin "12"
-			(uuid "6a321d14-b688-4ac9-a1dc-aae62bf4e236")
-		)
-		(pin "11"
-			(uuid "b8d73d1a-c31a-437a-9c65-72c0b1253622")
-		)
-		(pin "15"
-			(uuid "3a9ab85d-1a92-44e5-8f8b-ba04410ca742")
-		)
-		(pin "13"
-			(uuid "8ea832cf-c344-4986-8737-4351f6d1ee23")
-		)
-		(pin "7"
-			(uuid "d75ec3cd-823e-44c1-836a-392fdfd8ef3f")
-		)
-		(pin "16"
-			(uuid "9ab11f1e-4d14-49bd-8a21-761ad220e0b1")
-		)
-		(pin "17"
-			(uuid "2aeb7a6b-79cb-4707-9ee3-dbd56abd5478")
-		)
-		(pin "3"
-			(uuid "b120120d-1d78-41ae-aae1-74a9f8cb92fb")
 		)
 		(pin "1"
-			(uuid "97a50df3-5dde-4ad5-8ef2-51439bc17a29")
-		)
-		(pin "4"
-			(uuid "5ccbb3d0-c9af-42ad-a767-672c03853d46")
-		)
-		(pin "2"
-			(uuid "51241037-8b8d-4e88-88c8-c58cd93dfab1")
-		)
-		(pin "5"
-			(uuid "78fc5720-5527-4961-8536-06d674e5724a")
-		)
-		(pin "9"
-			(uuid "2b67746c-632c-4127-97d5-9d89ff6aec4d")
+			(uuid "9835f282-b15a-4e52-8152-7d543507adbb")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "U1201")
+					(reference "#PWR12003")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Sensor_Audio:SPH0641LU4H-1")
+		(at 30.48 104.14 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "ea5daa4e-55f8-4717-b4e9-1dbb109392bc")
+		(property "Reference" "U1202"
+			(at 30.48 100.33 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "SPH0641LU4H-1"
+			(at 30.48 107.95 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Sensor_Audio:Knowles_LGA-5_3.5x2.65mm"
+			(at 30.48 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.knowles.com/docs/default-source/default-document-library/sph0641lu4h-1-revb.pdf"
+			(at 30.48 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 30.48 104.14 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SPH0641LU4H-1"
+			(at 30.48 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C2879853"
+			(at 30.48 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Knowles"
+			(at 30.48 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "3"
+			(uuid "64f01214-3770-4ee2-a338-b8bcee076680")
+		)
+		(pin "5"
+			(uuid "4de6ab4f-bae3-4b6b-94c3-651e14b03137")
+		)
+		(pin "4"
+			(uuid "a12f8f41-2d3d-4b86-9427-1768c8ee2ca8")
+		)
+		(pin "1"
+			(uuid "9077f99d-eb72-4e6f-819e-2cd8817ebd72")
+		)
+		(pin "2"
+			(uuid "3009c7ec-f3bf-4d8f-9668-554b224a7125")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "U1202")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 96.52 153.67 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "eb282ff2-a1da-421c-879c-863c6e11002d")
+		(property "Reference" "#PWR12012"
+			(at 96.52 160.02 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 96.52 158.75 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 96.52 153.67 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 96.52 153.67 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 96.52 153.67 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b06d5cdd-2507-4fcb-aacb-3a31362582c7")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 53.34 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "ec885cf3-8779-4dac-bf64-412aa79e58ac")
+		(property "Reference" "#PWR12001"
+			(at 53.34 69.85 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 53.34 68.58 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 53.34 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 53.34 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "411bc7e4-370a-467c-9b18-e04074204902")
+		)
+		(instances
+			(project "fabbit_mainboard"
+				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
+					(reference "#PWR12001")
 					(unit 1)
 				)
 			)
@@ -5229,7 +7719,7 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "50372002-9c8f-439b-bd65-3d95ebb7bd2a")
+		(uuid "f6252ed1-f319-4f08-ae55-0b5f1a8d6ad6")
 		(property "Reference" "R1205"
 			(at 73.66 247.65 0)
 			(show_name no)
@@ -5316,10 +7806,10 @@
 			)
 		)
 		(pin "1"
-			(uuid "2e2d5237-30f4-444d-ac80-b2b1edeec164")
+			(uuid "dac5cf6a-d777-497e-b4e2-9641b8a9769c")
 		)
 		(pin "2"
-			(uuid "d95f08d1-c44b-4989-b757-8cfe8f4ec2aa")
+			(uuid "5eeefcab-1d6a-46ea-8470-7d38071fa149")
 		)
 		(instances
 			(project "fabbit_mainboard"
@@ -5331,230 +7821,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 134.62 251.46 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "58facc06-0a01-4e88-9b32-fff8908f5882")
-		(property "Reference" "R1206"
-			(at 134.62 247.65 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100R 1% 0402"
-			(at 134.62 255.27 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 134.62 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 134.62 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 134.62 251.46 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "0402WGF1000TCE"
-			(at 134.62 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C25076"
-			(at 134.62 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "UNI-ROYAL"
-			(at 134.62 251.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "343e5159-5d4b-48d6-9bd2-c8c2634edd56")
-		)
-		(pin "2"
-			(uuid "f321af5d-4bf1-4cd0-b9fd-9f041cfb7ad9")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "R1206")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 109.22 53.34 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "598a8d75-824b-42c1-81a3-b1b3f3195bd2")
-		(property "Reference" "R1201"
-			(at 109.22 49.53 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "634k 1% 0402"
-			(at 109.22 57.15 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 109.22 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 109.22 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 109.22 53.34 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "CRCW0402634KFKED"
-			(at 109.22 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C3007567"
-			(at 109.22 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Vishay"
-			(at 109.22 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "3342f95e-d6cf-489b-903f-184ffc19e2e1")
-		)
-		(pin "1"
-			(uuid "d463483c-ceac-4745-8584-f5e77ec4d3de")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "R1201")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
-		(at 66.04 110.49 0)
+		(at 111.76 246.38 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5562,9 +7830,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "660ba4d0-09c6-40bd-aded-79eaa7689e47")
-		(property "Reference" "#PWR12009"
-			(at 66.04 116.84 0)
+		(uuid "f6b3adfd-8c59-4d94-ab3f-3c670374ec21")
+		(property "Reference" "#PWR12018"
+			(at 111.76 252.73 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5575,7 +7843,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 66.04 115.57 0)
+			(at 111.76 251.46 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5585,7 +7853,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 66.04 110.49 0)
+			(at 111.76 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5596,7 +7864,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 66.04 110.49 0)
+			(at 111.76 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5607,7 +7875,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 66.04 110.49 0)
+			(at 111.76 246.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5617,2247 +7885,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "283caa70-4adf-4594-b11d-70732ef13c6a")
+			(uuid "2959f397-4684-4070-b903-e6ab7b7b94b2")
 		)
 		(instances
 			(project "fabbit_mainboard"
 				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12009")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 116.84 161.29 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "6a1067c1-663a-4f95-b465-fcd9e7136efd")
-		(property "Reference" "#PWR12014"
-			(at 116.84 167.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 116.84 166.37 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 116.84 161.29 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 116.84 161.29 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 116.84 161.29 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "334c3315-aea5-4907-bb70-39d759bfec8d")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12014")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 58.42 63.5 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "6ae7a84c-089e-4f7c-9943-f5a19487711d")
-		(property "Reference" "#PWR12004"
-			(at 58.42 69.85 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 58.42 68.58 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 58.42 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 58.42 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 58.42 63.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "36bb9c98-9a2d-4ba2-ade1-57d230fafbf7")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12004")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 50.8 300.99 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "7bce186d-b84e-440a-9165-476d5488fdbd")
-		(property "Reference" "#FLG1201"
-			(at 50.8 294.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "PWR_FLAG"
-			(at 50.8 295.91 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 50.8 300.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 50.8 300.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 50.8 300.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "7fd6a256-5461-4329-95e2-56b8c2abdab6")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#FLG1201")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Driver:DRV2605LDGS")
-		(at 58.42 152.4 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "81de49db-e40b-4f11-98f6-550b6f2cc78f")
-		(property "Reference" "U1203"
-			(at 58.42 148.59 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "DRV2605LDGSR"
-			(at 58.42 156.21 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Fabbit_TI:TI_DGS0010A"
-			(at 58.42 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" "https://www.ti.com/lit/gpn/drv2605l"
-			(at 58.42 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 58.42 152.4 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "DRV2605LDGSR"
-			(at 58.42 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C527464"
-			(at 58.42 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "TI"
-			(at 58.42 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Address" "0x5A"
-			(at 58.42 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "4"
-			(uuid "b9d070f8-9766-4e4f-9b95-74203d3d3894")
-		)
-		(pin "2"
-			(uuid "f542071e-a285-4ad9-87f9-be9d5b06f0e5")
-		)
-		(pin "7"
-			(uuid "6c0c0856-8f8a-4351-bc63-0efaffecf686")
-		)
-		(pin "9"
-			(uuid "d9a0969e-c0c7-4a63-aa66-030bbd97314b")
-		)
-		(pin "5"
-			(uuid "86a0c7d4-5c94-474d-a566-741f5524b8ad")
-		)
-		(pin "10"
-			(uuid "e1582ec9-e54e-4d8b-907b-3319af9779b0")
-		)
-		(pin "6"
-			(uuid "8cb93d81-4ce5-4d3b-a9dc-957c2b68b5d1")
-		)
-		(pin "8"
-			(uuid "6b36a86a-af32-46d1-a4e0-e7852419c498")
-		)
-		(pin "1"
-			(uuid "ade54f9f-748f-4ca1-9f02-a236fa02ffb8")
-		)
-		(pin "3"
-			(uuid "ba4387a1-ae04-49d4-a877-17028eac6b0c")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "U1203")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 144.78 256.54 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "8ec46aa9-d509-4069-914d-764dd6b3b319")
-		(property "Reference" "R1207"
-			(at 144.78 252.73 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100k 1% 0402"
-			(at 144.78 260.35 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 144.78 256.54 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 144.78 256.54 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 144.78 256.54 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "0402WGF1003TCE"
-			(at 144.78 256.54 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C25741"
-			(at 144.78 256.54 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "UNI-ROYAL"
-			(at 144.78 256.54 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "2"
-			(uuid "f52d5ef0-5948-4d8f-a720-3c65c8f5ebf4")
-		)
-		(pin "1"
-			(uuid "f07ac465-3390-40de-863c-cf0dd9f60578")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "R1207")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 76.2 110.49 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "8f00bb65-3abd-4738-ac4c-a691de83c568")
-		(property "Reference" "#PWR12010"
-			(at 76.2 116.84 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 76.2 115.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 76.2 110.49 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 76.2 110.49 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 76.2 110.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "c9eef7c3-4afb-495c-aa68-6f4e7445fcb7")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12010")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 25.4 111.76 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "95161828-bef8-4788-93cf-e511f8301187")
-		(property "Reference" "#PWR12007"
-			(at 25.4 118.11 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 25.4 116.84 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 25.4 111.76 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 25.4 111.76 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 25.4 111.76 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "41dc3b53-6bac-464a-9ab8-221da03b574a")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12007")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Transistor_FET:AO3400A")
-		(at 104.14 241.3 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "99d8745b-2fcb-416a-801a-fcc6d4fda387")
-		(property "Reference" "Q1201"
-			(at 104.14 237.49 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "AO3400A"
-			(at 104.14 245.11 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 104.14 241.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf"
-			(at 104.14 241.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 104.14 241.3 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "AO3400A"
-			(at 104.14 241.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C20917"
-			(at 104.14 241.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Alpha & Omega"
-			(at 104.14 241.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "3"
-			(uuid "d5db2ac9-f6d0-47c1-8f28-628f2c755e2d")
-		)
-		(pin "1"
-			(uuid "2b037518-35ba-46e7-b129-fb71b63a10b1")
-		)
-		(pin "2"
-			(uuid "f12fe3e8-08ff-4fb9-86e9-fbd848b09965")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "Q1201")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:LED")
-		(at 43.18 238.76 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "9e0c6122-b321-4480-b924-3b8d214eef45")
-		(property "Reference" "D1201"
-			(at 43.18 234.95 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "VSMB2943SLX01"
-			(at 43.18 242.57 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Fabbit_IC:Vishay_VSMB2943SLX01"
-			(at 43.18 238.76 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" "https://www.vishay.com/docs/83479/vsmb2943slx01.pdf"
-			(at 43.18 238.76 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 43.18 238.76 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "VSMB2943SLX01"
-			(at 43.18 238.76 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C511094"
-			(at 43.18 238.76 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Vishay"
-			(at 43.18 238.76 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "62d1918e-36bd-4bbf-95a6-5b5e6eacc736")
-		)
-		(pin "2"
-			(uuid "77dddd45-d4bd-4bec-9263-802e21a604e7")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "D1201")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 53.34 63.5 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "a6734e40-a4aa-4986-a6d3-dbb8e6002877")
-		(property "Reference" "#PWR12002"
-			(at 53.34 69.85 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 53.34 68.58 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 53.34 63.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "8db6b17f-fd52-4a06-bb0a-db6509b5e761")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12002")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 78.74 204.47 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "b13b8166-e029-475a-9f68-78ae728e0d74")
-		(property "Reference" "#PWR12017"
-			(at 78.74 210.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 78.74 209.55 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 78.74 204.47 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 78.74 204.47 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 78.74 204.47 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "ef689e3c-3de6-488b-9b6f-46bd68d9d390")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12017")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 58.42 167.64 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "b1ff6d7f-1165-48a4-98e8-114145ef4309")
-		(property "Reference" "#PWR12011"
-			(at 58.42 173.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 58.42 172.72 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 58.42 167.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 58.42 167.64 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 58.42 167.64 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "94834ba6-e9b5-4246-92a6-834503523a23")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12011")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 34.29 219.71 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c343f333-46ca-43af-a306-52d31f0395fe")
-		(property "Reference" "#PWR12015"
-			(at 34.29 226.06 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 34.29 224.79 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 34.29 219.71 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 34.29 219.71 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 34.29 219.71 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "7ddb29a5-9c37-42b6-ade5-f33f9367936b")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12015")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 78.74 195.58 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c4331453-5b70-476d-8f22-0548ae0f3ea7")
-		(property "Reference" "C1206"
-			(at 78.74 191.77 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "4.7uF 10V X5R 0603"
-			(at 78.74 199.39 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 78.74 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 78.74 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 78.74 195.58 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "CL10A475KO8NNNC"
-			(at 78.74 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C19666"
-			(at 78.74 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 78.74 195.58 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "93054039-fc28-4f3d-8e2b-c6cdcb439d4c")
-		)
-		(pin "2"
-			(uuid "7f55d854-acc5-495f-b21e-d72c015d5b4c")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "C1206")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 41.91 224.79 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "c862dd93-e2a9-4964-ba54-bab284ad3c78")
-		(property "Reference" "#PWR12016"
-			(at 41.91 231.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 41.91 229.87 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 41.91 224.79 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 41.91 224.79 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 41.91 224.79 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6ac0f1f6-9ece-4f3f-b10b-feb00374514a")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12016")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 88.9 46.99 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "daf4778e-ab48-43be-96e0-816c8dd7b28a")
-		(property "Reference" "#PWR12005"
-			(at 88.9 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 88.9 52.07 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 88.9 46.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 88.9 46.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 88.9 46.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "0a13ee1b-1fe3-419e-99c4-6f77cf205937")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12005")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 53.34 63.5 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "db23f618-d367-41a8-9e4f-716396b35d81")
-		(property "Reference" "#PWR12001"
-			(at 53.34 69.85 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 53.34 68.58 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 53.34 63.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "700be316-f232-4d12-ab75-32bd3efda87a")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12001")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 99.06 46.99 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "dcccf227-3f13-428a-b5ca-a0cecd196dfa")
-		(property "Reference" "#PWR12006"
-			(at 99.06 53.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 99.06 52.07 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 99.06 46.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 99.06 46.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 99.06 46.99 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "49b7f00d-5789-4662-baf2-4a1786ad375c")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12006")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 96.52 153.67 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e1129a3d-cbd3-47c7-99e3-240f0c43d238")
-		(property "Reference" "#PWR12012"
-			(at 96.52 160.02 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 96.52 158.75 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 96.52 153.67 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 96.52 153.67 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 96.52 153.67 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "65e278c6-6a01-4a13-a810-356a52b40938")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12012")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 53.34 63.5 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e4250463-7ed0-4e4c-881c-79dfb419c6df")
-		(property "Reference" "#PWR12003"
-			(at 53.34 69.85 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 53.34 68.58 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 53.34 63.5 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 53.34 63.5 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "20a1ec80-f0c5-410f-b4ca-66f7a0d45809")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12003")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 99.06 38.1 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e9afe592-bf42-4d98-a2be-58787caa48b8")
-		(property "Reference" "C1202"
-			(at 99.06 34.29 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "100nF 16V X7R 0402"
-			(at 99.06 41.91 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
-			(at 99.06 38.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 99.06 38.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 99.06 38.1 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "CL05B104KO5NNNC"
-			(at 99.06 38.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C1525"
-			(at 99.06 38.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 99.06 38.1 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "e6ed2c31-4805-4aad-8ee7-f675d3241030")
-		)
-		(pin "2"
-			(uuid "a9195565-afcd-4d39-9352-78deb1a294e1")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "C1202")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Fabbit:TSOP75238TR")
-		(at 40.64 205.74 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "eeb5617c-148a-4e0b-851c-1558c820eab6")
-		(property "Reference" "U1204"
-			(at 40.64 201.93 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "TSOP75238TR"
-			(at 40.64 209.55 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Fabbit_IC:Vishay_TSOP752_SMD-4"
-			(at 40.64 205.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" "https://www.vishay.com/docs/82494/tsop752.pdf"
-			(at 40.64 205.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 40.64 205.74 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "TSOP75238TR"
-			(at 40.64 205.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C511498"
-			(at 40.64 205.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Vishay"
-			(at 40.64 205.74 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "4"
-			(uuid "aa0abf7e-a99c-4a33-896e-b96224c2d45c")
-		)
-		(pin "3"
-			(uuid "c1023980-bdfb-4b8e-aebb-a88e56a2a2ef")
-		)
-		(pin "2"
-			(uuid "b1a670b0-8bf0-4186-ac19-2667964c446c")
-		)
-		(pin "1"
-			(uuid "cf5f4dd2-55a7-4ba9-9c25-2be60807fba0")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "U1204")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 116.84 152.4 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "f2978820-0d27-48a4-991c-731956ccae6a")
-		(property "Reference" "R1203"
-			(at 116.84 148.59 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "1.2k 1% 0402"
-			(at 116.84 156.21 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 116.84 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 116.84 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 116.84 152.4 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Purpose" "VIB_TRIG pull-down: FPGA config pull-up 330uA max x 1.2k = 0.40V < VIL 0.5V DRV2605L (DS181 p3, SLOS854 p6)"
-			(at 116.84 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "MPN" "0402WGF1201TCE"
-			(at 116.84 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C25862"
-			(at 116.84 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "UNI-ROYAL"
-			(at 116.84 152.4 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "f83f6fef-e69e-4814-8037-07a4098ec594")
-		)
-		(pin "2"
-			(uuid "004b0dc6-5848-4dbd-9525-7848ec55bd47")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "R1203")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 154.94 260.35 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "fd84f218-ef7b-4c6d-906e-e51058a2339d")
-		(property "Reference" "#PWR12020"
-			(at 154.94 266.7 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 154.94 265.43 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 154.94 260.35 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 154.94 260.35 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 154.94 260.35 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "33cd5e90-5324-4ba2-80a8-a4d71de5cc9d")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12020")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 45.72 101.6 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "fe75480a-4e5d-4751-bcfb-67f912a52732")
-		(property "Reference" "#PWR12008"
-			(at 45.72 107.95 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 45.72 106.68 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 45.72 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 45.72 101.6 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 45.72 101.6 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "6ef4f4a5-1a98-4564-b207-01164ff391ca")
-		)
-		(instances
-			(project "fabbit_mainboard"
-				(path "/9c62ab38-49ad-4c41-a787-a9e39c3fb4e9/837eeae3-b07e-47d4-940a-593b0563f406"
-					(reference "#PWR12008")
+					(reference "#PWR12018")
 					(unit 1)
 				)
 			)
