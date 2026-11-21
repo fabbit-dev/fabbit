@@ -1,5 +1,33 @@
 (version 1)
 
+# J601 USB-C и J1101 HDMI mid-mount стоят в вырезах по чертежам HCTL и G-Switch (Recommended PCB layout):
+# площадки и пазы корпуса в 0,25…0,45 мм от выреза. U1301 ESP32-C5 у выреза антенны, SW915 энкодер
+# у края по механике корпуса. 0,25 мм: норма Резонита «отступ топологии от фрезеруемого контура».
+(rule "Разъёмы у края платы: площадки 0,25 от контура"
+	(constraint edge_clearance (min 0.25mm))
+	(condition "A.Type == 'Pad' && (A.memberOfFootprint('J601') || A.memberOfFootprint('J1101') || A.memberOfFootprint('U1301') || A.memberOfFootprint('SW915'))"))
+
+# Экран SCR1 стоит модулем перед F. Отверстия угловых гнёзд J1601/J1401/J1701 (выводы откусываются
+# заподлицо после пайки), колышки J1801 и энкодера SW915 приходятся на площадь экрана; на F там
+# деталей нет. Механика: hardware/mainboard/mech/README.md.
+(rule "Детали B под экраном SCR1"
+	(constraint courtyard_clearance (min -0.01mm))
+	(condition "(B.Reference == 'SCR1' && (A.Reference == 'J1601' || A.Reference == 'J1401' || A.Reference == 'J1701' || A.Reference == 'J1801' || A.Reference == 'SW915')) || (A.Reference == 'SCR1' && (B.Reference == 'J1601' || B.Reference == 'J1401' || B.Reference == 'J1701' || B.Reference == 'J1801' || B.Reference == 'SW915'))"))
+
+# Зазор между площадками одного футпринта задан land pattern производителя (шаг выводов),
+# класс цепей POWER 0,2 мм к нему не применяется. Минимум: базовая норма Резонита 0,125 мм (фольга 18 мкм).
+# Между разными футпринтами действуют классы цепей.
+(rule "Выводы одного корпуса: норма Резонита"
+	(constraint clearance (min 0.125mm))
+	(condition "A.Type == 'Pad' && B.Type == 'Pad' && A.Parent == B.Parent"))
+
+# Задняя лапка корпуса HCTL HC-TYPE-C-24P-MM0.8-5A: L-вырез из двух овалов (0,6 × 1,6 и 1,2 × 0,6).
+# KiCad считает поясок по каждой площадке отдельно; по объединённой меди поясок >= 0,2 мм со всех сторон
+# (норма Резонита для монтажной площадки). Чертёж HCTL, Recommended PCB layout.
+(rule "J601: L-образный вырез корпуса"
+	(constraint annular_width (min 0mm))
+	(condition "A.memberOfFootprint('J601') && A.Pad_Number == 'SH'"))
+
 # Стойки модуля аналога H9…H12 (Würth WA-SMSI 9774090151): площадка 1 касается
 # отверстия Ø3,7 самого футпринта. Так в рекомендации Würth.
 (rule "Würth WA-SMSI: площадка у своего отверстия"
