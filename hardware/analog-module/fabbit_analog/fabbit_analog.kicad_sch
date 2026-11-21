@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Fabbit analog module: schematic")
-		(date "2026-11-07")
+		(date "2026-11-21")
 		(company "Fabbit")
 		(comment 1 "DRAFT, DO NOT POWER")
 		(comment 2 "Connector contract stage; analog circuitry incomplete")
@@ -100,6 +100,52 @@
 			(project ""
 				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7"
 					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 100.33 60.96)
+		(size 38.1 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "cc9e02ad-c4ff-492e-9b39-f5224598f3a0")
+		(property "Sheetname" "Module power"
+			(at 100.33 60.2484 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 100.33 74.2546 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project ""
+				(path "/210920a1-b7c4-456c-bc91-5987c4ba92b7"
+					(page "6")
 				)
 			)
 		)
